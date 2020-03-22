@@ -50,7 +50,10 @@ public class GymController {
 
     @PostMapping("/fetch")
     public ResponseEntity fetch() {
-        return ResponseEntity.ok(gymDao.findAll());
+        List<Gym> gyms = gymDao.findAll();
+        if(gyms==null || gyms.isEmpty())
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+        return ResponseEntity.ok(new GymResponse("message", "status", 200, gyms));
     }
 
     @CrossOrigin
