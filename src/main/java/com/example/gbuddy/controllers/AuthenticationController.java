@@ -50,7 +50,6 @@ public class AuthenticationController {
     @CrossOrigin
     @PostMapping("/login")
     public ResponseEntity login(@Valid @RequestBody UserLoginRequest userLoginRequest) {
-        UserLoginResponse response = null;
         Optional<User> user = userDao.getByUserName(userLoginRequest.getUserName());
         if(!user.isPresent())
             return ResponseEntity.noContent().build();
@@ -58,7 +57,9 @@ public class AuthenticationController {
             logger.info("password invalid");
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
-        return ResponseEntity.ok(user.get());
+
+        return ResponseEntity.ok(new UserLoginResponse(user.get().getUserId(), "authorized", "success", 200,
+                "jwt_token_undefined", user.get().getUserName()));
     }
 
     @CrossOrigin
