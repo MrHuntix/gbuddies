@@ -45,7 +45,7 @@ public class MatchLookupController {
      * @return
      */
     @PutMapping("/buddy/requester/{requesterId}/gym/{gymId}/branch/{branchId}")
-    public ResponseEntity addForLookup(@PathVariable("requesterId") int requesterId, @PathVariable("gymId") int gymId, @PathVariable("branchId") int branchId) {
+    public ResponseEntity<String> addForLookup(@PathVariable("requesterId") int requesterId, @PathVariable("gymId") int gymId, @PathVariable("branchId") int branchId) {
         logger.info("adding for lookup requesterid: {}, gymid: {}, branch id: {}", requesterId, gymId, branchId);
         return matchLookupService.addForLookup(requesterId, gymId, branchId) ?
                 ResponseEntity.ok("requested") :
@@ -67,7 +67,7 @@ public class MatchLookupController {
      * @return
      */
     @PutMapping("/like/{matchLookupId}/by/{userId}")
-    public ResponseEntity like(@PathVariable("matchLookupId") int matchLookupId, @PathVariable("userId") int userId) {
+    public ResponseEntity<String> like(@PathVariable("matchLookupId") int matchLookupId, @PathVariable("userId") int userId) {
         logger.info("linking matchLookupId: {}, userId: {}", matchLookupId, userId);
         return matchLookupService.like(matchLookupId, userId) ?
                 ResponseEntity.ok("like request created") :
@@ -87,7 +87,7 @@ public class MatchLookupController {
      * @return
      */
     @PutMapping("/dislike/{matchId}")
-    public ResponseEntity unmatch(@PathVariable("matchId") int matchId) {
+    public ResponseEntity<String> unmatch(@PathVariable("matchId") int matchId) {
         logger.info("unmatching: {}", matchId);
         return matchLookupService.disike(matchId) ?
                 ResponseEntity.ok("unmatched") : ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).build();
@@ -107,7 +107,7 @@ public class MatchLookupController {
      * @return
      */
     @GetMapping("/all/{requesterId}/gym/{gymId}/branch/{branchId}")
-    public ResponseEntity getSuitableMatches(@PathVariable("requesterId") int requesterId, @PathVariable("gymId") int gymId, @PathVariable("branchId") int branchId) {
+    public ResponseEntity<List<MatchLookup>> getSuitableMatches(@PathVariable("requesterId") int requesterId, @PathVariable("gymId") int gymId, @PathVariable("branchId") int branchId) {
         List<MatchLookup> matches = matchLookupService.getSuitableMatches(requesterId, gymId, branchId);
         return Objects.nonNull(matches)? ResponseEntity.ok(matches)
                 : ResponseEntity.status(HttpStatus.NO_CONTENT).build();
