@@ -48,8 +48,8 @@ public class MatchLookupController {
     public ResponseEntity<String> addForLookup(@PathVariable("requesterId") int requesterId, @PathVariable("gymId") int gymId, @PathVariable("branchId") int branchId) {
         logger.info("adding for lookup requesterid: {}, gymid: {}, branch id: {}", requesterId, gymId, branchId);
         return matchLookupService.addForLookup(requesterId, gymId, branchId) ?
-                ResponseEntity.ok("requested") :
-                ResponseEntity.status(HttpStatus.CONFLICT).build();
+                ResponseEntity.ok("lookup reference created") :
+                ResponseEntity.ok("lookup reference already exists");
     }
 
     /**
@@ -71,7 +71,7 @@ public class MatchLookupController {
         logger.info("linking matchLookupId: {}, userId: {}", matchLookupId, userId);
         return matchLookupService.like(matchLookupId, userId) ?
                 ResponseEntity.ok("like request created") :
-                ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).build();
+                ResponseEntity.ok("like request already exists");
     }
 
     /**
@@ -90,7 +90,7 @@ public class MatchLookupController {
     public ResponseEntity<String> unmatch(@PathVariable("matchId") int matchId) {
         logger.info("unmatching: {}", matchId);
         return matchLookupService.disike(matchId) ?
-                ResponseEntity.ok("unmatched") : ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).build();
+                ResponseEntity.ok("unmatched") : ResponseEntity.ok("no like request present");
     }
 
     /**
