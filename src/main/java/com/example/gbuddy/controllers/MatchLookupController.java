@@ -30,6 +30,7 @@ public class MatchLookupController {
     }
 
     /**
+     * on click of buddie up
      * if gymid, branchid, requestid present
      * if status == UNMATCHED
      * buddy request already present
@@ -45,6 +46,7 @@ public class MatchLookupController {
      */
     @PutMapping("/buddy/requester/{requesterId}/gym/{gymId}/branch/{branchId}")
     public ResponseEntity addForLookup(@PathVariable("requesterId") int requesterId, @PathVariable("gymId") int gymId, @PathVariable("branchId") int branchId) {
+        logger.info("adding for lookup requesterid: {}, gymid: {}, branch id: {}", requesterId, gymId, branchId);
         return matchLookupService.addForLookup(requesterId, gymId, branchId) ?
                 ResponseEntity.ok("requested") :
                 ResponseEntity.status(HttpStatus.CONFLICT).build();
@@ -66,6 +68,7 @@ public class MatchLookupController {
      */
     @PutMapping("/like/{matchLookupId}/by/{userId}")
     public ResponseEntity like(@PathVariable("matchLookupId") int matchLookupId, @PathVariable("userId") int userId) {
+        logger.info("linking matchLookupId: {}, userId: {}", matchLookupId, userId);
         return matchLookupService.like(matchLookupId, userId) ?
                 ResponseEntity.ok("like request created") :
                 ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).build();
@@ -85,11 +88,13 @@ public class MatchLookupController {
      */
     @PutMapping("/dislike/{matchId}")
     public ResponseEntity unmatch(@PathVariable("matchId") int matchId) {
+        logger.info("unmatching: {}", matchId);
         return matchLookupService.disike(matchId) ?
                 ResponseEntity.ok("unmatched") : ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).build();
     }
 
     /**
+     * in matches tab
      * if gymid, branchid, requestid present
      * if status == UNMATCHED and resuestid != requesting_user
      * return all matching records
