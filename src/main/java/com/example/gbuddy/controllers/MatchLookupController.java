@@ -7,6 +7,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -20,9 +21,6 @@ public class MatchLookupController {
 
     @Autowired
     private MatchLookupService matchLookupService;
-
-    @Autowired
-    private MatcherUtil matcherUtil;
 
     @GetMapping("/test/match")
     public ResponseEntity test() {
@@ -44,7 +42,7 @@ public class MatchLookupController {
      * @param branchId    id of branch
      * @return
      */
-    @PutMapping("/buddy/requester/{requesterId}/gym/{gymId}/branch/{branchId}")
+    @PutMapping(value = "/buddy/requester/{requesterId}/gym/{gymId}/branch/{branchId}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<String> addForLookup(@PathVariable("requesterId") int requesterId, @PathVariable("gymId") int gymId, @PathVariable("branchId") int branchId) {
         logger.info("adding for lookup requesterid: {}, gymid: {}, branch id: {}", requesterId, gymId, branchId);
         return matchLookupService.addForLookup(requesterId, gymId, branchId) ?
@@ -66,7 +64,7 @@ public class MatchLookupController {
      * @param userId        requester id
      * @return
      */
-    @PutMapping("/like/{matchLookupId}/by/{userId}")
+    @PutMapping(value = "/like/{matchLookupId}/by/{userId}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<String> like(@PathVariable("matchLookupId") int matchLookupId, @PathVariable("userId") int userId) {
         logger.info("linking matchLookupId: {}, userId: {}", matchLookupId, userId);
         return matchLookupService.like(matchLookupId, userId) ?
@@ -86,7 +84,7 @@ public class MatchLookupController {
      * @param matchId pk of MATCH table
      * @return
      */
-    @PutMapping("/dislike/{matchId}")
+    @PutMapping(value = "/dislike/{matchId}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<String> unmatch(@PathVariable("matchId") int matchId) {
         logger.info("unmatching: {}", matchId);
         return matchLookupService.disike(matchId) ?
@@ -106,7 +104,7 @@ public class MatchLookupController {
      * @param branchId    id of branch
      * @return
      */
-    @GetMapping("/all/{requesterId}/gym/{gymId}/branch/{branchId}")
+    @GetMapping(value = "/all/{requesterId}/gym/{gymId}/branch/{branchId}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<MatchLookup>> getSuitableMatches(@PathVariable("requesterId") int requesterId, @PathVariable("gymId") int gymId, @PathVariable("branchId") int branchId) {
         List<MatchLookup> matches = matchLookupService.getSuitableMatches(requesterId, gymId, branchId);
         return Objects.nonNull(matches)? ResponseEntity.ok(matches)
