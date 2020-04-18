@@ -116,7 +116,7 @@ public class MatchLookupService {
             return null;
         }
         matchLookupsForRequester.forEach(matchLookup -> {
-            List<MatchLookup> matches = matchLookupDao.deriveMatches(matchLookup.getGymId(), matchLookup.getBranchId(), MatcherConst.UNMATCHED.getName());
+            List<MatchLookup> matches = matchLookupDao.possibleMatches(matchLookup.getGymId(), matchLookup.getBranchId(), requesterId, MatcherConst.UNMATCHED.getName());
             if(matches!=null && !matches.isEmpty())
                 derivedMatches.addAll(matches);
         });
