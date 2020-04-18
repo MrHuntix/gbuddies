@@ -110,4 +110,17 @@ public class MatchLookupController {
         return Objects.nonNull(matches)? ResponseEntity.ok(matches)
                 : ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
+
+    /**
+     * for requester id get all the gb -> (gym,branch) id pairs
+     * for each gb get lookup info where status is unmatched.
+     * @param requesterId
+     * @return
+     */
+    @GetMapping(value = "/derive/{requesterId}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<List<MatchLookup>> deriveMatches(@PathVariable("requesterId") int requesterId) {
+        List<MatchLookup> matches = matchLookupService.deriveMatches(requesterId);
+        return Objects.nonNull(matches)? ResponseEntity.ok(matches)
+                : ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+    }
 }

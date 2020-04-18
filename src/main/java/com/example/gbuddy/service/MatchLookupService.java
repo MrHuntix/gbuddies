@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -100,10 +101,26 @@ public class MatchLookupService {
 
     public List<MatchLookup> getSuitableMatches(int requesterId, int gymId, int branchId) {
         List<MatchLookup> matches = matchLookupDao.possibleMatches(gymId, branchId, requesterId, MatcherConst.UNMATCHED.getName());
+
         if(CollectionUtils.isEmpty(matches)){
             LOG.info("no records found in MATCH_LOOKUP for (gymId: {}, branchId: {}, requesterId: {})", gymId, branchId, requesterId);
         }
         return matches;
+    }
 
+    public List<MatchLookup> deriveMatches(int requesterId) {
+        List<MatchLookup> derivedMatches = new ArrayList<>();
+        List<MatchLookup> matchLookupsForRequester = matchLookupDao.getAllByRequesterId(requesterId);
+        if(matchLookupsForRequester==null || matchLookupsForRequester.isEmpty()) {
+            LOG.info("there is no match_lookup entries for requester id :{}", requesterId);
+            return null;
+        }
+        matchLookupsForRequester.forEach(matchLookup -> {
+            List<MatchLookup> matches = matchLookupDao.deriveMatches(matchLookup.getGymId(), matchLookup.getBranchId(), MatcherConst.UNMATCHED.getName());
+            if(matches!=null && !matches.isEmpty())
+                derivedMatches.addAll(matches);
+        });
+        LOG.info("derived {} matches", derivedMatches.size());
+        return derivedMatches;
     }
 }
