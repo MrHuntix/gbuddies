@@ -1,6 +1,8 @@
 package com.example.gbuddy.controllers;
 
+import com.example.gbuddy.dao.BranchDao;
 import com.example.gbuddy.dao.GymDao;
+import com.example.gbuddy.models.Branch;
 import com.example.gbuddy.models.Gym;
 import com.example.gbuddy.models.GymRegisterRequest;
 import com.example.gbuddy.models.GymResponse;
@@ -15,6 +17,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/gym")
@@ -23,6 +26,9 @@ public class GymController {
 
     @Autowired
     private GymDao gymDao;
+
+    @Autowired
+    private BranchDao branchDao;
 
     @Autowired
     private MapperUtil mapperUtil;
@@ -61,6 +67,17 @@ public class GymController {
     public ResponseEntity test() {
         logger.info("*******");
         return ResponseEntity.ok("test string");
+    }
+
+    @GetMapping("/coordinates/{branchId}")
+    public ResponseEntity coordinates(@PathVariable("branchId") int branchId) {
+        logger.info("getting coordinates for branch id: {}", branchId);
+        Optional<Branch> branch = branchDao.findById(branchId);
+        if (!branch.isPresent()) {
+            logger.info("no branch found for having branch id: {}", branchId);
+        }
+        logger.info("found branch: {}", branch.get());
+        return ResponseEntity.ok(branch.get());
     }
 }
 

@@ -6,5 +6,5 @@ import org.springframework.stereotype.Component;
 
 @Component
 //@RibbonClient("gym-operation-service")
-interface BranchDao extends JpaRepository<Branch, Long> {
+public interface BranchDao extends JpaRepository<Branch, Integer> {
 }
