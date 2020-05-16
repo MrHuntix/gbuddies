@@ -31,9 +31,10 @@ public class AuthenticationController {
     @CrossOrigin
     @PostMapping("/signup")
     public ResponseEntity<UserSignupResponse> signup(@Valid @RequestBody UserSignupRequest userSignupRequest) {
+        logger.info("starting signup process");
         UserSignupResponse response;
         if (userDao.getByUserName(userSignupRequest.getUserName()).isPresent()) {
-            logger.info("/signup username {} already taken", userSignupRequest.getUserName());
+            logger.info("username {} already taken", userSignupRequest.getUserName());
             return new ResponseEntity<>(getUserResponse(userSignupRequest.getUserName() + " already taken",
                     HttpStatus.OK.getReasonPhrase(), HttpStatus.OK.value()), HttpStatus.OK);
         }
@@ -44,17 +45,21 @@ public class AuthenticationController {
         user = userDao.save(user);
         response = getUserResponse(user.getUserName() + " created successfully",
                 HttpStatus.OK.getReasonPhrase(), HttpStatus.OK.value());
+        logger.info("completed signup process");
         return ResponseEntity.ok(response);
     }
 
     @CrossOrigin
     @PostMapping("/login")
     public ResponseEntity login(@Valid @RequestBody UserLoginRequest userLoginRequest) {
+        logger.info("start or login process");
         Optional<User> user = userDao.getByUserName(userLoginRequest.getUserName());
-        if(!user.isPresent())
+        if(!user.isPresent()) {
+            logger.info("no user present for username {}", userLoginRequest.getUserName());
             return ResponseEntity.noContent().build();
+        }
         if(!userLoginRequest.getPassword().equalsIgnoreCase(user.get().getPassword())) {
-            logger.info("password invalid");
+            logger.info("wrong password entered");
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
 
@@ -64,7 +69,7 @@ public class AuthenticationController {
 
     @CrossOrigin
     @GetMapping("/id/{id}")
-    public ResponseEntity getUserById(@PathVariable("id") List<Integer> userId) {
+    public ResponseEntity<User> getUserById(@PathVariable("id") List<Integer> userId) {
         logger.info("fetching deatails of user having id {}", userId);
         Optional<List<User>> users = userDao.getByUserIdIn(userId);
         return users.<ResponseEntity>map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.noContent().build());
@@ -73,12 +78,10 @@ public class AuthenticationController {
     @CrossOrigin
     @GetMapping("/test")
     public ResponseEntity test() {
-        logger.info("*******");
-        return ResponseEntity.ok("test string");
+        return ResponseEntity.ok("authentication server is up and running");
     }
 
     private UserSignupResponse getUserResponse(String responseMessage, String responseStatus, int responseCode) {
-        logger.info("*******");
         return new UserSignupResponse(responseMessage, responseStatus, responseCode);
     }
 }

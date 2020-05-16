@@ -23,7 +23,7 @@ public class MatchLookupController {
 
     @GetMapping("/test/match")
     public ResponseEntity test() {
-        return ResponseEntity.ok("Hello from gym-matcher-service" + System.getProperty("server.port"));
+        return ResponseEntity.ok("match service is up and running");
     }
 
     /**
@@ -65,7 +65,7 @@ public class MatchLookupController {
      */
     @PutMapping(value = "/like/{matchLookupId}/by/{userId}")
     public ResponseEntity<MatchResponse> like(@PathVariable("matchLookupId") int matchLookupId, @PathVariable("userId") int userId) {
-        logger.info("linking matchLookupId: {}, userId: {}", matchLookupId, userId);
+        logger.info("liking matchLookupId: {}, userId: {}", matchLookupId, userId);
         return matchLookupService.like(matchLookupId, userId) ?
                 ResponseEntity.ok(new MatchResponse("like request created")) :
                 ResponseEntity.ok(new MatchResponse("like request already exists"));
@@ -104,9 +104,12 @@ public class MatchLookupController {
      * @return
      */
     @GetMapping(value = "/all/{requesterId}/gym/{gymId}/branch/{branchId}")
-    public ResponseEntity<List<MatchLookup>> getSuitableMatches(@PathVariable("requesterId") int requesterId, @PathVariable("gymId") int gymId, @PathVariable("branchId") int branchId) {
+    public ResponseEntity<List<MatchLookup>> getSuitableMatches(@PathVariable("requesterId") int requesterId, @PathVariable("gymId") int gymId,
+                                                                @PathVariable("branchId") int branchId) {
+        logger.info("getting suitable matches for user id: {} for gym id: {} and branch id: {}", requesterId, gymId, branchId);
         List<MatchLookup> matches = matchLookupService.getSuitableMatches(requesterId, gymId, branchId);
-        return Objects.nonNull(matches)? ResponseEntity.ok(matches)
+        logger.info("found {} potential matches", matches.size());
+        return !matches.isEmpty()? ResponseEntity.ok(matches)
                 : ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
@@ -118,8 +121,10 @@ public class MatchLookupController {
      */
     @GetMapping(value = "/derive/{requesterId}")
     public ResponseEntity<List<MatchLookup>> deriveMatches(@PathVariable("requesterId") int requesterId) {
+        logger.info("deriving matches for user id: {}", requesterId);
         List<MatchLookup> matches = matchLookupService.deriveMatches(requesterId);
-        return Objects.nonNull(matches)? ResponseEntity.ok(matches)
+        logger.info("derived {} matches", matches.size());
+        return !matches.isEmpty()? ResponseEntity.ok(matches)
                 : ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 }

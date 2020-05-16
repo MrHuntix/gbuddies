@@ -36,17 +36,17 @@ public class GymController {
     @CrossOrigin
     @PostMapping(name = "/register/gym")
     public ResponseEntity registerGym(@RequestBody GymRegisterRequest gymRegisterRequest) {
-        logger.info("registering gym: {}", gymRegisterRequest);
+        logger.info("start of gym registration process");
         if(mapperUtil.validateRequest(gymRegisterRequest)) {
             logger.info("the request to add a new gym could not be processed");
             return new ResponseEntity<>(new GymResponse("The request to register gym cannot be processed as the entered details is invalid",
                     HttpStatus.UNPROCESSABLE_ENTITY.getReasonPhrase(), HttpStatus.UNPROCESSABLE_ENTITY.value(),
                     GymResponse.getDefaultGyms()), HttpStatus.UNPROCESSABLE_ENTITY);
         }
-        logger.info("processing request to add new gym");
+        logger.info("gym details validated. Processing request to add new gym");
         Gym g = mapperUtil.getGymFromRequest(gymRegisterRequest);
-
         Gym gym = gymDao.save(g);
+        logger.info("gym created with id: {}", gym.getId());
         return ResponseEntity.ok(
                 new GymResponse("Gym successfully registered into our systems",
                         HttpStatus.OK.getReasonPhrase(), HttpStatus.OK.value(),
@@ -56,17 +56,20 @@ public class GymController {
 
     @PostMapping("/fetch")
     public ResponseEntity fetch() {
+        logger.info("start of fetch process");
         List<Gym> gyms = gymDao.findAll();
-        if(gyms==null || gyms.isEmpty())
+        if(gyms==null || gyms.isEmpty()) {
+            logger.info("fetch process did not find any gyms");
             return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+        }
+        logger.info("fetch process completed. Found {} gyms", gyms.size());
         return ResponseEntity.ok(new GymResponse("message", "status", 200, gyms));
     }
 
     @CrossOrigin
     @GetMapping("/test/gym")
     public ResponseEntity test() {
-        logger.info("*******");
-        return ResponseEntity.ok("test string");
+        return ResponseEntity.ok("gym service is up and running");
     }
 
     @GetMapping("/coordinates/{branchId}")
