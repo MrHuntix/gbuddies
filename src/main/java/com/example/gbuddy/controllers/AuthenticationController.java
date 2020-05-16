@@ -72,7 +72,13 @@ public class AuthenticationController {
     public ResponseEntity<User> getUserById(@PathVariable("id") List<Integer> userId) {
         logger.info("fetching deatails of user having id {}", userId);
         Optional<List<User>> users = userDao.getByUserIdIn(userId);
-        return users.<ResponseEntity>map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.noContent().build());
+        if(!users.isPresent()) {
+            logger.info("no user present for id {}", userId.get(0));
+            ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+        }
+        User user = users.get().get(0);
+        logger.info("found user having id {}", user.getUserId());
+        return ResponseEntity.ok(user);
     }
 
     @CrossOrigin
