@@ -82,7 +82,7 @@ public class MatchLookupService {
             LOG.info("no record in MATCH_LOOKUP for id {}", matchLookupId);
             return false;
         }
-        if (MatcherConst.MATCHED.getName().equals(lookup.getStatus())) {
+        if (MatcherConst.REQUESTED.getName().equals(lookup.getStatus())) {
             LOG.info("record found in MATCH_LOOKUP for id {}, with status {}. SHOULD NOT HAPPEN", matchLookupId, lookup.getStatus());
             return false;
         }
