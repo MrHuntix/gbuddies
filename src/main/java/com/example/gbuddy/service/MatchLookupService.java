@@ -135,6 +135,10 @@ public class MatchLookupService {
     }
 
     public List<MatchLookup> deriveMatches(int requesterId) {
+        return deriveMatches(requesterId, MatcherConst.UNMATCHED);
+    }
+
+    public List<MatchLookup> deriveMatches(int requesterId, MatcherConst matcherConst) {
         List<MatchLookup> derivedMatches = new ArrayList<>();
         List<MatchLookup> matchLookupsForRequester = matchLookupDao.getAllByRequesterId(requesterId);
         if(matchLookupsForRequester==null || matchLookupsForRequester.isEmpty()) {
@@ -142,7 +146,7 @@ public class MatchLookupService {
             return null;
         }
         matchLookupsForRequester.forEach(matchLookup -> {
-            List<MatchLookup> matches = matchLookupDao.possibleMatches(matchLookup.getGymId(), matchLookup.getBranchId(), requesterId, MatcherConst.UNMATCHED.getName());
+            List<MatchLookup> matches = matchLookupDao.possibleMatches(matchLookup.getGymId(), matchLookup.getBranchId(), requesterId, matcherConst.getName());
             if(matches!=null && !matches.isEmpty())
                 derivedMatches.addAll(matches);
         });

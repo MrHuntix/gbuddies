@@ -3,6 +3,7 @@ package com.example.gbuddy.controllers;
 import com.example.gbuddy.models.MatchLookup;
 import com.example.gbuddy.models.MatchResponse;
 import com.example.gbuddy.service.MatchLookupService;
+import com.example.gbuddy.util.MatcherConst;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -128,6 +129,27 @@ public class MatchLookupController {
                 : ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
+    /**
+     * for requester id get all the gb -> (gym,branch) id pairs
+     * for each gb get lookup info where status is requested.
+     * @param requesterId
+     * @return
+     */
+    @GetMapping(value = "/derive/req/{requesterId}")
+    public ResponseEntity<List<MatchLookup>> deriveMatchesForRequested(@PathVariable("requesterId") int requesterId) {
+        logger.info("deriving matches for user id: {}", requesterId);
+        List<MatchLookup> matches = matchLookupService.deriveMatches(requesterId, MatcherConst.REQUESTED);
+        logger.info("derived {} matches", matches.size());
+        return !matches.isEmpty()? ResponseEntity.ok(matches)
+                : ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+    }
+
+    /**
+     * api for setting request status to REQUESTED for a match
+     * @param matchLookupId
+     * @param userId
+     * @return
+     */
     @PutMapping(value = "/request/{matchLookupId}/by/{userId}")
     public ResponseEntity<MatchResponse> requestForLike(@PathVariable("matchLookupId") int matchLookupId, @PathVariable("userId") int userId) {
         logger.info("start of request process for matchLookupId: {} for userId: {}", matchLookupId, userId);
