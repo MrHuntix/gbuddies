@@ -127,4 +127,12 @@ public class MatchLookupController {
         return !matches.isEmpty()? ResponseEntity.ok(matches)
                 : ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
+
+    @PutMapping(value = "/request/{matchLookupId}/by/{userId}")
+    public ResponseEntity<MatchResponse> requestForLike(@PathVariable("matchLookupId") int matchLookupId, @PathVariable("userId") int userId) {
+        logger.info("start of request process for matchLookupId: {} for userId: {}", matchLookupId, userId);
+        return matchLookupService.requestForLike(matchLookupId, userId) ?
+                ResponseEntity.ok(new MatchResponse("requested for buddy")) :
+                ResponseEntity.ok(new MatchResponse("request for buddy already exists"));
+    }
 }

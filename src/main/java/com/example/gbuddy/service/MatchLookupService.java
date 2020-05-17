@@ -72,6 +72,32 @@ public class MatchLookupService {
         return true;
     }
 
+    public boolean requestForLike(int matchLookupId, int userId) {
+        MatchLookup lookup = matchLookupDao.getById(matchLookupId);
+        if (lookup.getRequesterId() == userId) {
+            LOG.info("user id({}) and requester id({}) is same", userId, lookup.getRequesterId());
+            return false;
+        }
+        if (Objects.isNull(lookup)) {
+            LOG.info("no record in MATCH_LOOKUP for id {}", matchLookupId);
+            return false;
+        }
+        if (MatcherConst.MATCHED.getName().equals(lookup.getStatus())) {
+            LOG.info("record found in MATCH_LOOKUP for id {}, with status {}. SHOULD NOT HAPPEN", matchLookupId, lookup.getStatus());
+            return false;
+        }
+        LOG.info("record found in MATCH_LOOKUP for id {}, with status {}. CREATING MATCH", matchLookupId, lookup.getStatus());
+        lookup.setStatus(MatcherConst.REQUESTED.getName());
+        LOG.info("setting status to REQUESTED for lookupId: {}", lookup.getId());
+        matchLookupDao.save(lookup);
+
+        lookup = matchLookupDao.getRequestMatch(lookup.getGymId(), lookup.getBranchId(), userId);
+        lookup.setStatus(MatcherConst.REQUESTED.getName());
+        LOG.info("setting status to REQUESTED for lookupId: {}", lookup.getId());
+        matchLookupDao.save(lookup);
+        return true;
+    }
+
     public boolean disike(int matchId) {
         Match match = matchDao.findById(matchId).orElse(null);
         if (Objects.isNull(match)) {
