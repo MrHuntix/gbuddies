@@ -76,6 +76,7 @@ public class MatchLookupService {
         return requestForLike(matchLookupId, userId, MatcherConst.REQUESTED);
     }
 
+    //TODO: fix the if block logic
     public boolean requestForLike(int matchLookupId, int userId, MatcherConst matcherConst) {
         MatchLookup lookup = matchLookupDao.getById(matchLookupId);
         if (lookup.getRequesterId() == userId) {
@@ -86,10 +87,10 @@ public class MatchLookupService {
             LOG.info("no record in MATCH_LOOKUP for id {}", matchLookupId);
             return false;
         }
-        if (MatcherConst.REQUESTED.getName().equals(lookup.getStatus())) {
-            LOG.info("record found in MATCH_LOOKUP for id {}, with status {}. SHOULD NOT HAPPEN", matchLookupId, lookup.getStatus());
-            return false;
-        }
+//        if (MatcherConst.REQUESTED.getName().equals(lookup.getStatus())) {
+//            LOG.info("record found in MATCH_LOOKUP for id {}, with status {}. SHOULD NOT HAPPEN", matchLookupId, lookup.getStatus());
+//            return false;
+//        }
         LOG.info("record found in MATCH_LOOKUP for id {}, with status {}. CREATING MATCH", matchLookupId, lookup.getStatus());
         lookup.setStatus(matcherConst.getName());
         LOG.info("setting status to {} for lookupId: {}", matcherConst.getName(), lookup.getId());
