@@ -164,7 +164,7 @@ public class MatchLookupController {
      * @param userId
      * @return
      */
-    @PutMapping(value = "/request/{matchLookupId}/by/{userId}")
+    @PutMapping(value = "/reject/{matchLookupId}/by/{userId}")
     public ResponseEntity<MatchResponse> rejectForLike(@PathVariable("matchLookupId") int matchLookupId, @PathVariable("userId") int userId) {
         logger.info("start of request process for matchLookupId: {} for userId: {}", matchLookupId, userId);
         return matchLookupService.requestForLike(matchLookupId, userId, MatcherConst.UNMATCHED) ?
