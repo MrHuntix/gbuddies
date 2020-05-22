@@ -157,4 +157,18 @@ public class MatchLookupController {
                 ResponseEntity.ok(new MatchResponse("requested for buddy")) :
                 ResponseEntity.ok(new MatchResponse("request for buddy already exists"));
     }
+
+    /**
+     * api for rejecting match request
+     * @param matchLookupId
+     * @param userId
+     * @return
+     */
+    @PutMapping(value = "/request/{matchLookupId}/by/{userId}")
+    public ResponseEntity<MatchResponse> rejectForLike(@PathVariable("matchLookupId") int matchLookupId, @PathVariable("userId") int userId) {
+        logger.info("start of request process for matchLookupId: {} for userId: {}", matchLookupId, userId);
+        return matchLookupService.requestForLike(matchLookupId, userId, MatcherConst.UNMATCHED) ?
+                ResponseEntity.ok(new MatchResponse("rejected buddy request")) :
+                ResponseEntity.ok(new MatchResponse("unable to reject buddy"));
+    }
 }
