@@ -73,37 +73,6 @@ public class MatchLookupService {
         return true;
     }
 
-    public boolean requestForLike(int matchLookupId, int userId) {
-        return requestForLike(matchLookupId, userId, MatcherConst.REQUESTED);
-    }
-
-    //TODO: fix the if block logic
-    public boolean requestForLike(int matchLookupId, int userId, MatcherConst matcherConst) {
-        MatchLookup lookup = matchLookupDao.getById(matchLookupId);
-        if (lookup.getRequesterId() == userId) {
-            LOG.info("user id({}) and requester id({}) is same", userId, lookup.getRequesterId());
-            return false;
-        }
-        if (Objects.isNull(lookup)) {
-            LOG.info("no record in MATCH_LOOKUP for id {}", matchLookupId);
-            return false;
-        }
-        if (matcherConst.getName().equals(lookup.getStatus())) {
-            LOG.info("record found in MATCH_LOOKUP for id {}, with status {}. SHOULD NOT HAPPEN", matchLookupId, lookup.getStatus());
-            return false;
-        }
-        LOG.info("record found in MATCH_LOOKUP for id {}, with status {}. CREATING MATCH", matchLookupId, lookup.getStatus());
-        lookup.setStatus(matcherConst.getName());
-        LOG.info("setting status to {} for lookupId: {}", matcherConst.getName(), lookup.getId());
-        matchLookupDao.save(lookup);
-
-        lookup = matchLookupDao.getRequestMatch(lookup.getGymId(), lookup.getBranchId(), userId);
-        lookup.setStatus(matcherConst.getName());
-        LOG.info("setting status to {} for lookupId: {}",matcherConst.getName(), lookup.getId());
-        matchLookupDao.save(lookup);
-        return true;
-    }
-
     public boolean disike(int matchId) {
         Match match = matchDao.findById(matchId).orElse(null);
         if (Objects.isNull(match)) {
@@ -143,25 +112,5 @@ public class MatchLookupService {
             LOG.info("no records found in MATCH_LOOKUP for (gymId: {}, branchId: {}, requesterId: {})", gymId, branchId, requesterId);
         }
         return matches;
-    }
-
-    public List<MatchLookup> deriveMatches(int requesterId) {
-        return deriveMatches(requesterId, MatcherConst.UNMATCHED);
-    }
-
-    public List<MatchLookup> deriveMatches(int requesterId, MatcherConst matcherConst) {
-        List<MatchLookup> derivedMatches = new ArrayList<>();
-        List<MatchLookup> matchLookupsForRequester = matchLookupDao.getAllByRequesterId(requesterId);
-        if(matchLookupsForRequester==null || matchLookupsForRequester.isEmpty()) {
-            LOG.info("there is no match_lookup entries for requester id :{}", requesterId);
-            return null;
-        }
-        matchLookupsForRequester.forEach(matchLookup -> {
-            List<MatchLookup> matches = matchLookupDao.possibleMatches(matchLookup.getGymId(), matchLookup.getBranchId(), requesterId, matcherConst.getName());
-            if(matches!=null && !matches.isEmpty())
-                derivedMatches.addAll(matches);
-        });
-        LOG.info("derived {} matches", derivedMatches.size());
-        return derivedMatches;
     }
 }
