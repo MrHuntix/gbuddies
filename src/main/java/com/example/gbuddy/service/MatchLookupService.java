@@ -44,12 +44,13 @@ public class MatchLookupService {
 
     public boolean like(int matchLookupId, int userId) {
         MatchLookup lookup = matchLookupDao.getById(matchLookupId);
-        if (lookup.getRequesterId() == userId) {
-            LOG.info("user id({}) and requester id({}) is same", userId, lookup.getRequesterId());
+        MatchLookup requesterLookup = matchLookupDao.getRequestMatch(lookup.getGymId(), lookup.getBranchId(), userId);
+        if (Objects.isNull(lookup) || Objects.isNull(requesterLookup)) {
+            LOG.info("no record in MATCH_LOOKUP for matchLookUpId {} and userId {}", matchLookupId, userId);
             return false;
         }
-        if (Objects.isNull(lookup)) {
-            LOG.info("no record in MATCH_LOOKUP for id {}", matchLookupId);
+        if (lookup.getRequesterId() == userId) {
+            LOG.info("user id({}) and requester id({}) is same", userId, lookup.getRequesterId());
             return false;
         }
         if (MatcherConst.MATCHED.getName().equals(lookup.getStatus())) {
@@ -58,17 +59,17 @@ public class MatchLookupService {
         }
         LOG.info("record found in MATCH_LOOKUP for id {}, with status {}. CREATING MATCH", matchLookupId, lookup.getStatus());
         lookup.setStatus(MatcherConst.MATCHED.getName());
+        requesterLookup.setStatus(MatcherConst.MATCHED.getName());
         matchLookupDao.save(lookup);
+        matchLookupDao.save(requesterLookup);
         Match match = new Match();
-        match.setRequester(lookup.getRequesterId());
+        match.setRequester(userId);
         match.setLookupId(lookup.getId());
         match.setGymId(lookup.getGymId());
         match.setBranchId(lookup.getBranchId());
-        match.setRequestee(userId);
+        match.setRequestee(lookup.getRequesterId());
         matchDao.save(match);
-        lookup = matchLookupDao.getRequestMatch(lookup.getGymId(), lookup.getBranchId(), userId);
-        lookup.setStatus(MatcherConst.MATCHED.getName());
-        matchLookupDao.save(lookup);
+
         return true;
     }
 
@@ -110,9 +111,14 @@ public class MatchLookupService {
             return false;
         }
         MatchLookup requester = matchLookupDao.getRequestMatch(match.getGymId(), match.getBranchId(), match.getRequester());
+        if(!Objects.isNull(requester) && !MatcherConst.MATCHED.getName().equalsIgnoreCase(requester.getStatus())) {
+            LOG.info("Got requester. Status {}", requester.getStatus());
+            return false;
+        }
+
         MatchLookup requestee = matchLookupDao.getRequestMatch(match.getGymId(), match.getBranchId(), match.getRequestee());
-        if (Objects.isNull(requester) || Objects.isNull(requestee)) {
-            LOG.info("no record in MATCH_LOOKUP for (gymId: {}, branchId: {}, requesterId: {})", match.getGymId(), match.getBranchId(), match.getRequester());
+        if(!Objects.isNull(requestee) && !MatcherConst.MATCHED.getName().equalsIgnoreCase(requestee.getStatus())) {
+            LOG.info("Got requestee. Status {}", requester.getStatus());
             return false;
         }
 
