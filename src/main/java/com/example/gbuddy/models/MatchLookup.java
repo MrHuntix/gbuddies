@@ -14,12 +14,15 @@ import javax.persistence.*;
 @NamedQueries({
         @NamedQuery(name = "MatchLookup.getRequestMatch", query = MatchLookup.getRequestMatch),
         @NamedQuery(name = "MatchLookup.possibleMatches", query = MatchLookup.possibleMatches),
-        @NamedQuery(name = "MatchLookup.deriveMatches", query = MatchLookup.deriveMatches)
+        @NamedQuery(name = "MatchLookup.deriveMatches", query = MatchLookup.deriveMatches),
+        @NamedQuery(name = "MatchLookup.getMatchesByRequestIdAndStatus", query = MatchLookup.getMatchesByRequestIdAndStatus)
 })
 public class MatchLookup {
-    static final String getRequestMatch = "FROM MatchLookup m where m.gymId = :gymId AND m.branchId = :branchId AND m.requesterId = :requesterId";
-    static final String possibleMatches = "FROM MatchLookup m where m.gymId = :gymId AND m.branchId = :branchId AND m.requesterId != :requesterId AND m.status = :status";
-    static final String deriveMatches = "FROM MatchLookup m WHERE m.gymId = :gymId AND m.branchId = :branchId AND m.status = :status";
+    public static final String getRequestMatch = "FROM MatchLookup m where m.gymId = :gymId AND m.branchId = :branchId AND m.requesterId = :requesterId";
+    public static final String possibleMatches = "FROM MatchLookup m where m.gymId = :gymId AND m.branchId = :branchId AND m.requesterId != :requesterId AND m.status = :status";
+    public static final String deriveMatches = "FROM MatchLookup m WHERE m.gymId = :gymId AND m.branchId = :branchId AND m.status = :status";
+    public static final String getMatchesByRequestIdAndStatus = "FROM MatchLookup m WHERE  m.requesterId = :requesterId AND m.status = :status";
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;

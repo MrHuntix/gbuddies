@@ -15,6 +15,7 @@ public interface MatchLookupDao extends JpaRepository<MatchLookup, Integer> {
     List<MatchLookup> getAllByRequesterId(int requesterId);
     List<MatchLookup> possibleMatches(@Param("gymId") int gymId, @Param("branchId") int branchId, @Param("requesterId") int requesterId, @Param("status") String status);
     List<MatchLookup> deriveMatches(@Param("gymId") int gymId, @Param("branchId") int branchId, @Param("status") String status);
+    List<MatchLookup> getMatchesByRequestIdAndStatus(@Param("requesterId") int requesterId, @Param("status") String status);
     MatchLookup getById(int id);
     MatchLookup getRequestMatch(@Param("gymId") int gymId, @Param("branchId") int branchId, @Param("requesterId") int requesterId);
 }

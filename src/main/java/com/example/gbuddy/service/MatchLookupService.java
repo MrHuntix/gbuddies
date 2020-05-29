@@ -120,7 +120,7 @@ public class MatchLookupService {
 
     public List<MatchLookup> deriveMatches(int requesterId, MatcherConst matcherConst) {
         List<MatchLookup> derivedMatches = new ArrayList<>();
-        List<MatchLookup> matchLookupsForRequester = matchLookupDao.getAllByRequesterId(requesterId);
+        List<MatchLookup> matchLookupsForRequester = matchLookupDao.getMatchesByRequestIdAndStatus(requesterId, matcherConst.getName());
         if(matchLookupsForRequester==null || matchLookupsForRequester.isEmpty()) {
             LOG.info("there is no match_lookup entries for requester id :{}", requesterId);
             return null;
