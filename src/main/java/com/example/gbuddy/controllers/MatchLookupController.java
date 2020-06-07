@@ -1,5 +1,6 @@
 package com.example.gbuddy.controllers;
 
+import com.example.gbuddy.models.Match;
 import com.example.gbuddy.models.MatchLookup;
 import com.example.gbuddy.models.MatchResponse;
 import com.example.gbuddy.service.MatchLookupService;
@@ -127,5 +128,11 @@ public class MatchLookupController {
         logger.info("derived {} matches", matches.size());
         return !matches.isEmpty()? ResponseEntity.ok(matches)
                 : ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+    }
+
+    @GetMapping(value = "/matched/{requesterId}")
+    public ResponseEntity<List<Match>> getMatched(@PathVariable("requesterId") int requesterId) {
+        logger.info("start of matched fetch process for requester {}", requesterId);
+        return ResponseEntity.ok(matchLookupService.matched(requesterId));
     }
 }

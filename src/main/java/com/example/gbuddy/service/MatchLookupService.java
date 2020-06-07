@@ -133,4 +133,15 @@ public class MatchLookupService {
         LOG.info("derived {} matches", derivedMatches.size());
         return derivedMatches;
     }
+
+    public List<Match> matched(int requesterId) {
+        List<Match> matches = matchDao.getMatched(requesterId);
+        if(matches!=null && !matches.isEmpty()) {
+            LOG.info("found {} records that have been liked for user {}", matches.size(), requesterId);
+            return matches;
+        } else {
+            LOG.info("no matches present for requester {}", requesterId);
+            return new ArrayList<>();
+        }
+    }
 }

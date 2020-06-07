@@ -6,11 +6,17 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 
-@Entity(name = "MATCHES")
+@Entity
+@Table(name = "MATCHES")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@NamedQueries({
+        @NamedQuery(name = "Match.getMatched", query = Match.getMatched)
+})
 public class Match {
+    public static final String getMatched = "FROM Match m WHERE m.requester = :id OR m.requestee = :id";
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
