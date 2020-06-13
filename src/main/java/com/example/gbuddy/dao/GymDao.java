@@ -6,5 +6,5 @@ import org.springframework.stereotype.Component;
 
 @Component
 //@RibbonClient("gym-operation-service")
-public interface GymDao extends JpaRepository<Gym, Long> {
+public interface GymDao extends JpaRepository<Gym, Integer> {
 }

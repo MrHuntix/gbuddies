@@ -1,9 +1,7 @@
 package com.example.gbuddy.service;
 
-import com.example.gbuddy.dao.MatchDao;
-import com.example.gbuddy.dao.MatchLookupDao;
-import com.example.gbuddy.models.Match;
-import com.example.gbuddy.models.MatchLookup;
+import com.example.gbuddy.dao.*;
+import com.example.gbuddy.models.*;
 import com.example.gbuddy.util.MatcherConst;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,6 +12,7 @@ import org.springframework.util.CollectionUtils;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 @Component
 public class MatchLookupService {
@@ -23,6 +22,15 @@ public class MatchLookupService {
 
     @Autowired
     private MatchDao matchDao;
+
+    @Autowired
+    private GymDao gymDao;
+
+    @Autowired
+    private BranchDao branchDao;
+
+    @Autowired
+    private UserDao userDao;
 
     public boolean addForLookup(int requesterId, int gymId, int branchId) {
         MatchLookup lookup = matchLookupDao.getRequestMatch(gymId, branchId, requesterId);
@@ -134,14 +142,46 @@ public class MatchLookupService {
         return derivedMatches;
     }
 
-    public List<Match> matched(int requesterId) {
+    public List<ChatResponse> matched(int requesterId) {
         List<Match> matches = matchDao.getMatched(requesterId);
-        if(matches!=null && !matches.isEmpty()) {
-            LOG.info("found {} records that have been liked for user {}", matches.size(), requesterId);
-            return matches;
-        } else {
-            LOG.info("no matches present for requester {}", requesterId);
-            return new ArrayList<>();
+        List<ChatResponse> chatResponses = new ArrayList<>();
+        for (Match match: matches) {
+            LOG.info("deriving chatresponse for {}", match);
+            ChatResponse chatResponse = new ChatResponse();
+            chatResponse.setMatch_id(match.getId());
+            chatResponse.setLookup_id(match.getLookupId());
+            Gym gym = gymDao.findById(match.getGymId()).orElse(null);
+
+            if(gym == null) {
+                LOG.info("for match {}, no gym exists with id {}", match.getId(), match.getGymId());
+                continue;
+            }
+            Branch branch = branchDao.findById(match.getBranchId()).orElse(null);
+            if(branch == null) {
+                LOG.info("for match {}, no branch exists with id {}", match.getId(), match.getGymId());
+                continue;
+            }
+            int userId = 0;
+            if(match.getRequester() == requesterId) {
+                LOG.info("using requestee id");
+                userId = match.getRequestee();
+            }
+            if(match.getRequestee() == requesterId) {
+                LOG.info("using requester id");
+                userId = match.getRequester();
+            }
+            User user = userDao.
+                    getByUserId(userId).orElse(null);
+            if(user == null) {
+                LOG.info("for match {}, no user exists with id {}", match.getId(), match.getGymId());
+                continue;
+            }
+            chatResponse.setGymName(gym.getName());
+            chatResponse.setWebsite(gym.getWebsite());
+            chatResponse.setBranch(branch);
+            chatResponse.setUser(user);
+            chatResponses.add(chatResponse);
         }
+        return chatResponses;
     }
 }
