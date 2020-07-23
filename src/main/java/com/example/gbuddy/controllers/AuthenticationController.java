@@ -11,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -30,7 +31,7 @@ public class AuthenticationController {
 
     @CrossOrigin
     @PostMapping("/signup")
-    public ResponseEntity<UserSignupResponse> signup(@Valid @RequestBody UserSignupRequest userSignupRequest) {
+    public ResponseEntity<UserSignupResponse> signup(@Valid @ModelAttribute UserSignupRequest userSignupRequest) {
         logger.info("starting signup process");
         UserSignupResponse response;
         if (userDao.getByUserName(userSignupRequest.getUserName()).isPresent()) {
@@ -38,11 +39,16 @@ public class AuthenticationController {
             return new ResponseEntity<>(getUserResponse(userSignupRequest.getUserName() + " already taken",
                     HttpStatus.OK.getReasonPhrase(), HttpStatus.OK.value()), HttpStatus.OK);
         }
-        User user = mapperUtil.getUserFromUserSignupRequest(userSignupRequest);
-        user.setPassword(user.getPassword());
-        user.setRoles("ROLE_ADMIN,ROLE_CLIENT");
-        logger.info("creating new user, {}", user);
-        user = userDao.save(user);
+        User user = null;
+        try {
+            user = mapperUtil.getUserFromUserSignupRequest(userSignupRequest);
+            logger.info("creating new user, {}", user);
+            user = userDao.save(user);
+        } catch (Exception e) {
+            logger.info("failed to create user object");
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+
         response = getUserResponse(user.getUserName() + " created successfully",
                 HttpStatus.OK.getReasonPhrase(), HttpStatus.OK.value());
         logger.info("completed signup process");

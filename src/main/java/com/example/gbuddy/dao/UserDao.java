@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Component
-public interface UserDao extends JpaRepository<User, Long> {
+public interface UserDao extends JpaRepository<User, Integer> {
     Optional<User> getByUserNameAndPassword(String userName, String password);
     Optional<User> getByUserName(String userName);
     Optional<User> getByUserId(int id);
