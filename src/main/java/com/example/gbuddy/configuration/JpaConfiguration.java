@@ -1,7 +1,6 @@
 package com.example.gbuddy.configuration;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.dao.annotation.PersistenceExceptionTranslationPostProcessor;
@@ -15,22 +14,37 @@ import org.springframework.transaction.PlatformTransactionManager;
 import javax.persistence.EntityManagerFactory;
 import javax.sql.DataSource;
 import javax.transaction.Transactional;
-import java.util.Properties;
 
 @Configuration
 @Transactional
 public class JpaConfiguration {
+
+    @Value("${gbuddies.db.packages.to.scan}")
+    String packagesToScan;
+
+    @Value("${gbuddies.db.driver.class.name}")
+    String driverClassName;
+
+    @Value("${gbuddies.db.url}")
+    String url;
+
+    @Value("${gbuddies.db.username}")
+    String username;
+
+    @Value("${gbuddies.db.password}")
+    String password;
+
 
     @Bean
     public LocalContainerEntityManagerFactoryBean entityManagerFactory() {
         LocalContainerEntityManagerFactoryBean em
                 = new LocalContainerEntityManagerFactoryBean();
         em.setDataSource(dataSource());
-        em.setPackagesToScan("com.example.gbuddy.models");
+        em.setPackagesToScan(packagesToScan);
 
         JpaVendorAdapter vendorAdapter = new HibernateJpaVendorAdapter();
         em.setJpaVendorAdapter(vendorAdapter);
-        em.setJpaProperties(additionalProperties());
+        //em.setJpaProperties(additionalProperties());
 
         return em;
     }
@@ -38,10 +52,10 @@ public class JpaConfiguration {
     @Bean
     public DataSource dataSource(){
         DriverManagerDataSource dataSource = new DriverManagerDataSource();
-        dataSource.setDriverClassName("com.mysql.jdbc.Driver");
-        dataSource.setUrl("jdbc:mysql://db4free.net:3306/gymbuddies");
-        dataSource.setUsername("neganlucile");
-        dataSource.setPassword("qwertyuiop123!");
+        dataSource.setDriverClassName(driverClassName);
+        dataSource.setUrl(url);
+        dataSource.setUsername(username);
+        dataSource.setPassword(password);
         return dataSource;
     }
 
@@ -58,12 +72,12 @@ public class JpaConfiguration {
         return new PersistenceExceptionTranslationPostProcessor();
     }
 
-    Properties additionalProperties() {
-        Properties properties = new Properties();
-        properties.setProperty("hibernate.hbm2ddl.auto", "validate");
-        properties.setProperty("hibernate.dialect", "org.hibernate.dialect.MySQL5Dialect");
-        properties.setProperty("spring.jpa.show-sql", "true");
-        return properties;
-    }
+//    Properties additionalProperties() {
+//        Properties properties = new Properties();
+//        properties.setProperty("hibernate.hbm2ddl.auto", "validate");
+//        properties.setProperty("hibernate.dialect", "org.hibernate.dialect.MySQL5Dialect");
+//        properties.setProperty("spring.jpa.show-sql", "true");
+//        return properties;
+//    }
 }
 
