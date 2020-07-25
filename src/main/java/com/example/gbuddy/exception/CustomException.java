@@ -5,21 +5,13 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.http.HttpStatus;
 
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
-public class CustomException extends RuntimeException {
+public class CustomException extends Exception {
     private static final long serialVersionUID = 1L;
-
-    private String message;
-    private HttpStatus httpStatus;
-
-    @Override
-    public String getMessage() {
-        return message;
+    public CustomException(String message) {
+        super(message);
     }
 
-    public HttpStatus getHttpStatus() {
-        return httpStatus;
+    public CustomException(String message, Throwable cause) {
+        super(message, cause);
     }
 }
