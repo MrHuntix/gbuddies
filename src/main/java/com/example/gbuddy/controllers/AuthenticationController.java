@@ -61,7 +61,7 @@ public class AuthenticationController {
             logger.info("validation completed in {} sec");
             user = mapperUtil.getUserFromUserSignupRequest(userSignupRequest);
             logger.info("creating new user, {}", user);
-            user = userDao.save(user);
+            //user = userDao.save(user);
             Blob image = user.getProfilePic().getUserImage();
             responseBuilder.setUserImage(ByteString.copyFrom(image.getBytes(1, (int)image.length())));
             responseBuilder.setResponseMessage("successfully created user");
