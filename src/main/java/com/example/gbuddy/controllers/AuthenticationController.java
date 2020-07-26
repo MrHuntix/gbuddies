@@ -71,7 +71,9 @@ public class AuthenticationController {
             e.printStackTrace();
         } finally {
             response = mapperUtil.buildSignUpResponse(responseBuilder, user);
+            logger.info("user persisted in db and response built");
         }
+        logger.info("sending response");
         return response;
     }
 

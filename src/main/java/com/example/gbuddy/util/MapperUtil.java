@@ -62,7 +62,6 @@ public class MapperUtil {
     }
 
     public LoginSignupProto.SignupResponse buildSignUpResponse(LoginSignupProto.LoginResponse.Builder responseBuilder, User user) {
-        Blob image = user.getProfilePic().getUserImage();
         responseBuilder
             .setUserName(user.getUserName())
             .setEmailId(user.getEmailId())
@@ -70,9 +69,8 @@ public class MapperUtil {
             .setPicId(user.getProfilePic().getPicId())
             .setUserId(user.getUserId())
             .setAbout(user.getAbout())
-            .setResponseCode(HttpStatus.OK.value())
             .build();
-
+        logger.info("built signup response with message: {} and code: {}", responseBuilder.getResponseMessage(), responseBuilder.getResponseCode());
         return LoginSignupProto.SignupResponse.newBuilder().setResponse(responseBuilder.build()).build();
     }
 
