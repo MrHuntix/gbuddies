@@ -6,13 +6,19 @@ package com.example.gbuddy.protos;
 public final class LoginSignupProto {
   private LoginSignupProto() {}
   public static void registerAllExtensions(
-      com.google.protobuf.ExtensionRegistryLite registry) {
+          com.google.protobuf.ExtensionRegistryLite registry) {
+  }
+
+  public static void registerAllExtensions(
+          com.google.protobuf.ExtensionRegistry registry) {
+    registerAllExtensions(
+            (com.google.protobuf.ExtensionRegistryLite) registry);
   }
   /**
    * Protobuf enum {@code gbuddy.RoleType}
    */
   public enum RoleType
-      implements com.google.protobuf.Internal.EnumLite {
+          implements com.google.protobuf.ProtocolMessageEnum {
     /**
      * <code>APP_USER = 0;</code>
      */
@@ -42,18 +48,17 @@ public final class LoginSignupProto {
     public static final int APP_ADMIN_VALUE = 2;
 
 
-    @Override
     public final int getNumber() {
       if (this == UNRECOGNIZED) {
         throw new IllegalArgumentException(
-            "Can't get the number of an unknown enum value.");
+                "Can't get the number of an unknown enum value.");
       }
       return value;
     }
 
     /**
-     * @param value The number of the enum to look for.
-     * @return The enum associated with the given number.
+     * @param value The numeric wire value of the corresponding enum entry.
+     * @return The enum associated with the given numeric wire value.
      * @deprecated Use {@link #forNumber(int)} instead.
      */
     @Deprecated
@@ -61,6 +66,10 @@ public final class LoginSignupProto {
       return forNumber(value);
     }
 
+    /**
+     * @param value The numeric wire value of the corresponding enum entry.
+     * @return The enum associated with the given numeric wire value.
+     */
     public static RoleType forNumber(int value) {
       switch (value) {
         case 0: return APP_USER;
@@ -71,31 +80,47 @@ public final class LoginSignupProto {
     }
 
     public static com.google.protobuf.Internal.EnumLiteMap<RoleType>
-        internalGetValueMap() {
+    internalGetValueMap() {
       return internalValueMap;
     }
     private static final com.google.protobuf.Internal.EnumLiteMap<
-        RoleType> internalValueMap =
-          new com.google.protobuf.Internal.EnumLiteMap<RoleType>() {
-            @Override
-            public RoleType findValueByNumber(int number) {
-              return RoleType.forNumber(number);
-            }
-          };
+            RoleType> internalValueMap =
+            new com.google.protobuf.Internal.EnumLiteMap<RoleType>() {
+              public RoleType findValueByNumber(int number) {
+                return RoleType.forNumber(number);
+              }
+            };
 
-    public static com.google.protobuf.Internal.EnumVerifier
-        internalGetVerifier() {
-      return RoleTypeVerifier.INSTANCE;
+    public final com.google.protobuf.Descriptors.EnumValueDescriptor
+    getValueDescriptor() {
+      if (this == UNRECOGNIZED) {
+        throw new IllegalStateException(
+                "Can't get the descriptor of an unrecognized enum value.");
+      }
+      return getDescriptor().getValues().get(ordinal());
+    }
+    public final com.google.protobuf.Descriptors.EnumDescriptor
+    getDescriptorForType() {
+      return getDescriptor();
+    }
+    public static final com.google.protobuf.Descriptors.EnumDescriptor
+    getDescriptor() {
+      return LoginSignupProto.getDescriptor().getEnumTypes().get(0);
     }
 
-    private static final class RoleTypeVerifier implements 
-         com.google.protobuf.Internal.EnumVerifier { 
-            static final com.google.protobuf.Internal.EnumVerifier           INSTANCE = new RoleTypeVerifier();
-            @Override
-            public boolean isInRange(int number) {
-              return RoleType.forNumber(number) != null;
-            }
-          };
+    private static final RoleType[] VALUES = values();
+
+    public static RoleType valueOf(
+            com.google.protobuf.Descriptors.EnumValueDescriptor desc) {
+      if (desc.getType() != getDescriptor()) {
+        throw new IllegalArgumentException(
+                "EnumValueDescriptor is not for this type.");
+      }
+      if (desc.getIndex() == -1) {
+        return UNRECOGNIZED;
+      }
+      return VALUES[desc.getIndex()];
+    }
 
     private final int value;
 
@@ -107,8 +132,8 @@ public final class LoginSignupProto {
   }
 
   public interface LoginRequestOrBuilder extends
-      // @@protoc_insertion_point(interface_extends:gbuddy.LoginRequest)
-      com.google.protobuf.MessageLiteOrBuilder {
+          // @@protoc_insertion_point(interface_extends:gbuddy.LoginRequest)
+          com.google.protobuf.MessageOrBuilder {
 
     /**
      * <code>string username = 1;</code>
@@ -120,7 +145,7 @@ public final class LoginSignupProto {
      * @return The bytes for username.
      */
     com.google.protobuf.ByteString
-        getUsernameBytes();
+    getUsernameBytes();
 
     /**
      * <code>string password = 2;</code>
@@ -132,29 +157,117 @@ public final class LoginSignupProto {
      * @return The bytes for password.
      */
     com.google.protobuf.ByteString
-        getPasswordBytes();
+    getPasswordBytes();
   }
   /**
    * Protobuf type {@code gbuddy.LoginRequest}
    */
-  public  static final class LoginRequest extends
-      com.google.protobuf.GeneratedMessageLite<
-          LoginRequest, LoginRequest.Builder> implements
-      // @@protoc_insertion_point(message_implements:gbuddy.LoginRequest)
-      LoginRequestOrBuilder {
+  public static final class LoginRequest extends
+          com.google.protobuf.GeneratedMessageV3 implements
+          // @@protoc_insertion_point(message_implements:gbuddy.LoginRequest)
+          LoginRequestOrBuilder {
+    private static final long serialVersionUID = 0L;
+    // Use LoginRequest.newBuilder() to construct.
+    private LoginRequest(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
+      super(builder);
+    }
     private LoginRequest() {
       username_ = "";
       password_ = "";
     }
+
+    @Override
+    @SuppressWarnings({"unused"})
+    protected Object newInstance(
+            UnusedPrivateParameter unused) {
+      return new LoginRequest();
+    }
+
+    @Override
+    public final com.google.protobuf.UnknownFieldSet
+    getUnknownFields() {
+      return this.unknownFields;
+    }
+    private LoginRequest(
+            com.google.protobuf.CodedInputStream input,
+            com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+            throws com.google.protobuf.InvalidProtocolBufferException {
+      this();
+      if (extensionRegistry == null) {
+        throw new NullPointerException();
+      }
+      com.google.protobuf.UnknownFieldSet.Builder unknownFields =
+              com.google.protobuf.UnknownFieldSet.newBuilder();
+      try {
+        boolean done = false;
+        while (!done) {
+          int tag = input.readTag();
+          switch (tag) {
+            case 0:
+              done = true;
+              break;
+            case 10: {
+              String s = input.readStringRequireUtf8();
+
+              username_ = s;
+              break;
+            }
+            case 18: {
+              String s = input.readStringRequireUtf8();
+
+              password_ = s;
+              break;
+            }
+            default: {
+              if (!parseUnknownField(
+                      input, unknownFields, extensionRegistry, tag)) {
+                done = true;
+              }
+              break;
+            }
+          }
+        }
+      } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+        throw e.setUnfinishedMessage(this);
+      } catch (java.io.IOException e) {
+        throw new com.google.protobuf.InvalidProtocolBufferException(
+                e).setUnfinishedMessage(this);
+      } finally {
+        this.unknownFields = unknownFields.build();
+        makeExtensionsImmutable();
+      }
+    }
+    public static final com.google.protobuf.Descriptors.Descriptor
+    getDescriptor() {
+      return LoginSignupProto.internal_static_gbuddy_LoginRequest_descriptor;
+    }
+
+    @Override
+    protected FieldAccessorTable
+    internalGetFieldAccessorTable() {
+      return LoginSignupProto.internal_static_gbuddy_LoginRequest_fieldAccessorTable
+              .ensureFieldAccessorsInitialized(
+                      LoginRequest.class, Builder.class);
+    }
+
     public static final int USERNAME_FIELD_NUMBER = 1;
-    private String username_;
+    private volatile Object username_;
     /**
      * <code>string username = 1;</code>
      * @return The username.
      */
     @Override
     public String getUsername() {
-      return username_;
+      Object ref = username_;
+      if (ref instanceof String) {
+        return (String) ref;
+      } else {
+        com.google.protobuf.ByteString bs =
+                (com.google.protobuf.ByteString) ref;
+        String s = bs.toStringUtf8();
+        username_ = s;
+        return s;
+      }
     }
     /**
      * <code>string username = 1;</code>
@@ -162,46 +275,37 @@ public final class LoginSignupProto {
      */
     @Override
     public com.google.protobuf.ByteString
-        getUsernameBytes() {
-      return com.google.protobuf.ByteString.copyFromUtf8(username_);
-    }
-    /**
-     * <code>string username = 1;</code>
-     * @param value The username to set.
-     */
-    private void setUsername(
-        String value) {
-      value.getClass();
-  
-      username_ = value;
-    }
-    /**
-     * <code>string username = 1;</code>
-     */
-    private void clearUsername() {
-      
-      username_ = getDefaultInstance().getUsername();
-    }
-    /**
-     * <code>string username = 1;</code>
-     * @param value The bytes for username to set.
-     */
-    private void setUsernameBytes(
-        com.google.protobuf.ByteString value) {
-      checkByteStringIsUtf8(value);
-      username_ = value.toStringUtf8();
-      
+    getUsernameBytes() {
+      Object ref = username_;
+      if (ref instanceof String) {
+        com.google.protobuf.ByteString b =
+                com.google.protobuf.ByteString.copyFromUtf8(
+                        (String) ref);
+        username_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
     }
 
     public static final int PASSWORD_FIELD_NUMBER = 2;
-    private String password_;
+    private volatile Object password_;
     /**
      * <code>string password = 2;</code>
      * @return The password.
      */
     @Override
     public String getPassword() {
-      return password_;
+      Object ref = password_;
+      if (ref instanceof String) {
+        return (String) ref;
+      } else {
+        com.google.protobuf.ByteString bs =
+                (com.google.protobuf.ByteString) ref;
+        String s = bs.toStringUtf8();
+        password_ = s;
+        return s;
+      }
     }
     /**
      * <code>string password = 2;</code>
@@ -209,148 +313,371 @@ public final class LoginSignupProto {
      */
     @Override
     public com.google.protobuf.ByteString
-        getPasswordBytes() {
-      return com.google.protobuf.ByteString.copyFromUtf8(password_);
+    getPasswordBytes() {
+      Object ref = password_;
+      if (ref instanceof String) {
+        com.google.protobuf.ByteString b =
+                com.google.protobuf.ByteString.copyFromUtf8(
+                        (String) ref);
+        password_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
     }
-    /**
-     * <code>string password = 2;</code>
-     * @param value The password to set.
-     */
-    private void setPassword(
-        String value) {
-      value.getClass();
-  
-      password_ = value;
+
+    private byte memoizedIsInitialized = -1;
+    @Override
+    public final boolean isInitialized() {
+      byte isInitialized = memoizedIsInitialized;
+      if (isInitialized == 1) return true;
+      if (isInitialized == 0) return false;
+
+      memoizedIsInitialized = 1;
+      return true;
     }
-    /**
-     * <code>string password = 2;</code>
-     */
-    private void clearPassword() {
-      
-      password_ = getDefaultInstance().getPassword();
+
+    @Override
+    public void writeTo(com.google.protobuf.CodedOutputStream output)
+            throws java.io.IOException {
+      if (!getUsernameBytes().isEmpty()) {
+        com.google.protobuf.GeneratedMessageV3.writeString(output, 1, username_);
+      }
+      if (!getPasswordBytes().isEmpty()) {
+        com.google.protobuf.GeneratedMessageV3.writeString(output, 2, password_);
+      }
+      unknownFields.writeTo(output);
     }
-    /**
-     * <code>string password = 2;</code>
-     * @param value The bytes for password to set.
-     */
-    private void setPasswordBytes(
-        com.google.protobuf.ByteString value) {
-      checkByteStringIsUtf8(value);
-      password_ = value.toStringUtf8();
-      
+
+    @Override
+    public int getSerializedSize() {
+      int size = memoizedSize;
+      if (size != -1) return size;
+
+      size = 0;
+      if (!getUsernameBytes().isEmpty()) {
+        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(1, username_);
+      }
+      if (!getPasswordBytes().isEmpty()) {
+        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(2, password_);
+      }
+      size += unknownFields.getSerializedSize();
+      memoizedSize = size;
+      return size;
+    }
+
+    @Override
+    public boolean equals(final Object obj) {
+      if (obj == this) {
+        return true;
+      }
+      if (!(obj instanceof LoginRequest)) {
+        return super.equals(obj);
+      }
+      LoginRequest other = (LoginRequest) obj;
+
+      if (!getUsername()
+              .equals(other.getUsername())) return false;
+      if (!getPassword()
+              .equals(other.getPassword())) return false;
+      if (!unknownFields.equals(other.unknownFields)) return false;
+      return true;
+    }
+
+    @Override
+    public int hashCode() {
+      if (memoizedHashCode != 0) {
+        return memoizedHashCode;
+      }
+      int hash = 41;
+      hash = (19 * hash) + getDescriptor().hashCode();
+      hash = (37 * hash) + USERNAME_FIELD_NUMBER;
+      hash = (53 * hash) + getUsername().hashCode();
+      hash = (37 * hash) + PASSWORD_FIELD_NUMBER;
+      hash = (53 * hash) + getPassword().hashCode();
+      hash = (29 * hash) + unknownFields.hashCode();
+      memoizedHashCode = hash;
+      return hash;
     }
 
     public static LoginRequest parseFrom(
-        java.nio.ByteBuffer data)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return com.google.protobuf.GeneratedMessageLite.parseFrom(
-          DEFAULT_INSTANCE, data);
+            java.nio.ByteBuffer data)
+            throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
     }
     public static LoginRequest parseFrom(
-        java.nio.ByteBuffer data,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return com.google.protobuf.GeneratedMessageLite.parseFrom(
-          DEFAULT_INSTANCE, data, extensionRegistry);
+            java.nio.ByteBuffer data,
+            com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+            throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
     }
     public static LoginRequest parseFrom(
-        com.google.protobuf.ByteString data)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return com.google.protobuf.GeneratedMessageLite.parseFrom(
-          DEFAULT_INSTANCE, data);
+            com.google.protobuf.ByteString data)
+            throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
     }
     public static LoginRequest parseFrom(
-        com.google.protobuf.ByteString data,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return com.google.protobuf.GeneratedMessageLite.parseFrom(
-          DEFAULT_INSTANCE, data, extensionRegistry);
+            com.google.protobuf.ByteString data,
+            com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+            throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
     }
     public static LoginRequest parseFrom(byte[] data)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return com.google.protobuf.GeneratedMessageLite.parseFrom(
-          DEFAULT_INSTANCE, data);
+            throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
     }
     public static LoginRequest parseFrom(
-        byte[] data,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return com.google.protobuf.GeneratedMessageLite.parseFrom(
-          DEFAULT_INSTANCE, data, extensionRegistry);
+            byte[] data,
+            com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+            throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
     }
     public static LoginRequest parseFrom(java.io.InputStream input)
-        throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageLite.parseFrom(
-          DEFAULT_INSTANCE, input);
+            throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+              .parseWithIOException(PARSER, input);
     }
     public static LoginRequest parseFrom(
-        java.io.InputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageLite.parseFrom(
-          DEFAULT_INSTANCE, input, extensionRegistry);
+            java.io.InputStream input,
+            com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+            throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+              .parseWithIOException(PARSER, input, extensionRegistry);
     }
     public static LoginRequest parseDelimitedFrom(java.io.InputStream input)
-        throws java.io.IOException {
-      return parseDelimitedFrom(DEFAULT_INSTANCE, input);
+            throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+              .parseDelimitedWithIOException(PARSER, input);
     }
     public static LoginRequest parseDelimitedFrom(
-        java.io.InputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws java.io.IOException {
-      return parseDelimitedFrom(DEFAULT_INSTANCE, input, extensionRegistry);
+            java.io.InputStream input,
+            com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+            throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+              .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
     }
     public static LoginRequest parseFrom(
-        com.google.protobuf.CodedInputStream input)
-        throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageLite.parseFrom(
-          DEFAULT_INSTANCE, input);
+            com.google.protobuf.CodedInputStream input)
+            throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+              .parseWithIOException(PARSER, input);
     }
     public static LoginRequest parseFrom(
-        com.google.protobuf.CodedInputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageLite.parseFrom(
-          DEFAULT_INSTANCE, input, extensionRegistry);
+            com.google.protobuf.CodedInputStream input,
+            com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+            throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+              .parseWithIOException(PARSER, input, extensionRegistry);
     }
 
+    @Override
+    public Builder newBuilderForType() { return newBuilder(); }
     public static Builder newBuilder() {
-      return (Builder) DEFAULT_INSTANCE.createBuilder();
+      return DEFAULT_INSTANCE.toBuilder();
     }
     public static Builder newBuilder(LoginRequest prototype) {
-      return (Builder) DEFAULT_INSTANCE.createBuilder(prototype);
+      return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
+    }
+    @Override
+    public Builder toBuilder() {
+      return this == DEFAULT_INSTANCE
+              ? new Builder() : new Builder().mergeFrom(this);
     }
 
+    @Override
+    protected Builder newBuilderForType(
+            BuilderParent parent) {
+      Builder builder = new Builder(parent);
+      return builder;
+    }
     /**
      * Protobuf type {@code gbuddy.LoginRequest}
      */
     public static final class Builder extends
-        com.google.protobuf.GeneratedMessageLite.Builder<
-          LoginRequest, Builder> implements
-        // @@protoc_insertion_point(builder_implements:gbuddy.LoginRequest)
-        LoginRequestOrBuilder {
-      // Construct using com.example.gym.buddies.data.protos.LoginSignupProto.LoginRequest.newBuilder()
-      private Builder() {
-        super(DEFAULT_INSTANCE);
+            com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
+            // @@protoc_insertion_point(builder_implements:gbuddy.LoginRequest)
+            LoginRequestOrBuilder {
+      public static final com.google.protobuf.Descriptors.Descriptor
+      getDescriptor() {
+        return LoginSignupProto.internal_static_gbuddy_LoginRequest_descriptor;
       }
 
+      @Override
+      protected FieldAccessorTable
+      internalGetFieldAccessorTable() {
+        return LoginSignupProto.internal_static_gbuddy_LoginRequest_fieldAccessorTable
+                .ensureFieldAccessorsInitialized(
+                        LoginRequest.class, Builder.class);
+      }
 
+      // Construct using com.example.gbuddy.protos.LoginSignupProto.LoginRequest.newBuilder()
+      private Builder() {
+        maybeForceBuilderInitialization();
+      }
+
+      private Builder(
+              BuilderParent parent) {
+        super(parent);
+        maybeForceBuilderInitialization();
+      }
+      private void maybeForceBuilderInitialization() {
+        if (com.google.protobuf.GeneratedMessageV3
+                .alwaysUseFieldBuilders) {
+        }
+      }
+      @Override
+      public Builder clear() {
+        super.clear();
+        username_ = "";
+
+        password_ = "";
+
+        return this;
+      }
+
+      @Override
+      public com.google.protobuf.Descriptors.Descriptor
+      getDescriptorForType() {
+        return LoginSignupProto.internal_static_gbuddy_LoginRequest_descriptor;
+      }
+
+      @Override
+      public LoginRequest getDefaultInstanceForType() {
+        return LoginRequest.getDefaultInstance();
+      }
+
+      @Override
+      public LoginRequest build() {
+        LoginRequest result = buildPartial();
+        if (!result.isInitialized()) {
+          throw newUninitializedMessageException(result);
+        }
+        return result;
+      }
+
+      @Override
+      public LoginRequest buildPartial() {
+        LoginRequest result = new LoginRequest(this);
+        result.username_ = username_;
+        result.password_ = password_;
+        onBuilt();
+        return result;
+      }
+
+      @Override
+      public Builder clone() {
+        return super.clone();
+      }
+      @Override
+      public Builder setField(
+              com.google.protobuf.Descriptors.FieldDescriptor field,
+              Object value) {
+        return super.setField(field, value);
+      }
+      @Override
+      public Builder clearField(
+              com.google.protobuf.Descriptors.FieldDescriptor field) {
+        return super.clearField(field);
+      }
+      @Override
+      public Builder clearOneof(
+              com.google.protobuf.Descriptors.OneofDescriptor oneof) {
+        return super.clearOneof(oneof);
+      }
+      @Override
+      public Builder setRepeatedField(
+              com.google.protobuf.Descriptors.FieldDescriptor field,
+              int index, Object value) {
+        return super.setRepeatedField(field, index, value);
+      }
+      @Override
+      public Builder addRepeatedField(
+              com.google.protobuf.Descriptors.FieldDescriptor field,
+              Object value) {
+        return super.addRepeatedField(field, value);
+      }
+      @Override
+      public Builder mergeFrom(com.google.protobuf.Message other) {
+        if (other instanceof LoginRequest) {
+          return mergeFrom((LoginRequest)other);
+        } else {
+          super.mergeFrom(other);
+          return this;
+        }
+      }
+
+      public Builder mergeFrom(LoginRequest other) {
+        if (other == LoginRequest.getDefaultInstance()) return this;
+        if (!other.getUsername().isEmpty()) {
+          username_ = other.username_;
+          onChanged();
+        }
+        if (!other.getPassword().isEmpty()) {
+          password_ = other.password_;
+          onChanged();
+        }
+        this.mergeUnknownFields(other.unknownFields);
+        onChanged();
+        return this;
+      }
+
+      @Override
+      public final boolean isInitialized() {
+        return true;
+      }
+
+      @Override
+      public Builder mergeFrom(
+              com.google.protobuf.CodedInputStream input,
+              com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+              throws java.io.IOException {
+        LoginRequest parsedMessage = null;
+        try {
+          parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
+        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+          parsedMessage = (LoginRequest) e.getUnfinishedMessage();
+          throw e.unwrapIOException();
+        } finally {
+          if (parsedMessage != null) {
+            mergeFrom(parsedMessage);
+          }
+        }
+        return this;
+      }
+
+      private Object username_ = "";
       /**
        * <code>string username = 1;</code>
        * @return The username.
        */
-      @Override
       public String getUsername() {
-        return instance.getUsername();
+        Object ref = username_;
+        if (!(ref instanceof String)) {
+          com.google.protobuf.ByteString bs =
+                  (com.google.protobuf.ByteString) ref;
+          String s = bs.toStringUtf8();
+          username_ = s;
+          return s;
+        } else {
+          return (String) ref;
+        }
       }
       /**
        * <code>string username = 1;</code>
        * @return The bytes for username.
        */
-      @Override
       public com.google.protobuf.ByteString
-          getUsernameBytes() {
-        return instance.getUsernameBytes();
+      getUsernameBytes() {
+        Object ref = username_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b =
+                  com.google.protobuf.ByteString.copyFromUtf8(
+                          (String) ref);
+          username_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
       }
       /**
        * <code>string username = 1;</code>
@@ -358,9 +685,13 @@ public final class LoginSignupProto {
        * @return This builder for chaining.
        */
       public Builder setUsername(
-          String value) {
-        copyOnWrite();
-        instance.setUsername(value);
+              String value) {
+        if (value == null) {
+          throw new NullPointerException();
+        }
+
+        username_ = value;
+        onChanged();
         return this;
       }
       /**
@@ -368,8 +699,9 @@ public final class LoginSignupProto {
        * @return This builder for chaining.
        */
       public Builder clearUsername() {
-        copyOnWrite();
-        instance.clearUsername();
+
+        username_ = getDefaultInstance().getUsername();
+        onChanged();
         return this;
       }
       /**
@@ -378,28 +710,50 @@ public final class LoginSignupProto {
        * @return This builder for chaining.
        */
       public Builder setUsernameBytes(
-          com.google.protobuf.ByteString value) {
-        copyOnWrite();
-        instance.setUsernameBytes(value);
+              com.google.protobuf.ByteString value) {
+        if (value == null) {
+          throw new NullPointerException();
+        }
+        checkByteStringIsUtf8(value);
+
+        username_ = value;
+        onChanged();
         return this;
       }
 
+      private Object password_ = "";
       /**
        * <code>string password = 2;</code>
        * @return The password.
        */
-      @Override
       public String getPassword() {
-        return instance.getPassword();
+        Object ref = password_;
+        if (!(ref instanceof String)) {
+          com.google.protobuf.ByteString bs =
+                  (com.google.protobuf.ByteString) ref;
+          String s = bs.toStringUtf8();
+          password_ = s;
+          return s;
+        } else {
+          return (String) ref;
+        }
       }
       /**
        * <code>string password = 2;</code>
        * @return The bytes for password.
        */
-      @Override
       public com.google.protobuf.ByteString
-          getPasswordBytes() {
-        return instance.getPasswordBytes();
+      getPasswordBytes() {
+        Object ref = password_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b =
+                  com.google.protobuf.ByteString.copyFromUtf8(
+                          (String) ref);
+          password_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
       }
       /**
        * <code>string password = 2;</code>
@@ -407,9 +761,13 @@ public final class LoginSignupProto {
        * @return This builder for chaining.
        */
       public Builder setPassword(
-          String value) {
-        copyOnWrite();
-        instance.setPassword(value);
+              String value) {
+        if (value == null) {
+          throw new NullPointerException();
+        }
+
+        password_ = value;
+        onChanged();
         return this;
       }
       /**
@@ -417,8 +775,9 @@ public final class LoginSignupProto {
        * @return This builder for chaining.
        */
       public Builder clearPassword() {
-        copyOnWrite();
-        instance.clearPassword();
+
+        password_ = getDefaultInstance().getPassword();
+        onChanged();
         return this;
       }
       /**
@@ -427,91 +786,72 @@ public final class LoginSignupProto {
        * @return This builder for chaining.
        */
       public Builder setPasswordBytes(
-          com.google.protobuf.ByteString value) {
-        copyOnWrite();
-        instance.setPasswordBytes(value);
+              com.google.protobuf.ByteString value) {
+        if (value == null) {
+          throw new NullPointerException();
+        }
+        checkByteStringIsUtf8(value);
+
+        password_ = value;
+        onChanged();
         return this;
       }
+      @Override
+      public final Builder setUnknownFields(
+              final com.google.protobuf.UnknownFieldSet unknownFields) {
+        return super.setUnknownFields(unknownFields);
+      }
+
+      @Override
+      public final Builder mergeUnknownFields(
+              final com.google.protobuf.UnknownFieldSet unknownFields) {
+        return super.mergeUnknownFields(unknownFields);
+      }
+
 
       // @@protoc_insertion_point(builder_scope:gbuddy.LoginRequest)
     }
-    @Override
-    @SuppressWarnings({"unchecked", "fallthrough"})
-    protected final Object dynamicMethod(
-        MethodToInvoke method,
-        Object arg0, Object arg1) {
-      switch (method) {
-        case NEW_MUTABLE_INSTANCE: {
-          return new LoginRequest();
-        }
-        case NEW_BUILDER: {
-          return new Builder();
-        }
-        case BUILD_MESSAGE_INFO: {
-            Object[] objects = new Object[] {
-              "username_",
-              "password_",
-            };
-            String info =
-                "\u0000\u0002\u0000\u0000\u0001\u0002\u0002\u0000\u0000\u0000\u0001\u0208\u0002\u0208" +
-                "";
-            return newMessageInfo(DEFAULT_INSTANCE, info, objects);
-        }
-        // fall through
-        case GET_DEFAULT_INSTANCE: {
-          return DEFAULT_INSTANCE;
-        }
-        case GET_PARSER: {
-          com.google.protobuf.Parser<LoginRequest> parser = PARSER;
-          if (parser == null) {
-            synchronized (LoginRequest.class) {
-              parser = PARSER;
-              if (parser == null) {
-                parser =
-                    new DefaultInstanceBasedParser<LoginRequest>(
-                        DEFAULT_INSTANCE);
-                PARSER = parser;
-              }
-            }
-          }
-          return parser;
-      }
-      case GET_MEMOIZED_IS_INITIALIZED: {
-        return (byte) 1;
-      }
-      case SET_MEMOIZED_IS_INITIALIZED: {
-        return null;
-      }
-      }
-      throw new UnsupportedOperationException();
-    }
-
 
     // @@protoc_insertion_point(class_scope:gbuddy.LoginRequest)
     private static final LoginRequest DEFAULT_INSTANCE;
     static {
-      LoginRequest defaultInstance = new LoginRequest();
-      // New instances are implicitly immutable so no need to make
-      // immutable.
-      DEFAULT_INSTANCE = defaultInstance;
-      com.google.protobuf.GeneratedMessageLite.registerDefaultInstance(
-        LoginRequest.class, defaultInstance);
+      DEFAULT_INSTANCE = new LoginRequest();
     }
 
     public static LoginRequest getDefaultInstance() {
       return DEFAULT_INSTANCE;
     }
 
-    private static volatile com.google.protobuf.Parser<LoginRequest> PARSER;
+    private static final com.google.protobuf.Parser<LoginRequest>
+            PARSER = new com.google.protobuf.AbstractParser<LoginRequest>() {
+      @Override
+      public LoginRequest parsePartialFrom(
+              com.google.protobuf.CodedInputStream input,
+              com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+              throws com.google.protobuf.InvalidProtocolBufferException {
+        return new LoginRequest(input, extensionRegistry);
+      }
+    };
 
     public static com.google.protobuf.Parser<LoginRequest> parser() {
-      return DEFAULT_INSTANCE.getParserForType();
+      return PARSER;
     }
+
+    @Override
+    public com.google.protobuf.Parser<LoginRequest> getParserForType() {
+      return PARSER;
+    }
+
+    @Override
+    public LoginRequest getDefaultInstanceForType() {
+      return DEFAULT_INSTANCE;
+    }
+
   }
 
   public interface LoginResponseOrBuilder extends
-      // @@protoc_insertion_point(interface_extends:gbuddy.LoginResponse)
-      com.google.protobuf.MessageLiteOrBuilder {
+          // @@protoc_insertion_point(interface_extends:gbuddy.LoginResponse)
+          com.google.protobuf.MessageOrBuilder {
 
     /**
      * <code>string userName = 1;</code>
@@ -523,7 +863,7 @@ public final class LoginSignupProto {
      * @return The bytes for userName.
      */
     com.google.protobuf.ByteString
-        getUserNameBytes();
+    getUserNameBytes();
 
     /**
      * <code>string emailId = 2;</code>
@@ -535,7 +875,7 @@ public final class LoginSignupProto {
      * @return The bytes for emailId.
      */
     com.google.protobuf.ByteString
-        getEmailIdBytes();
+    getEmailIdBytes();
 
     /**
      * <code>string mobileNo = 3;</code>
@@ -547,7 +887,7 @@ public final class LoginSignupProto {
      * @return The bytes for mobileNo.
      */
     com.google.protobuf.ByteString
-        getMobileNoBytes();
+    getMobileNoBytes();
 
     /**
      * <code>int32 picId = 4;</code>
@@ -577,7 +917,7 @@ public final class LoginSignupProto {
      * @return The bytes for about.
      */
     com.google.protobuf.ByteString
-        getAboutBytes();
+    getAboutBytes();
 
     /**
      * <code>int32 responseCode = 6;</code>
@@ -595,16 +935,20 @@ public final class LoginSignupProto {
      * @return The bytes for responseMessage.
      */
     com.google.protobuf.ByteString
-        getResponseMessageBytes();
+    getResponseMessageBytes();
   }
   /**
    * Protobuf type {@code gbuddy.LoginResponse}
    */
-  public  static final class LoginResponse extends
-      com.google.protobuf.GeneratedMessageLite<
-          LoginResponse, LoginResponse.Builder> implements
-      // @@protoc_insertion_point(message_implements:gbuddy.LoginResponse)
-      LoginResponseOrBuilder {
+  public static final class LoginResponse extends
+          com.google.protobuf.GeneratedMessageV3 implements
+          // @@protoc_insertion_point(message_implements:gbuddy.LoginResponse)
+          LoginResponseOrBuilder {
+    private static final long serialVersionUID = 0L;
+    // Use LoginResponse.newBuilder() to construct.
+    private LoginResponse(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
+      super(builder);
+    }
     private LoginResponse() {
       userName_ = "";
       emailId_ = "";
@@ -613,15 +957,137 @@ public final class LoginSignupProto {
       about_ = "";
       responseMessage_ = "";
     }
+
+    @Override
+    @SuppressWarnings({"unused"})
+    protected Object newInstance(
+            UnusedPrivateParameter unused) {
+      return new LoginResponse();
+    }
+
+    @Override
+    public final com.google.protobuf.UnknownFieldSet
+    getUnknownFields() {
+      return this.unknownFields;
+    }
+    private LoginResponse(
+            com.google.protobuf.CodedInputStream input,
+            com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+            throws com.google.protobuf.InvalidProtocolBufferException {
+      this();
+      if (extensionRegistry == null) {
+        throw new NullPointerException();
+      }
+      com.google.protobuf.UnknownFieldSet.Builder unknownFields =
+              com.google.protobuf.UnknownFieldSet.newBuilder();
+      try {
+        boolean done = false;
+        while (!done) {
+          int tag = input.readTag();
+          switch (tag) {
+            case 0:
+              done = true;
+              break;
+            case 10: {
+              String s = input.readStringRequireUtf8();
+
+              userName_ = s;
+              break;
+            }
+            case 18: {
+              String s = input.readStringRequireUtf8();
+
+              emailId_ = s;
+              break;
+            }
+            case 26: {
+              String s = input.readStringRequireUtf8();
+
+              mobileNo_ = s;
+              break;
+            }
+            case 32: {
+
+              picId_ = input.readInt32();
+              break;
+            }
+            case 40: {
+
+              userId_ = input.readInt32();
+              break;
+            }
+            case 48: {
+
+              responseCode_ = input.readInt32();
+              break;
+            }
+            case 162: {
+
+              userImage_ = input.readBytes();
+              break;
+            }
+            case 170: {
+              String s = input.readStringRequireUtf8();
+
+              about_ = s;
+              break;
+            }
+            case 178: {
+              String s = input.readStringRequireUtf8();
+
+              responseMessage_ = s;
+              break;
+            }
+            default: {
+              if (!parseUnknownField(
+                      input, unknownFields, extensionRegistry, tag)) {
+                done = true;
+              }
+              break;
+            }
+          }
+        }
+      } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+        throw e.setUnfinishedMessage(this);
+      } catch (java.io.IOException e) {
+        throw new com.google.protobuf.InvalidProtocolBufferException(
+                e).setUnfinishedMessage(this);
+      } finally {
+        this.unknownFields = unknownFields.build();
+        makeExtensionsImmutable();
+      }
+    }
+    public static final com.google.protobuf.Descriptors.Descriptor
+    getDescriptor() {
+      return LoginSignupProto.internal_static_gbuddy_LoginResponse_descriptor;
+    }
+
+    @Override
+    protected FieldAccessorTable
+    internalGetFieldAccessorTable() {
+      return LoginSignupProto.internal_static_gbuddy_LoginResponse_fieldAccessorTable
+              .ensureFieldAccessorsInitialized(
+                      LoginResponse.class, Builder.class);
+    }
+
     public static final int USERNAME_FIELD_NUMBER = 1;
-    private String userName_;
+    private volatile Object userName_;
     /**
      * <code>string userName = 1;</code>
      * @return The userName.
      */
     @Override
     public String getUserName() {
-      return userName_;
+      Object ref = userName_;
+      if (ref instanceof String) {
+        return (String) ref;
+      } else {
+        com.google.protobuf.ByteString bs =
+                (com.google.protobuf.ByteString) ref;
+        String s = bs.toStringUtf8();
+        userName_ = s;
+        return s;
+      }
     }
     /**
      * <code>string userName = 1;</code>
@@ -629,46 +1095,37 @@ public final class LoginSignupProto {
      */
     @Override
     public com.google.protobuf.ByteString
-        getUserNameBytes() {
-      return com.google.protobuf.ByteString.copyFromUtf8(userName_);
-    }
-    /**
-     * <code>string userName = 1;</code>
-     * @param value The userName to set.
-     */
-    private void setUserName(
-        String value) {
-      value.getClass();
-  
-      userName_ = value;
-    }
-    /**
-     * <code>string userName = 1;</code>
-     */
-    private void clearUserName() {
-      
-      userName_ = getDefaultInstance().getUserName();
-    }
-    /**
-     * <code>string userName = 1;</code>
-     * @param value The bytes for userName to set.
-     */
-    private void setUserNameBytes(
-        com.google.protobuf.ByteString value) {
-      checkByteStringIsUtf8(value);
-      userName_ = value.toStringUtf8();
-      
+    getUserNameBytes() {
+      Object ref = userName_;
+      if (ref instanceof String) {
+        com.google.protobuf.ByteString b =
+                com.google.protobuf.ByteString.copyFromUtf8(
+                        (String) ref);
+        userName_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
     }
 
     public static final int EMAILID_FIELD_NUMBER = 2;
-    private String emailId_;
+    private volatile Object emailId_;
     /**
      * <code>string emailId = 2;</code>
      * @return The emailId.
      */
     @Override
     public String getEmailId() {
-      return emailId_;
+      Object ref = emailId_;
+      if (ref instanceof String) {
+        return (String) ref;
+      } else {
+        com.google.protobuf.ByteString bs =
+                (com.google.protobuf.ByteString) ref;
+        String s = bs.toStringUtf8();
+        emailId_ = s;
+        return s;
+      }
     }
     /**
      * <code>string emailId = 2;</code>
@@ -676,46 +1133,37 @@ public final class LoginSignupProto {
      */
     @Override
     public com.google.protobuf.ByteString
-        getEmailIdBytes() {
-      return com.google.protobuf.ByteString.copyFromUtf8(emailId_);
-    }
-    /**
-     * <code>string emailId = 2;</code>
-     * @param value The emailId to set.
-     */
-    private void setEmailId(
-        String value) {
-      value.getClass();
-  
-      emailId_ = value;
-    }
-    /**
-     * <code>string emailId = 2;</code>
-     */
-    private void clearEmailId() {
-      
-      emailId_ = getDefaultInstance().getEmailId();
-    }
-    /**
-     * <code>string emailId = 2;</code>
-     * @param value The bytes for emailId to set.
-     */
-    private void setEmailIdBytes(
-        com.google.protobuf.ByteString value) {
-      checkByteStringIsUtf8(value);
-      emailId_ = value.toStringUtf8();
-      
+    getEmailIdBytes() {
+      Object ref = emailId_;
+      if (ref instanceof String) {
+        com.google.protobuf.ByteString b =
+                com.google.protobuf.ByteString.copyFromUtf8(
+                        (String) ref);
+        emailId_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
     }
 
     public static final int MOBILENO_FIELD_NUMBER = 3;
-    private String mobileNo_;
+    private volatile Object mobileNo_;
     /**
      * <code>string mobileNo = 3;</code>
      * @return The mobileNo.
      */
     @Override
     public String getMobileNo() {
-      return mobileNo_;
+      Object ref = mobileNo_;
+      if (ref instanceof String) {
+        return (String) ref;
+      } else {
+        com.google.protobuf.ByteString bs =
+                (com.google.protobuf.ByteString) ref;
+        String s = bs.toStringUtf8();
+        mobileNo_ = s;
+        return s;
+      }
     }
     /**
      * <code>string mobileNo = 3;</code>
@@ -723,35 +1171,17 @@ public final class LoginSignupProto {
      */
     @Override
     public com.google.protobuf.ByteString
-        getMobileNoBytes() {
-      return com.google.protobuf.ByteString.copyFromUtf8(mobileNo_);
-    }
-    /**
-     * <code>string mobileNo = 3;</code>
-     * @param value The mobileNo to set.
-     */
-    private void setMobileNo(
-        String value) {
-      value.getClass();
-  
-      mobileNo_ = value;
-    }
-    /**
-     * <code>string mobileNo = 3;</code>
-     */
-    private void clearMobileNo() {
-      
-      mobileNo_ = getDefaultInstance().getMobileNo();
-    }
-    /**
-     * <code>string mobileNo = 3;</code>
-     * @param value The bytes for mobileNo to set.
-     */
-    private void setMobileNoBytes(
-        com.google.protobuf.ByteString value) {
-      checkByteStringIsUtf8(value);
-      mobileNo_ = value.toStringUtf8();
-      
+    getMobileNoBytes() {
+      Object ref = mobileNo_;
+      if (ref instanceof String) {
+        com.google.protobuf.ByteString b =
+                com.google.protobuf.ByteString.copyFromUtf8(
+                        (String) ref);
+        mobileNo_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
     }
 
     public static final int PICID_FIELD_NUMBER = 4;
@@ -764,21 +1194,6 @@ public final class LoginSignupProto {
     public int getPicId() {
       return picId_;
     }
-    /**
-     * <code>int32 picId = 4;</code>
-     * @param value The picId to set.
-     */
-    private void setPicId(int value) {
-      
-      picId_ = value;
-    }
-    /**
-     * <code>int32 picId = 4;</code>
-     */
-    private void clearPicId() {
-      
-      picId_ = 0;
-    }
 
     public static final int USERID_FIELD_NUMBER = 5;
     private int userId_;
@@ -789,21 +1204,6 @@ public final class LoginSignupProto {
     @Override
     public int getUserId() {
       return userId_;
-    }
-    /**
-     * <code>int32 userId = 5;</code>
-     * @param value The userId to set.
-     */
-    private void setUserId(int value) {
-      
-      userId_ = value;
-    }
-    /**
-     * <code>int32 userId = 5;</code>
-     */
-    private void clearUserId() {
-      
-      userId_ = 0;
     }
 
     public static final int USERIMAGE_FIELD_NUMBER = 20;
@@ -816,32 +1216,25 @@ public final class LoginSignupProto {
     public com.google.protobuf.ByteString getUserImage() {
       return userImage_;
     }
-    /**
-     * <code>bytes userImage = 20;</code>
-     * @param value The userImage to set.
-     */
-    private void setUserImage(com.google.protobuf.ByteString value) {
-      value.getClass();
-  
-      userImage_ = value;
-    }
-    /**
-     * <code>bytes userImage = 20;</code>
-     */
-    private void clearUserImage() {
-      
-      userImage_ = getDefaultInstance().getUserImage();
-    }
 
     public static final int ABOUT_FIELD_NUMBER = 21;
-    private String about_;
+    private volatile Object about_;
     /**
      * <code>string about = 21;</code>
      * @return The about.
      */
     @Override
     public String getAbout() {
-      return about_;
+      Object ref = about_;
+      if (ref instanceof String) {
+        return (String) ref;
+      } else {
+        com.google.protobuf.ByteString bs =
+                (com.google.protobuf.ByteString) ref;
+        String s = bs.toStringUtf8();
+        about_ = s;
+        return s;
+      }
     }
     /**
      * <code>string about = 21;</code>
@@ -849,35 +1242,17 @@ public final class LoginSignupProto {
      */
     @Override
     public com.google.protobuf.ByteString
-        getAboutBytes() {
-      return com.google.protobuf.ByteString.copyFromUtf8(about_);
-    }
-    /**
-     * <code>string about = 21;</code>
-     * @param value The about to set.
-     */
-    private void setAbout(
-        String value) {
-      value.getClass();
-  
-      about_ = value;
-    }
-    /**
-     * <code>string about = 21;</code>
-     */
-    private void clearAbout() {
-      
-      about_ = getDefaultInstance().getAbout();
-    }
-    /**
-     * <code>string about = 21;</code>
-     * @param value The bytes for about to set.
-     */
-    private void setAboutBytes(
-        com.google.protobuf.ByteString value) {
-      checkByteStringIsUtf8(value);
-      about_ = value.toStringUtf8();
-      
+    getAboutBytes() {
+      Object ref = about_;
+      if (ref instanceof String) {
+        com.google.protobuf.ByteString b =
+                com.google.protobuf.ByteString.copyFromUtf8(
+                        (String) ref);
+        about_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
     }
 
     public static final int RESPONSECODE_FIELD_NUMBER = 6;
@@ -890,31 +1265,25 @@ public final class LoginSignupProto {
     public int getResponseCode() {
       return responseCode_;
     }
-    /**
-     * <code>int32 responseCode = 6;</code>
-     * @param value The responseCode to set.
-     */
-    private void setResponseCode(int value) {
-      
-      responseCode_ = value;
-    }
-    /**
-     * <code>int32 responseCode = 6;</code>
-     */
-    private void clearResponseCode() {
-      
-      responseCode_ = 0;
-    }
 
     public static final int RESPONSEMESSAGE_FIELD_NUMBER = 22;
-    private String responseMessage_;
+    private volatile Object responseMessage_;
     /**
      * <code>string responseMessage = 22;</code>
      * @return The responseMessage.
      */
     @Override
     public String getResponseMessage() {
-      return responseMessage_;
+      Object ref = responseMessage_;
+      if (ref instanceof String) {
+        return (String) ref;
+      } else {
+        com.google.protobuf.ByteString bs =
+                (com.google.protobuf.ByteString) ref;
+        String s = bs.toStringUtf8();
+        responseMessage_ = s;
+        return s;
+      }
     }
     /**
      * <code>string responseMessage = 22;</code>
@@ -922,148 +1291,490 @@ public final class LoginSignupProto {
      */
     @Override
     public com.google.protobuf.ByteString
-        getResponseMessageBytes() {
-      return com.google.protobuf.ByteString.copyFromUtf8(responseMessage_);
+    getResponseMessageBytes() {
+      Object ref = responseMessage_;
+      if (ref instanceof String) {
+        com.google.protobuf.ByteString b =
+                com.google.protobuf.ByteString.copyFromUtf8(
+                        (String) ref);
+        responseMessage_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
     }
-    /**
-     * <code>string responseMessage = 22;</code>
-     * @param value The responseMessage to set.
-     */
-    private void setResponseMessage(
-        String value) {
-      value.getClass();
-  
-      responseMessage_ = value;
+
+    private byte memoizedIsInitialized = -1;
+    @Override
+    public final boolean isInitialized() {
+      byte isInitialized = memoizedIsInitialized;
+      if (isInitialized == 1) return true;
+      if (isInitialized == 0) return false;
+
+      memoizedIsInitialized = 1;
+      return true;
     }
-    /**
-     * <code>string responseMessage = 22;</code>
-     */
-    private void clearResponseMessage() {
-      
-      responseMessage_ = getDefaultInstance().getResponseMessage();
+
+    @Override
+    public void writeTo(com.google.protobuf.CodedOutputStream output)
+            throws java.io.IOException {
+      if (!getUserNameBytes().isEmpty()) {
+        com.google.protobuf.GeneratedMessageV3.writeString(output, 1, userName_);
+      }
+      if (!getEmailIdBytes().isEmpty()) {
+        com.google.protobuf.GeneratedMessageV3.writeString(output, 2, emailId_);
+      }
+      if (!getMobileNoBytes().isEmpty()) {
+        com.google.protobuf.GeneratedMessageV3.writeString(output, 3, mobileNo_);
+      }
+      if (picId_ != 0) {
+        output.writeInt32(4, picId_);
+      }
+      if (userId_ != 0) {
+        output.writeInt32(5, userId_);
+      }
+      if (responseCode_ != 0) {
+        output.writeInt32(6, responseCode_);
+      }
+      if (!userImage_.isEmpty()) {
+        output.writeBytes(20, userImage_);
+      }
+      if (!getAboutBytes().isEmpty()) {
+        com.google.protobuf.GeneratedMessageV3.writeString(output, 21, about_);
+      }
+      if (!getResponseMessageBytes().isEmpty()) {
+        com.google.protobuf.GeneratedMessageV3.writeString(output, 22, responseMessage_);
+      }
+      unknownFields.writeTo(output);
     }
-    /**
-     * <code>string responseMessage = 22;</code>
-     * @param value The bytes for responseMessage to set.
-     */
-    private void setResponseMessageBytes(
-        com.google.protobuf.ByteString value) {
-      checkByteStringIsUtf8(value);
-      responseMessage_ = value.toStringUtf8();
-      
+
+    @Override
+    public int getSerializedSize() {
+      int size = memoizedSize;
+      if (size != -1) return size;
+
+      size = 0;
+      if (!getUserNameBytes().isEmpty()) {
+        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(1, userName_);
+      }
+      if (!getEmailIdBytes().isEmpty()) {
+        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(2, emailId_);
+      }
+      if (!getMobileNoBytes().isEmpty()) {
+        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(3, mobileNo_);
+      }
+      if (picId_ != 0) {
+        size += com.google.protobuf.CodedOutputStream
+                .computeInt32Size(4, picId_);
+      }
+      if (userId_ != 0) {
+        size += com.google.protobuf.CodedOutputStream
+                .computeInt32Size(5, userId_);
+      }
+      if (responseCode_ != 0) {
+        size += com.google.protobuf.CodedOutputStream
+                .computeInt32Size(6, responseCode_);
+      }
+      if (!userImage_.isEmpty()) {
+        size += com.google.protobuf.CodedOutputStream
+                .computeBytesSize(20, userImage_);
+      }
+      if (!getAboutBytes().isEmpty()) {
+        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(21, about_);
+      }
+      if (!getResponseMessageBytes().isEmpty()) {
+        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(22, responseMessage_);
+      }
+      size += unknownFields.getSerializedSize();
+      memoizedSize = size;
+      return size;
+    }
+
+    @Override
+    public boolean equals(final Object obj) {
+      if (obj == this) {
+        return true;
+      }
+      if (!(obj instanceof LoginResponse)) {
+        return super.equals(obj);
+      }
+      LoginResponse other = (LoginResponse) obj;
+
+      if (!getUserName()
+              .equals(other.getUserName())) return false;
+      if (!getEmailId()
+              .equals(other.getEmailId())) return false;
+      if (!getMobileNo()
+              .equals(other.getMobileNo())) return false;
+      if (getPicId()
+              != other.getPicId()) return false;
+      if (getUserId()
+              != other.getUserId()) return false;
+      if (!getUserImage()
+              .equals(other.getUserImage())) return false;
+      if (!getAbout()
+              .equals(other.getAbout())) return false;
+      if (getResponseCode()
+              != other.getResponseCode()) return false;
+      if (!getResponseMessage()
+              .equals(other.getResponseMessage())) return false;
+      if (!unknownFields.equals(other.unknownFields)) return false;
+      return true;
+    }
+
+    @Override
+    public int hashCode() {
+      if (memoizedHashCode != 0) {
+        return memoizedHashCode;
+      }
+      int hash = 41;
+      hash = (19 * hash) + getDescriptor().hashCode();
+      hash = (37 * hash) + USERNAME_FIELD_NUMBER;
+      hash = (53 * hash) + getUserName().hashCode();
+      hash = (37 * hash) + EMAILID_FIELD_NUMBER;
+      hash = (53 * hash) + getEmailId().hashCode();
+      hash = (37 * hash) + MOBILENO_FIELD_NUMBER;
+      hash = (53 * hash) + getMobileNo().hashCode();
+      hash = (37 * hash) + PICID_FIELD_NUMBER;
+      hash = (53 * hash) + getPicId();
+      hash = (37 * hash) + USERID_FIELD_NUMBER;
+      hash = (53 * hash) + getUserId();
+      hash = (37 * hash) + USERIMAGE_FIELD_NUMBER;
+      hash = (53 * hash) + getUserImage().hashCode();
+      hash = (37 * hash) + ABOUT_FIELD_NUMBER;
+      hash = (53 * hash) + getAbout().hashCode();
+      hash = (37 * hash) + RESPONSECODE_FIELD_NUMBER;
+      hash = (53 * hash) + getResponseCode();
+      hash = (37 * hash) + RESPONSEMESSAGE_FIELD_NUMBER;
+      hash = (53 * hash) + getResponseMessage().hashCode();
+      hash = (29 * hash) + unknownFields.hashCode();
+      memoizedHashCode = hash;
+      return hash;
     }
 
     public static LoginResponse parseFrom(
-        java.nio.ByteBuffer data)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return com.google.protobuf.GeneratedMessageLite.parseFrom(
-          DEFAULT_INSTANCE, data);
+            java.nio.ByteBuffer data)
+            throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
     }
     public static LoginResponse parseFrom(
-        java.nio.ByteBuffer data,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return com.google.protobuf.GeneratedMessageLite.parseFrom(
-          DEFAULT_INSTANCE, data, extensionRegistry);
+            java.nio.ByteBuffer data,
+            com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+            throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
     }
     public static LoginResponse parseFrom(
-        com.google.protobuf.ByteString data)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return com.google.protobuf.GeneratedMessageLite.parseFrom(
-          DEFAULT_INSTANCE, data);
+            com.google.protobuf.ByteString data)
+            throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
     }
     public static LoginResponse parseFrom(
-        com.google.protobuf.ByteString data,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return com.google.protobuf.GeneratedMessageLite.parseFrom(
-          DEFAULT_INSTANCE, data, extensionRegistry);
+            com.google.protobuf.ByteString data,
+            com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+            throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
     }
     public static LoginResponse parseFrom(byte[] data)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return com.google.protobuf.GeneratedMessageLite.parseFrom(
-          DEFAULT_INSTANCE, data);
+            throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
     }
     public static LoginResponse parseFrom(
-        byte[] data,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return com.google.protobuf.GeneratedMessageLite.parseFrom(
-          DEFAULT_INSTANCE, data, extensionRegistry);
+            byte[] data,
+            com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+            throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
     }
     public static LoginResponse parseFrom(java.io.InputStream input)
-        throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageLite.parseFrom(
-          DEFAULT_INSTANCE, input);
+            throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+              .parseWithIOException(PARSER, input);
     }
     public static LoginResponse parseFrom(
-        java.io.InputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageLite.parseFrom(
-          DEFAULT_INSTANCE, input, extensionRegistry);
+            java.io.InputStream input,
+            com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+            throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+              .parseWithIOException(PARSER, input, extensionRegistry);
     }
     public static LoginResponse parseDelimitedFrom(java.io.InputStream input)
-        throws java.io.IOException {
-      return parseDelimitedFrom(DEFAULT_INSTANCE, input);
+            throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+              .parseDelimitedWithIOException(PARSER, input);
     }
     public static LoginResponse parseDelimitedFrom(
-        java.io.InputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws java.io.IOException {
-      return parseDelimitedFrom(DEFAULT_INSTANCE, input, extensionRegistry);
+            java.io.InputStream input,
+            com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+            throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+              .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
     }
     public static LoginResponse parseFrom(
-        com.google.protobuf.CodedInputStream input)
-        throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageLite.parseFrom(
-          DEFAULT_INSTANCE, input);
+            com.google.protobuf.CodedInputStream input)
+            throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+              .parseWithIOException(PARSER, input);
     }
     public static LoginResponse parseFrom(
-        com.google.protobuf.CodedInputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageLite.parseFrom(
-          DEFAULT_INSTANCE, input, extensionRegistry);
+            com.google.protobuf.CodedInputStream input,
+            com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+            throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+              .parseWithIOException(PARSER, input, extensionRegistry);
     }
 
+    @Override
+    public Builder newBuilderForType() { return newBuilder(); }
     public static Builder newBuilder() {
-      return (Builder) DEFAULT_INSTANCE.createBuilder();
+      return DEFAULT_INSTANCE.toBuilder();
     }
     public static Builder newBuilder(LoginResponse prototype) {
-      return (Builder) DEFAULT_INSTANCE.createBuilder(prototype);
+      return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
+    }
+    @Override
+    public Builder toBuilder() {
+      return this == DEFAULT_INSTANCE
+              ? new Builder() : new Builder().mergeFrom(this);
     }
 
+    @Override
+    protected Builder newBuilderForType(
+            BuilderParent parent) {
+      Builder builder = new Builder(parent);
+      return builder;
+    }
     /**
      * Protobuf type {@code gbuddy.LoginResponse}
      */
     public static final class Builder extends
-        com.google.protobuf.GeneratedMessageLite.Builder<
-          LoginResponse, Builder> implements
-        // @@protoc_insertion_point(builder_implements:gbuddy.LoginResponse)
-        LoginResponseOrBuilder {
-      // Construct using com.example.gym.buddies.data.protos.LoginSignupProto.LoginResponse.newBuilder()
-      private Builder() {
-        super(DEFAULT_INSTANCE);
+            com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
+            // @@protoc_insertion_point(builder_implements:gbuddy.LoginResponse)
+            LoginResponseOrBuilder {
+      public static final com.google.protobuf.Descriptors.Descriptor
+      getDescriptor() {
+        return LoginSignupProto.internal_static_gbuddy_LoginResponse_descriptor;
       }
 
+      @Override
+      protected FieldAccessorTable
+      internalGetFieldAccessorTable() {
+        return LoginSignupProto.internal_static_gbuddy_LoginResponse_fieldAccessorTable
+                .ensureFieldAccessorsInitialized(
+                        LoginResponse.class, Builder.class);
+      }
 
+      // Construct using com.example.gbuddy.protos.LoginSignupProto.LoginResponse.newBuilder()
+      private Builder() {
+        maybeForceBuilderInitialization();
+      }
+
+      private Builder(
+              BuilderParent parent) {
+        super(parent);
+        maybeForceBuilderInitialization();
+      }
+      private void maybeForceBuilderInitialization() {
+        if (com.google.protobuf.GeneratedMessageV3
+                .alwaysUseFieldBuilders) {
+        }
+      }
+      @Override
+      public Builder clear() {
+        super.clear();
+        userName_ = "";
+
+        emailId_ = "";
+
+        mobileNo_ = "";
+
+        picId_ = 0;
+
+        userId_ = 0;
+
+        userImage_ = com.google.protobuf.ByteString.EMPTY;
+
+        about_ = "";
+
+        responseCode_ = 0;
+
+        responseMessage_ = "";
+
+        return this;
+      }
+
+      @Override
+      public com.google.protobuf.Descriptors.Descriptor
+      getDescriptorForType() {
+        return LoginSignupProto.internal_static_gbuddy_LoginResponse_descriptor;
+      }
+
+      @Override
+      public LoginResponse getDefaultInstanceForType() {
+        return LoginResponse.getDefaultInstance();
+      }
+
+      @Override
+      public LoginResponse build() {
+        LoginResponse result = buildPartial();
+        if (!result.isInitialized()) {
+          throw newUninitializedMessageException(result);
+        }
+        return result;
+      }
+
+      @Override
+      public LoginResponse buildPartial() {
+        LoginResponse result = new LoginResponse(this);
+        result.userName_ = userName_;
+        result.emailId_ = emailId_;
+        result.mobileNo_ = mobileNo_;
+        result.picId_ = picId_;
+        result.userId_ = userId_;
+        result.userImage_ = userImage_;
+        result.about_ = about_;
+        result.responseCode_ = responseCode_;
+        result.responseMessage_ = responseMessage_;
+        onBuilt();
+        return result;
+      }
+
+      @Override
+      public Builder clone() {
+        return super.clone();
+      }
+      @Override
+      public Builder setField(
+              com.google.protobuf.Descriptors.FieldDescriptor field,
+              Object value) {
+        return super.setField(field, value);
+      }
+      @Override
+      public Builder clearField(
+              com.google.protobuf.Descriptors.FieldDescriptor field) {
+        return super.clearField(field);
+      }
+      @Override
+      public Builder clearOneof(
+              com.google.protobuf.Descriptors.OneofDescriptor oneof) {
+        return super.clearOneof(oneof);
+      }
+      @Override
+      public Builder setRepeatedField(
+              com.google.protobuf.Descriptors.FieldDescriptor field,
+              int index, Object value) {
+        return super.setRepeatedField(field, index, value);
+      }
+      @Override
+      public Builder addRepeatedField(
+              com.google.protobuf.Descriptors.FieldDescriptor field,
+              Object value) {
+        return super.addRepeatedField(field, value);
+      }
+      @Override
+      public Builder mergeFrom(com.google.protobuf.Message other) {
+        if (other instanceof LoginResponse) {
+          return mergeFrom((LoginResponse)other);
+        } else {
+          super.mergeFrom(other);
+          return this;
+        }
+      }
+
+      public Builder mergeFrom(LoginResponse other) {
+        if (other == LoginResponse.getDefaultInstance()) return this;
+        if (!other.getUserName().isEmpty()) {
+          userName_ = other.userName_;
+          onChanged();
+        }
+        if (!other.getEmailId().isEmpty()) {
+          emailId_ = other.emailId_;
+          onChanged();
+        }
+        if (!other.getMobileNo().isEmpty()) {
+          mobileNo_ = other.mobileNo_;
+          onChanged();
+        }
+        if (other.getPicId() != 0) {
+          setPicId(other.getPicId());
+        }
+        if (other.getUserId() != 0) {
+          setUserId(other.getUserId());
+        }
+        if (other.getUserImage() != com.google.protobuf.ByteString.EMPTY) {
+          setUserImage(other.getUserImage());
+        }
+        if (!other.getAbout().isEmpty()) {
+          about_ = other.about_;
+          onChanged();
+        }
+        if (other.getResponseCode() != 0) {
+          setResponseCode(other.getResponseCode());
+        }
+        if (!other.getResponseMessage().isEmpty()) {
+          responseMessage_ = other.responseMessage_;
+          onChanged();
+        }
+        this.mergeUnknownFields(other.unknownFields);
+        onChanged();
+        return this;
+      }
+
+      @Override
+      public final boolean isInitialized() {
+        return true;
+      }
+
+      @Override
+      public Builder mergeFrom(
+              com.google.protobuf.CodedInputStream input,
+              com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+              throws java.io.IOException {
+        LoginResponse parsedMessage = null;
+        try {
+          parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
+        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+          parsedMessage = (LoginResponse) e.getUnfinishedMessage();
+          throw e.unwrapIOException();
+        } finally {
+          if (parsedMessage != null) {
+            mergeFrom(parsedMessage);
+          }
+        }
+        return this;
+      }
+
+      private Object userName_ = "";
       /**
        * <code>string userName = 1;</code>
        * @return The userName.
        */
-      @Override
       public String getUserName() {
-        return instance.getUserName();
+        Object ref = userName_;
+        if (!(ref instanceof String)) {
+          com.google.protobuf.ByteString bs =
+                  (com.google.protobuf.ByteString) ref;
+          String s = bs.toStringUtf8();
+          userName_ = s;
+          return s;
+        } else {
+          return (String) ref;
+        }
       }
       /**
        * <code>string userName = 1;</code>
        * @return The bytes for userName.
        */
-      @Override
       public com.google.protobuf.ByteString
-          getUserNameBytes() {
-        return instance.getUserNameBytes();
+      getUserNameBytes() {
+        Object ref = userName_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b =
+                  com.google.protobuf.ByteString.copyFromUtf8(
+                          (String) ref);
+          userName_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
       }
       /**
        * <code>string userName = 1;</code>
@@ -1071,9 +1782,13 @@ public final class LoginSignupProto {
        * @return This builder for chaining.
        */
       public Builder setUserName(
-          String value) {
-        copyOnWrite();
-        instance.setUserName(value);
+              String value) {
+        if (value == null) {
+          throw new NullPointerException();
+        }
+
+        userName_ = value;
+        onChanged();
         return this;
       }
       /**
@@ -1081,8 +1796,9 @@ public final class LoginSignupProto {
        * @return This builder for chaining.
        */
       public Builder clearUserName() {
-        copyOnWrite();
-        instance.clearUserName();
+
+        userName_ = getDefaultInstance().getUserName();
+        onChanged();
         return this;
       }
       /**
@@ -1091,28 +1807,50 @@ public final class LoginSignupProto {
        * @return This builder for chaining.
        */
       public Builder setUserNameBytes(
-          com.google.protobuf.ByteString value) {
-        copyOnWrite();
-        instance.setUserNameBytes(value);
+              com.google.protobuf.ByteString value) {
+        if (value == null) {
+          throw new NullPointerException();
+        }
+        checkByteStringIsUtf8(value);
+
+        userName_ = value;
+        onChanged();
         return this;
       }
 
+      private Object emailId_ = "";
       /**
        * <code>string emailId = 2;</code>
        * @return The emailId.
        */
-      @Override
       public String getEmailId() {
-        return instance.getEmailId();
+        Object ref = emailId_;
+        if (!(ref instanceof String)) {
+          com.google.protobuf.ByteString bs =
+                  (com.google.protobuf.ByteString) ref;
+          String s = bs.toStringUtf8();
+          emailId_ = s;
+          return s;
+        } else {
+          return (String) ref;
+        }
       }
       /**
        * <code>string emailId = 2;</code>
        * @return The bytes for emailId.
        */
-      @Override
       public com.google.protobuf.ByteString
-          getEmailIdBytes() {
-        return instance.getEmailIdBytes();
+      getEmailIdBytes() {
+        Object ref = emailId_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b =
+                  com.google.protobuf.ByteString.copyFromUtf8(
+                          (String) ref);
+          emailId_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
       }
       /**
        * <code>string emailId = 2;</code>
@@ -1120,9 +1858,13 @@ public final class LoginSignupProto {
        * @return This builder for chaining.
        */
       public Builder setEmailId(
-          String value) {
-        copyOnWrite();
-        instance.setEmailId(value);
+              String value) {
+        if (value == null) {
+          throw new NullPointerException();
+        }
+
+        emailId_ = value;
+        onChanged();
         return this;
       }
       /**
@@ -1130,8 +1872,9 @@ public final class LoginSignupProto {
        * @return This builder for chaining.
        */
       public Builder clearEmailId() {
-        copyOnWrite();
-        instance.clearEmailId();
+
+        emailId_ = getDefaultInstance().getEmailId();
+        onChanged();
         return this;
       }
       /**
@@ -1140,28 +1883,50 @@ public final class LoginSignupProto {
        * @return This builder for chaining.
        */
       public Builder setEmailIdBytes(
-          com.google.protobuf.ByteString value) {
-        copyOnWrite();
-        instance.setEmailIdBytes(value);
+              com.google.protobuf.ByteString value) {
+        if (value == null) {
+          throw new NullPointerException();
+        }
+        checkByteStringIsUtf8(value);
+
+        emailId_ = value;
+        onChanged();
         return this;
       }
 
+      private Object mobileNo_ = "";
       /**
        * <code>string mobileNo = 3;</code>
        * @return The mobileNo.
        */
-      @Override
       public String getMobileNo() {
-        return instance.getMobileNo();
+        Object ref = mobileNo_;
+        if (!(ref instanceof String)) {
+          com.google.protobuf.ByteString bs =
+                  (com.google.protobuf.ByteString) ref;
+          String s = bs.toStringUtf8();
+          mobileNo_ = s;
+          return s;
+        } else {
+          return (String) ref;
+        }
       }
       /**
        * <code>string mobileNo = 3;</code>
        * @return The bytes for mobileNo.
        */
-      @Override
       public com.google.protobuf.ByteString
-          getMobileNoBytes() {
-        return instance.getMobileNoBytes();
+      getMobileNoBytes() {
+        Object ref = mobileNo_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b =
+                  com.google.protobuf.ByteString.copyFromUtf8(
+                          (String) ref);
+          mobileNo_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
       }
       /**
        * <code>string mobileNo = 3;</code>
@@ -1169,9 +1934,13 @@ public final class LoginSignupProto {
        * @return This builder for chaining.
        */
       public Builder setMobileNo(
-          String value) {
-        copyOnWrite();
-        instance.setMobileNo(value);
+              String value) {
+        if (value == null) {
+          throw new NullPointerException();
+        }
+
+        mobileNo_ = value;
+        onChanged();
         return this;
       }
       /**
@@ -1179,8 +1948,9 @@ public final class LoginSignupProto {
        * @return This builder for chaining.
        */
       public Builder clearMobileNo() {
-        copyOnWrite();
-        instance.clearMobileNo();
+
+        mobileNo_ = getDefaultInstance().getMobileNo();
+        onChanged();
         return this;
       }
       /**
@@ -1189,19 +1959,25 @@ public final class LoginSignupProto {
        * @return This builder for chaining.
        */
       public Builder setMobileNoBytes(
-          com.google.protobuf.ByteString value) {
-        copyOnWrite();
-        instance.setMobileNoBytes(value);
+              com.google.protobuf.ByteString value) {
+        if (value == null) {
+          throw new NullPointerException();
+        }
+        checkByteStringIsUtf8(value);
+
+        mobileNo_ = value;
+        onChanged();
         return this;
       }
 
+      private int picId_ ;
       /**
        * <code>int32 picId = 4;</code>
        * @return The picId.
        */
       @Override
       public int getPicId() {
-        return instance.getPicId();
+        return picId_;
       }
       /**
        * <code>int32 picId = 4;</code>
@@ -1209,8 +1985,9 @@ public final class LoginSignupProto {
        * @return This builder for chaining.
        */
       public Builder setPicId(int value) {
-        copyOnWrite();
-        instance.setPicId(value);
+
+        picId_ = value;
+        onChanged();
         return this;
       }
       /**
@@ -1218,18 +1995,20 @@ public final class LoginSignupProto {
        * @return This builder for chaining.
        */
       public Builder clearPicId() {
-        copyOnWrite();
-        instance.clearPicId();
+
+        picId_ = 0;
+        onChanged();
         return this;
       }
 
+      private int userId_ ;
       /**
        * <code>int32 userId = 5;</code>
        * @return The userId.
        */
       @Override
       public int getUserId() {
-        return instance.getUserId();
+        return userId_;
       }
       /**
        * <code>int32 userId = 5;</code>
@@ -1237,8 +2016,9 @@ public final class LoginSignupProto {
        * @return This builder for chaining.
        */
       public Builder setUserId(int value) {
-        copyOnWrite();
-        instance.setUserId(value);
+
+        userId_ = value;
+        onChanged();
         return this;
       }
       /**
@@ -1246,18 +2026,20 @@ public final class LoginSignupProto {
        * @return This builder for chaining.
        */
       public Builder clearUserId() {
-        copyOnWrite();
-        instance.clearUserId();
+
+        userId_ = 0;
+        onChanged();
         return this;
       }
 
+      private com.google.protobuf.ByteString userImage_ = com.google.protobuf.ByteString.EMPTY;
       /**
        * <code>bytes userImage = 20;</code>
        * @return The userImage.
        */
       @Override
       public com.google.protobuf.ByteString getUserImage() {
-        return instance.getUserImage();
+        return userImage_;
       }
       /**
        * <code>bytes userImage = 20;</code>
@@ -1265,8 +2047,12 @@ public final class LoginSignupProto {
        * @return This builder for chaining.
        */
       public Builder setUserImage(com.google.protobuf.ByteString value) {
-        copyOnWrite();
-        instance.setUserImage(value);
+        if (value == null) {
+          throw new NullPointerException();
+        }
+
+        userImage_ = value;
+        onChanged();
         return this;
       }
       /**
@@ -1274,27 +2060,45 @@ public final class LoginSignupProto {
        * @return This builder for chaining.
        */
       public Builder clearUserImage() {
-        copyOnWrite();
-        instance.clearUserImage();
+
+        userImage_ = getDefaultInstance().getUserImage();
+        onChanged();
         return this;
       }
 
+      private Object about_ = "";
       /**
        * <code>string about = 21;</code>
        * @return The about.
        */
-      @Override
       public String getAbout() {
-        return instance.getAbout();
+        Object ref = about_;
+        if (!(ref instanceof String)) {
+          com.google.protobuf.ByteString bs =
+                  (com.google.protobuf.ByteString) ref;
+          String s = bs.toStringUtf8();
+          about_ = s;
+          return s;
+        } else {
+          return (String) ref;
+        }
       }
       /**
        * <code>string about = 21;</code>
        * @return The bytes for about.
        */
-      @Override
       public com.google.protobuf.ByteString
-          getAboutBytes() {
-        return instance.getAboutBytes();
+      getAboutBytes() {
+        Object ref = about_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b =
+                  com.google.protobuf.ByteString.copyFromUtf8(
+                          (String) ref);
+          about_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
       }
       /**
        * <code>string about = 21;</code>
@@ -1302,9 +2106,13 @@ public final class LoginSignupProto {
        * @return This builder for chaining.
        */
       public Builder setAbout(
-          String value) {
-        copyOnWrite();
-        instance.setAbout(value);
+              String value) {
+        if (value == null) {
+          throw new NullPointerException();
+        }
+
+        about_ = value;
+        onChanged();
         return this;
       }
       /**
@@ -1312,8 +2120,9 @@ public final class LoginSignupProto {
        * @return This builder for chaining.
        */
       public Builder clearAbout() {
-        copyOnWrite();
-        instance.clearAbout();
+
+        about_ = getDefaultInstance().getAbout();
+        onChanged();
         return this;
       }
       /**
@@ -1322,19 +2131,25 @@ public final class LoginSignupProto {
        * @return This builder for chaining.
        */
       public Builder setAboutBytes(
-          com.google.protobuf.ByteString value) {
-        copyOnWrite();
-        instance.setAboutBytes(value);
+              com.google.protobuf.ByteString value) {
+        if (value == null) {
+          throw new NullPointerException();
+        }
+        checkByteStringIsUtf8(value);
+
+        about_ = value;
+        onChanged();
         return this;
       }
 
+      private int responseCode_ ;
       /**
        * <code>int32 responseCode = 6;</code>
        * @return The responseCode.
        */
       @Override
       public int getResponseCode() {
-        return instance.getResponseCode();
+        return responseCode_;
       }
       /**
        * <code>int32 responseCode = 6;</code>
@@ -1342,8 +2157,9 @@ public final class LoginSignupProto {
        * @return This builder for chaining.
        */
       public Builder setResponseCode(int value) {
-        copyOnWrite();
-        instance.setResponseCode(value);
+
+        responseCode_ = value;
+        onChanged();
         return this;
       }
       /**
@@ -1351,27 +2167,45 @@ public final class LoginSignupProto {
        * @return This builder for chaining.
        */
       public Builder clearResponseCode() {
-        copyOnWrite();
-        instance.clearResponseCode();
+
+        responseCode_ = 0;
+        onChanged();
         return this;
       }
 
+      private Object responseMessage_ = "";
       /**
        * <code>string responseMessage = 22;</code>
        * @return The responseMessage.
        */
-      @Override
       public String getResponseMessage() {
-        return instance.getResponseMessage();
+        Object ref = responseMessage_;
+        if (!(ref instanceof String)) {
+          com.google.protobuf.ByteString bs =
+                  (com.google.protobuf.ByteString) ref;
+          String s = bs.toStringUtf8();
+          responseMessage_ = s;
+          return s;
+        } else {
+          return (String) ref;
+        }
       }
       /**
        * <code>string responseMessage = 22;</code>
        * @return The bytes for responseMessage.
        */
-      @Override
       public com.google.protobuf.ByteString
-          getResponseMessageBytes() {
-        return instance.getResponseMessageBytes();
+      getResponseMessageBytes() {
+        Object ref = responseMessage_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b =
+                  com.google.protobuf.ByteString.copyFromUtf8(
+                          (String) ref);
+          responseMessage_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
       }
       /**
        * <code>string responseMessage = 22;</code>
@@ -1379,9 +2213,13 @@ public final class LoginSignupProto {
        * @return This builder for chaining.
        */
       public Builder setResponseMessage(
-          String value) {
-        copyOnWrite();
-        instance.setResponseMessage(value);
+              String value) {
+        if (value == null) {
+          throw new NullPointerException();
+        }
+
+        responseMessage_ = value;
+        onChanged();
         return this;
       }
       /**
@@ -1389,8 +2227,9 @@ public final class LoginSignupProto {
        * @return This builder for chaining.
        */
       public Builder clearResponseMessage() {
-        copyOnWrite();
-        instance.clearResponseMessage();
+
+        responseMessage_ = getDefaultInstance().getResponseMessage();
+        onChanged();
         return this;
       }
       /**
@@ -1399,98 +2238,72 @@ public final class LoginSignupProto {
        * @return This builder for chaining.
        */
       public Builder setResponseMessageBytes(
-          com.google.protobuf.ByteString value) {
-        copyOnWrite();
-        instance.setResponseMessageBytes(value);
+              com.google.protobuf.ByteString value) {
+        if (value == null) {
+          throw new NullPointerException();
+        }
+        checkByteStringIsUtf8(value);
+
+        responseMessage_ = value;
+        onChanged();
         return this;
       }
+      @Override
+      public final Builder setUnknownFields(
+              final com.google.protobuf.UnknownFieldSet unknownFields) {
+        return super.setUnknownFields(unknownFields);
+      }
+
+      @Override
+      public final Builder mergeUnknownFields(
+              final com.google.protobuf.UnknownFieldSet unknownFields) {
+        return super.mergeUnknownFields(unknownFields);
+      }
+
 
       // @@protoc_insertion_point(builder_scope:gbuddy.LoginResponse)
     }
-    @Override
-    @SuppressWarnings({"unchecked", "fallthrough"})
-    protected final Object dynamicMethod(
-        MethodToInvoke method,
-        Object arg0, Object arg1) {
-      switch (method) {
-        case NEW_MUTABLE_INSTANCE: {
-          return new LoginResponse();
-        }
-        case NEW_BUILDER: {
-          return new Builder();
-        }
-        case BUILD_MESSAGE_INFO: {
-            Object[] objects = new Object[] {
-              "userName_",
-              "emailId_",
-              "mobileNo_",
-              "picId_",
-              "userId_",
-              "responseCode_",
-              "userImage_",
-              "about_",
-              "responseMessage_",
-            };
-            String info =
-                "\u0000\t\u0000\u0000\u0001\u0016\t\u0000\u0000\u0000\u0001\u0208\u0002\u0208\u0003" +
-                "\u0208\u0004\u0004\u0005\u0004\u0006\u0004\u0014\n\u0015\u0208\u0016\u0208";
-            return newMessageInfo(DEFAULT_INSTANCE, info, objects);
-        }
-        // fall through
-        case GET_DEFAULT_INSTANCE: {
-          return DEFAULT_INSTANCE;
-        }
-        case GET_PARSER: {
-          com.google.protobuf.Parser<LoginResponse> parser = PARSER;
-          if (parser == null) {
-            synchronized (LoginResponse.class) {
-              parser = PARSER;
-              if (parser == null) {
-                parser =
-                    new DefaultInstanceBasedParser<LoginResponse>(
-                        DEFAULT_INSTANCE);
-                PARSER = parser;
-              }
-            }
-          }
-          return parser;
-      }
-      case GET_MEMOIZED_IS_INITIALIZED: {
-        return (byte) 1;
-      }
-      case SET_MEMOIZED_IS_INITIALIZED: {
-        return null;
-      }
-      }
-      throw new UnsupportedOperationException();
-    }
-
 
     // @@protoc_insertion_point(class_scope:gbuddy.LoginResponse)
     private static final LoginResponse DEFAULT_INSTANCE;
     static {
-      LoginResponse defaultInstance = new LoginResponse();
-      // New instances are implicitly immutable so no need to make
-      // immutable.
-      DEFAULT_INSTANCE = defaultInstance;
-      com.google.protobuf.GeneratedMessageLite.registerDefaultInstance(
-        LoginResponse.class, defaultInstance);
+      DEFAULT_INSTANCE = new LoginResponse();
     }
 
     public static LoginResponse getDefaultInstance() {
       return DEFAULT_INSTANCE;
     }
 
-    private static volatile com.google.protobuf.Parser<LoginResponse> PARSER;
+    private static final com.google.protobuf.Parser<LoginResponse>
+            PARSER = new com.google.protobuf.AbstractParser<LoginResponse>() {
+      @Override
+      public LoginResponse parsePartialFrom(
+              com.google.protobuf.CodedInputStream input,
+              com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+              throws com.google.protobuf.InvalidProtocolBufferException {
+        return new LoginResponse(input, extensionRegistry);
+      }
+    };
 
     public static com.google.protobuf.Parser<LoginResponse> parser() {
-      return DEFAULT_INSTANCE.getParserForType();
+      return PARSER;
     }
+
+    @Override
+    public com.google.protobuf.Parser<LoginResponse> getParserForType() {
+      return PARSER;
+    }
+
+    @Override
+    public LoginResponse getDefaultInstanceForType() {
+      return DEFAULT_INSTANCE;
+    }
+
   }
 
   public interface SignupRequestOrBuilder extends
-      // @@protoc_insertion_point(interface_extends:gbuddy.SignupRequest)
-      com.google.protobuf.MessageLiteOrBuilder {
+          // @@protoc_insertion_point(interface_extends:gbuddy.SignupRequest)
+          com.google.protobuf.MessageOrBuilder {
 
     /**
      * <code>string userName = 1;</code>
@@ -1502,7 +2315,7 @@ public final class LoginSignupProto {
      * @return The bytes for userName.
      */
     com.google.protobuf.ByteString
-        getUserNameBytes();
+    getUserNameBytes();
 
     /**
      * <code>string emailId = 2;</code>
@@ -1514,7 +2327,7 @@ public final class LoginSignupProto {
      * @return The bytes for emailId.
      */
     com.google.protobuf.ByteString
-        getEmailIdBytes();
+    getEmailIdBytes();
 
     /**
      * <code>string mobileNo = 3;</code>
@@ -1526,7 +2339,7 @@ public final class LoginSignupProto {
      * @return The bytes for mobileNo.
      */
     com.google.protobuf.ByteString
-        getMobileNoBytes();
+    getMobileNoBytes();
 
     /**
      * <code>string password = 4;</code>
@@ -1538,7 +2351,7 @@ public final class LoginSignupProto {
      * @return The bytes for password.
      */
     com.google.protobuf.ByteString
-        getPasswordBytes();
+    getPasswordBytes();
 
     /**
      * <code>.gbuddy.RoleType roles = 20;</code>
@@ -1561,7 +2374,7 @@ public final class LoginSignupProto {
      * @return The bytes for about.
      */
     com.google.protobuf.ByteString
-        getAboutBytes();
+    getAboutBytes();
 
     /**
      * <code>bytes userImage = 22;</code>
@@ -1572,28 +2385,146 @@ public final class LoginSignupProto {
   /**
    * Protobuf type {@code gbuddy.SignupRequest}
    */
-  public  static final class SignupRequest extends
-      com.google.protobuf.GeneratedMessageLite<
-          SignupRequest, SignupRequest.Builder> implements
-      // @@protoc_insertion_point(message_implements:gbuddy.SignupRequest)
-      SignupRequestOrBuilder {
+  public static final class SignupRequest extends
+          com.google.protobuf.GeneratedMessageV3 implements
+          // @@protoc_insertion_point(message_implements:gbuddy.SignupRequest)
+          SignupRequestOrBuilder {
+    private static final long serialVersionUID = 0L;
+    // Use SignupRequest.newBuilder() to construct.
+    private SignupRequest(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
+      super(builder);
+    }
     private SignupRequest() {
       userName_ = "";
       emailId_ = "";
       mobileNo_ = "";
       password_ = "";
+      roles_ = 0;
       about_ = "";
       userImage_ = com.google.protobuf.ByteString.EMPTY;
     }
+
+    @Override
+    @SuppressWarnings({"unused"})
+    protected Object newInstance(
+            UnusedPrivateParameter unused) {
+      return new SignupRequest();
+    }
+
+    @Override
+    public final com.google.protobuf.UnknownFieldSet
+    getUnknownFields() {
+      return this.unknownFields;
+    }
+    private SignupRequest(
+            com.google.protobuf.CodedInputStream input,
+            com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+            throws com.google.protobuf.InvalidProtocolBufferException {
+      this();
+      if (extensionRegistry == null) {
+        throw new NullPointerException();
+      }
+      com.google.protobuf.UnknownFieldSet.Builder unknownFields =
+              com.google.protobuf.UnknownFieldSet.newBuilder();
+      try {
+        boolean done = false;
+        while (!done) {
+          int tag = input.readTag();
+          switch (tag) {
+            case 0:
+              done = true;
+              break;
+            case 10: {
+              String s = input.readStringRequireUtf8();
+
+              userName_ = s;
+              break;
+            }
+            case 18: {
+              String s = input.readStringRequireUtf8();
+
+              emailId_ = s;
+              break;
+            }
+            case 26: {
+              String s = input.readStringRequireUtf8();
+
+              mobileNo_ = s;
+              break;
+            }
+            case 34: {
+              String s = input.readStringRequireUtf8();
+
+              password_ = s;
+              break;
+            }
+            case 160: {
+              int rawValue = input.readEnum();
+
+              roles_ = rawValue;
+              break;
+            }
+            case 170: {
+              String s = input.readStringRequireUtf8();
+
+              about_ = s;
+              break;
+            }
+            case 178: {
+
+              userImage_ = input.readBytes();
+              break;
+            }
+            default: {
+              if (!parseUnknownField(
+                      input, unknownFields, extensionRegistry, tag)) {
+                done = true;
+              }
+              break;
+            }
+          }
+        }
+      } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+        throw e.setUnfinishedMessage(this);
+      } catch (java.io.IOException e) {
+        throw new com.google.protobuf.InvalidProtocolBufferException(
+                e).setUnfinishedMessage(this);
+      } finally {
+        this.unknownFields = unknownFields.build();
+        makeExtensionsImmutable();
+      }
+    }
+    public static final com.google.protobuf.Descriptors.Descriptor
+    getDescriptor() {
+      return LoginSignupProto.internal_static_gbuddy_SignupRequest_descriptor;
+    }
+
+    @Override
+    protected FieldAccessorTable
+    internalGetFieldAccessorTable() {
+      return LoginSignupProto.internal_static_gbuddy_SignupRequest_fieldAccessorTable
+              .ensureFieldAccessorsInitialized(
+                      SignupRequest.class, Builder.class);
+    }
+
     public static final int USERNAME_FIELD_NUMBER = 1;
-    private String userName_;
+    private volatile Object userName_;
     /**
      * <code>string userName = 1;</code>
      * @return The userName.
      */
     @Override
     public String getUserName() {
-      return userName_;
+      Object ref = userName_;
+      if (ref instanceof String) {
+        return (String) ref;
+      } else {
+        com.google.protobuf.ByteString bs =
+                (com.google.protobuf.ByteString) ref;
+        String s = bs.toStringUtf8();
+        userName_ = s;
+        return s;
+      }
     }
     /**
      * <code>string userName = 1;</code>
@@ -1601,46 +2532,37 @@ public final class LoginSignupProto {
      */
     @Override
     public com.google.protobuf.ByteString
-        getUserNameBytes() {
-      return com.google.protobuf.ByteString.copyFromUtf8(userName_);
-    }
-    /**
-     * <code>string userName = 1;</code>
-     * @param value The userName to set.
-     */
-    private void setUserName(
-        String value) {
-      value.getClass();
-  
-      userName_ = value;
-    }
-    /**
-     * <code>string userName = 1;</code>
-     */
-    private void clearUserName() {
-      
-      userName_ = getDefaultInstance().getUserName();
-    }
-    /**
-     * <code>string userName = 1;</code>
-     * @param value The bytes for userName to set.
-     */
-    private void setUserNameBytes(
-        com.google.protobuf.ByteString value) {
-      checkByteStringIsUtf8(value);
-      userName_ = value.toStringUtf8();
-      
+    getUserNameBytes() {
+      Object ref = userName_;
+      if (ref instanceof String) {
+        com.google.protobuf.ByteString b =
+                com.google.protobuf.ByteString.copyFromUtf8(
+                        (String) ref);
+        userName_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
     }
 
     public static final int EMAILID_FIELD_NUMBER = 2;
-    private String emailId_;
+    private volatile Object emailId_;
     /**
      * <code>string emailId = 2;</code>
      * @return The emailId.
      */
     @Override
     public String getEmailId() {
-      return emailId_;
+      Object ref = emailId_;
+      if (ref instanceof String) {
+        return (String) ref;
+      } else {
+        com.google.protobuf.ByteString bs =
+                (com.google.protobuf.ByteString) ref;
+        String s = bs.toStringUtf8();
+        emailId_ = s;
+        return s;
+      }
     }
     /**
      * <code>string emailId = 2;</code>
@@ -1648,46 +2570,37 @@ public final class LoginSignupProto {
      */
     @Override
     public com.google.protobuf.ByteString
-        getEmailIdBytes() {
-      return com.google.protobuf.ByteString.copyFromUtf8(emailId_);
-    }
-    /**
-     * <code>string emailId = 2;</code>
-     * @param value The emailId to set.
-     */
-    private void setEmailId(
-        String value) {
-      value.getClass();
-  
-      emailId_ = value;
-    }
-    /**
-     * <code>string emailId = 2;</code>
-     */
-    private void clearEmailId() {
-      
-      emailId_ = getDefaultInstance().getEmailId();
-    }
-    /**
-     * <code>string emailId = 2;</code>
-     * @param value The bytes for emailId to set.
-     */
-    private void setEmailIdBytes(
-        com.google.protobuf.ByteString value) {
-      checkByteStringIsUtf8(value);
-      emailId_ = value.toStringUtf8();
-      
+    getEmailIdBytes() {
+      Object ref = emailId_;
+      if (ref instanceof String) {
+        com.google.protobuf.ByteString b =
+                com.google.protobuf.ByteString.copyFromUtf8(
+                        (String) ref);
+        emailId_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
     }
 
     public static final int MOBILENO_FIELD_NUMBER = 3;
-    private String mobileNo_;
+    private volatile Object mobileNo_;
     /**
      * <code>string mobileNo = 3;</code>
      * @return The mobileNo.
      */
     @Override
     public String getMobileNo() {
-      return mobileNo_;
+      Object ref = mobileNo_;
+      if (ref instanceof String) {
+        return (String) ref;
+      } else {
+        com.google.protobuf.ByteString bs =
+                (com.google.protobuf.ByteString) ref;
+        String s = bs.toStringUtf8();
+        mobileNo_ = s;
+        return s;
+      }
     }
     /**
      * <code>string mobileNo = 3;</code>
@@ -1695,46 +2608,37 @@ public final class LoginSignupProto {
      */
     @Override
     public com.google.protobuf.ByteString
-        getMobileNoBytes() {
-      return com.google.protobuf.ByteString.copyFromUtf8(mobileNo_);
-    }
-    /**
-     * <code>string mobileNo = 3;</code>
-     * @param value The mobileNo to set.
-     */
-    private void setMobileNo(
-        String value) {
-      value.getClass();
-  
-      mobileNo_ = value;
-    }
-    /**
-     * <code>string mobileNo = 3;</code>
-     */
-    private void clearMobileNo() {
-      
-      mobileNo_ = getDefaultInstance().getMobileNo();
-    }
-    /**
-     * <code>string mobileNo = 3;</code>
-     * @param value The bytes for mobileNo to set.
-     */
-    private void setMobileNoBytes(
-        com.google.protobuf.ByteString value) {
-      checkByteStringIsUtf8(value);
-      mobileNo_ = value.toStringUtf8();
-      
+    getMobileNoBytes() {
+      Object ref = mobileNo_;
+      if (ref instanceof String) {
+        com.google.protobuf.ByteString b =
+                com.google.protobuf.ByteString.copyFromUtf8(
+                        (String) ref);
+        mobileNo_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
     }
 
     public static final int PASSWORD_FIELD_NUMBER = 4;
-    private String password_;
+    private volatile Object password_;
     /**
      * <code>string password = 4;</code>
      * @return The password.
      */
     @Override
     public String getPassword() {
-      return password_;
+      Object ref = password_;
+      if (ref instanceof String) {
+        return (String) ref;
+      } else {
+        com.google.protobuf.ByteString bs =
+                (com.google.protobuf.ByteString) ref;
+        String s = bs.toStringUtf8();
+        password_ = s;
+        return s;
+      }
     }
     /**
      * <code>string password = 4;</code>
@@ -1742,35 +2646,17 @@ public final class LoginSignupProto {
      */
     @Override
     public com.google.protobuf.ByteString
-        getPasswordBytes() {
-      return com.google.protobuf.ByteString.copyFromUtf8(password_);
-    }
-    /**
-     * <code>string password = 4;</code>
-     * @param value The password to set.
-     */
-    private void setPassword(
-        String value) {
-      value.getClass();
-  
-      password_ = value;
-    }
-    /**
-     * <code>string password = 4;</code>
-     */
-    private void clearPassword() {
-      
-      password_ = getDefaultInstance().getPassword();
-    }
-    /**
-     * <code>string password = 4;</code>
-     * @param value The bytes for password to set.
-     */
-    private void setPasswordBytes(
-        com.google.protobuf.ByteString value) {
-      checkByteStringIsUtf8(value);
-      password_ = value.toStringUtf8();
-      
+    getPasswordBytes() {
+      Object ref = password_;
+      if (ref instanceof String) {
+        com.google.protobuf.ByteString b =
+                com.google.protobuf.ByteString.copyFromUtf8(
+                        (String) ref);
+        password_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
     }
 
     public static final int ROLES_FIELD_NUMBER = 20;
@@ -1779,51 +2665,37 @@ public final class LoginSignupProto {
      * <code>.gbuddy.RoleType roles = 20;</code>
      * @return The enum numeric value on the wire for roles.
      */
-    @Override
-    public int getRolesValue() {
+    @Override public int getRolesValue() {
       return roles_;
     }
     /**
      * <code>.gbuddy.RoleType roles = 20;</code>
      * @return The roles.
      */
-    @Override
-    public RoleType getRoles() {
-      RoleType result = RoleType.forNumber(roles_);
+    @Override public RoleType getRoles() {
+      @SuppressWarnings("deprecation")
+      RoleType result = RoleType.valueOf(roles_);
       return result == null ? RoleType.UNRECOGNIZED : result;
-    }
-    /**
-     * <code>.gbuddy.RoleType roles = 20;</code>
-     * @param value The enum numeric value on the wire for roles to set.
-     */
-    private void setRolesValue(int value) {
-        roles_ = value;
-    }
-    /**
-     * <code>.gbuddy.RoleType roles = 20;</code>
-     * @param value The roles to set.
-     */
-    private void setRoles(RoleType value) {
-      roles_ = value.getNumber();
-      
-    }
-    /**
-     * <code>.gbuddy.RoleType roles = 20;</code>
-     */
-    private void clearRoles() {
-      
-      roles_ = 0;
     }
 
     public static final int ABOUT_FIELD_NUMBER = 21;
-    private String about_;
+    private volatile Object about_;
     /**
      * <code>string about = 21;</code>
      * @return The about.
      */
     @Override
     public String getAbout() {
-      return about_;
+      Object ref = about_;
+      if (ref instanceof String) {
+        return (String) ref;
+      } else {
+        com.google.protobuf.ByteString bs =
+                (com.google.protobuf.ByteString) ref;
+        String s = bs.toStringUtf8();
+        about_ = s;
+        return s;
+      }
     }
     /**
      * <code>string about = 21;</code>
@@ -1831,35 +2703,17 @@ public final class LoginSignupProto {
      */
     @Override
     public com.google.protobuf.ByteString
-        getAboutBytes() {
-      return com.google.protobuf.ByteString.copyFromUtf8(about_);
-    }
-    /**
-     * <code>string about = 21;</code>
-     * @param value The about to set.
-     */
-    private void setAbout(
-        String value) {
-      value.getClass();
-  
-      about_ = value;
-    }
-    /**
-     * <code>string about = 21;</code>
-     */
-    private void clearAbout() {
-      
-      about_ = getDefaultInstance().getAbout();
-    }
-    /**
-     * <code>string about = 21;</code>
-     * @param value The bytes for about to set.
-     */
-    private void setAboutBytes(
-        com.google.protobuf.ByteString value) {
-      checkByteStringIsUtf8(value);
-      about_ = value.toStringUtf8();
-      
+    getAboutBytes() {
+      Object ref = about_;
+      if (ref instanceof String) {
+        com.google.protobuf.ByteString b =
+                com.google.protobuf.ByteString.copyFromUtf8(
+                        (String) ref);
+        about_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
     }
 
     public static final int USERIMAGE_FIELD_NUMBER = 22;
@@ -1872,134 +2726,443 @@ public final class LoginSignupProto {
     public com.google.protobuf.ByteString getUserImage() {
       return userImage_;
     }
-    /**
-     * <code>bytes userImage = 22;</code>
-     * @param value The userImage to set.
-     */
-    private void setUserImage(com.google.protobuf.ByteString value) {
-      value.getClass();
-  
-      userImage_ = value;
+
+    private byte memoizedIsInitialized = -1;
+    @Override
+    public final boolean isInitialized() {
+      byte isInitialized = memoizedIsInitialized;
+      if (isInitialized == 1) return true;
+      if (isInitialized == 0) return false;
+
+      memoizedIsInitialized = 1;
+      return true;
     }
-    /**
-     * <code>bytes userImage = 22;</code>
-     */
-    private void clearUserImage() {
-      
-      userImage_ = getDefaultInstance().getUserImage();
+
+    @Override
+    public void writeTo(com.google.protobuf.CodedOutputStream output)
+            throws java.io.IOException {
+      if (!getUserNameBytes().isEmpty()) {
+        com.google.protobuf.GeneratedMessageV3.writeString(output, 1, userName_);
+      }
+      if (!getEmailIdBytes().isEmpty()) {
+        com.google.protobuf.GeneratedMessageV3.writeString(output, 2, emailId_);
+      }
+      if (!getMobileNoBytes().isEmpty()) {
+        com.google.protobuf.GeneratedMessageV3.writeString(output, 3, mobileNo_);
+      }
+      if (!getPasswordBytes().isEmpty()) {
+        com.google.protobuf.GeneratedMessageV3.writeString(output, 4, password_);
+      }
+      if (roles_ != RoleType.APP_USER.getNumber()) {
+        output.writeEnum(20, roles_);
+      }
+      if (!getAboutBytes().isEmpty()) {
+        com.google.protobuf.GeneratedMessageV3.writeString(output, 21, about_);
+      }
+      if (!userImage_.isEmpty()) {
+        output.writeBytes(22, userImage_);
+      }
+      unknownFields.writeTo(output);
+    }
+
+    @Override
+    public int getSerializedSize() {
+      int size = memoizedSize;
+      if (size != -1) return size;
+
+      size = 0;
+      if (!getUserNameBytes().isEmpty()) {
+        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(1, userName_);
+      }
+      if (!getEmailIdBytes().isEmpty()) {
+        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(2, emailId_);
+      }
+      if (!getMobileNoBytes().isEmpty()) {
+        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(3, mobileNo_);
+      }
+      if (!getPasswordBytes().isEmpty()) {
+        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(4, password_);
+      }
+      if (roles_ != RoleType.APP_USER.getNumber()) {
+        size += com.google.protobuf.CodedOutputStream
+                .computeEnumSize(20, roles_);
+      }
+      if (!getAboutBytes().isEmpty()) {
+        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(21, about_);
+      }
+      if (!userImage_.isEmpty()) {
+        size += com.google.protobuf.CodedOutputStream
+                .computeBytesSize(22, userImage_);
+      }
+      size += unknownFields.getSerializedSize();
+      memoizedSize = size;
+      return size;
+    }
+
+    @Override
+    public boolean equals(final Object obj) {
+      if (obj == this) {
+        return true;
+      }
+      if (!(obj instanceof SignupRequest)) {
+        return super.equals(obj);
+      }
+      SignupRequest other = (SignupRequest) obj;
+
+      if (!getUserName()
+              .equals(other.getUserName())) return false;
+      if (!getEmailId()
+              .equals(other.getEmailId())) return false;
+      if (!getMobileNo()
+              .equals(other.getMobileNo())) return false;
+      if (!getPassword()
+              .equals(other.getPassword())) return false;
+      if (roles_ != other.roles_) return false;
+      if (!getAbout()
+              .equals(other.getAbout())) return false;
+      if (!getUserImage()
+              .equals(other.getUserImage())) return false;
+      if (!unknownFields.equals(other.unknownFields)) return false;
+      return true;
+    }
+
+    @Override
+    public int hashCode() {
+      if (memoizedHashCode != 0) {
+        return memoizedHashCode;
+      }
+      int hash = 41;
+      hash = (19 * hash) + getDescriptor().hashCode();
+      hash = (37 * hash) + USERNAME_FIELD_NUMBER;
+      hash = (53 * hash) + getUserName().hashCode();
+      hash = (37 * hash) + EMAILID_FIELD_NUMBER;
+      hash = (53 * hash) + getEmailId().hashCode();
+      hash = (37 * hash) + MOBILENO_FIELD_NUMBER;
+      hash = (53 * hash) + getMobileNo().hashCode();
+      hash = (37 * hash) + PASSWORD_FIELD_NUMBER;
+      hash = (53 * hash) + getPassword().hashCode();
+      hash = (37 * hash) + ROLES_FIELD_NUMBER;
+      hash = (53 * hash) + roles_;
+      hash = (37 * hash) + ABOUT_FIELD_NUMBER;
+      hash = (53 * hash) + getAbout().hashCode();
+      hash = (37 * hash) + USERIMAGE_FIELD_NUMBER;
+      hash = (53 * hash) + getUserImage().hashCode();
+      hash = (29 * hash) + unknownFields.hashCode();
+      memoizedHashCode = hash;
+      return hash;
     }
 
     public static SignupRequest parseFrom(
-        java.nio.ByteBuffer data)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return com.google.protobuf.GeneratedMessageLite.parseFrom(
-          DEFAULT_INSTANCE, data);
+            java.nio.ByteBuffer data)
+            throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
     }
     public static SignupRequest parseFrom(
-        java.nio.ByteBuffer data,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return com.google.protobuf.GeneratedMessageLite.parseFrom(
-          DEFAULT_INSTANCE, data, extensionRegistry);
+            java.nio.ByteBuffer data,
+            com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+            throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
     }
     public static SignupRequest parseFrom(
-        com.google.protobuf.ByteString data)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return com.google.protobuf.GeneratedMessageLite.parseFrom(
-          DEFAULT_INSTANCE, data);
+            com.google.protobuf.ByteString data)
+            throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
     }
     public static SignupRequest parseFrom(
-        com.google.protobuf.ByteString data,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return com.google.protobuf.GeneratedMessageLite.parseFrom(
-          DEFAULT_INSTANCE, data, extensionRegistry);
+            com.google.protobuf.ByteString data,
+            com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+            throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
     }
     public static SignupRequest parseFrom(byte[] data)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return com.google.protobuf.GeneratedMessageLite.parseFrom(
-          DEFAULT_INSTANCE, data);
+            throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
     }
     public static SignupRequest parseFrom(
-        byte[] data,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return com.google.protobuf.GeneratedMessageLite.parseFrom(
-          DEFAULT_INSTANCE, data, extensionRegistry);
+            byte[] data,
+            com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+            throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
     }
     public static SignupRequest parseFrom(java.io.InputStream input)
-        throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageLite.parseFrom(
-          DEFAULT_INSTANCE, input);
+            throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+              .parseWithIOException(PARSER, input);
     }
     public static SignupRequest parseFrom(
-        java.io.InputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageLite.parseFrom(
-          DEFAULT_INSTANCE, input, extensionRegistry);
+            java.io.InputStream input,
+            com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+            throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+              .parseWithIOException(PARSER, input, extensionRegistry);
     }
     public static SignupRequest parseDelimitedFrom(java.io.InputStream input)
-        throws java.io.IOException {
-      return parseDelimitedFrom(DEFAULT_INSTANCE, input);
+            throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+              .parseDelimitedWithIOException(PARSER, input);
     }
     public static SignupRequest parseDelimitedFrom(
-        java.io.InputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws java.io.IOException {
-      return parseDelimitedFrom(DEFAULT_INSTANCE, input, extensionRegistry);
+            java.io.InputStream input,
+            com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+            throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+              .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
     }
     public static SignupRequest parseFrom(
-        com.google.protobuf.CodedInputStream input)
-        throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageLite.parseFrom(
-          DEFAULT_INSTANCE, input);
+            com.google.protobuf.CodedInputStream input)
+            throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+              .parseWithIOException(PARSER, input);
     }
     public static SignupRequest parseFrom(
-        com.google.protobuf.CodedInputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageLite.parseFrom(
-          DEFAULT_INSTANCE, input, extensionRegistry);
+            com.google.protobuf.CodedInputStream input,
+            com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+            throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+              .parseWithIOException(PARSER, input, extensionRegistry);
     }
 
+    @Override
+    public Builder newBuilderForType() { return newBuilder(); }
     public static Builder newBuilder() {
-      return (Builder) DEFAULT_INSTANCE.createBuilder();
+      return DEFAULT_INSTANCE.toBuilder();
     }
     public static Builder newBuilder(SignupRequest prototype) {
-      return (Builder) DEFAULT_INSTANCE.createBuilder(prototype);
+      return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
+    }
+    @Override
+    public Builder toBuilder() {
+      return this == DEFAULT_INSTANCE
+              ? new Builder() : new Builder().mergeFrom(this);
     }
 
+    @Override
+    protected Builder newBuilderForType(
+            BuilderParent parent) {
+      Builder builder = new Builder(parent);
+      return builder;
+    }
     /**
      * Protobuf type {@code gbuddy.SignupRequest}
      */
     public static final class Builder extends
-        com.google.protobuf.GeneratedMessageLite.Builder<
-          SignupRequest, Builder> implements
-        // @@protoc_insertion_point(builder_implements:gbuddy.SignupRequest)
-        SignupRequestOrBuilder {
-      // Construct using com.example.gym.buddies.data.protos.LoginSignupProto.SignupRequest.newBuilder()
-      private Builder() {
-        super(DEFAULT_INSTANCE);
+            com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
+            // @@protoc_insertion_point(builder_implements:gbuddy.SignupRequest)
+            SignupRequestOrBuilder {
+      public static final com.google.protobuf.Descriptors.Descriptor
+      getDescriptor() {
+        return LoginSignupProto.internal_static_gbuddy_SignupRequest_descriptor;
       }
 
+      @Override
+      protected FieldAccessorTable
+      internalGetFieldAccessorTable() {
+        return LoginSignupProto.internal_static_gbuddy_SignupRequest_fieldAccessorTable
+                .ensureFieldAccessorsInitialized(
+                        SignupRequest.class, Builder.class);
+      }
 
+      // Construct using com.example.gbuddy.protos.LoginSignupProto.SignupRequest.newBuilder()
+      private Builder() {
+        maybeForceBuilderInitialization();
+      }
+
+      private Builder(
+              BuilderParent parent) {
+        super(parent);
+        maybeForceBuilderInitialization();
+      }
+      private void maybeForceBuilderInitialization() {
+        if (com.google.protobuf.GeneratedMessageV3
+                .alwaysUseFieldBuilders) {
+        }
+      }
+      @Override
+      public Builder clear() {
+        super.clear();
+        userName_ = "";
+
+        emailId_ = "";
+
+        mobileNo_ = "";
+
+        password_ = "";
+
+        roles_ = 0;
+
+        about_ = "";
+
+        userImage_ = com.google.protobuf.ByteString.EMPTY;
+
+        return this;
+      }
+
+      @Override
+      public com.google.protobuf.Descriptors.Descriptor
+      getDescriptorForType() {
+        return LoginSignupProto.internal_static_gbuddy_SignupRequest_descriptor;
+      }
+
+      @Override
+      public SignupRequest getDefaultInstanceForType() {
+        return SignupRequest.getDefaultInstance();
+      }
+
+      @Override
+      public SignupRequest build() {
+        SignupRequest result = buildPartial();
+        if (!result.isInitialized()) {
+          throw newUninitializedMessageException(result);
+        }
+        return result;
+      }
+
+      @Override
+      public SignupRequest buildPartial() {
+        SignupRequest result = new SignupRequest(this);
+        result.userName_ = userName_;
+        result.emailId_ = emailId_;
+        result.mobileNo_ = mobileNo_;
+        result.password_ = password_;
+        result.roles_ = roles_;
+        result.about_ = about_;
+        result.userImage_ = userImage_;
+        onBuilt();
+        return result;
+      }
+
+      @Override
+      public Builder clone() {
+        return super.clone();
+      }
+      @Override
+      public Builder setField(
+              com.google.protobuf.Descriptors.FieldDescriptor field,
+              Object value) {
+        return super.setField(field, value);
+      }
+      @Override
+      public Builder clearField(
+              com.google.protobuf.Descriptors.FieldDescriptor field) {
+        return super.clearField(field);
+      }
+      @Override
+      public Builder clearOneof(
+              com.google.protobuf.Descriptors.OneofDescriptor oneof) {
+        return super.clearOneof(oneof);
+      }
+      @Override
+      public Builder setRepeatedField(
+              com.google.protobuf.Descriptors.FieldDescriptor field,
+              int index, Object value) {
+        return super.setRepeatedField(field, index, value);
+      }
+      @Override
+      public Builder addRepeatedField(
+              com.google.protobuf.Descriptors.FieldDescriptor field,
+              Object value) {
+        return super.addRepeatedField(field, value);
+      }
+      @Override
+      public Builder mergeFrom(com.google.protobuf.Message other) {
+        if (other instanceof SignupRequest) {
+          return mergeFrom((SignupRequest)other);
+        } else {
+          super.mergeFrom(other);
+          return this;
+        }
+      }
+
+      public Builder mergeFrom(SignupRequest other) {
+        if (other == SignupRequest.getDefaultInstance()) return this;
+        if (!other.getUserName().isEmpty()) {
+          userName_ = other.userName_;
+          onChanged();
+        }
+        if (!other.getEmailId().isEmpty()) {
+          emailId_ = other.emailId_;
+          onChanged();
+        }
+        if (!other.getMobileNo().isEmpty()) {
+          mobileNo_ = other.mobileNo_;
+          onChanged();
+        }
+        if (!other.getPassword().isEmpty()) {
+          password_ = other.password_;
+          onChanged();
+        }
+        if (other.roles_ != 0) {
+          setRolesValue(other.getRolesValue());
+        }
+        if (!other.getAbout().isEmpty()) {
+          about_ = other.about_;
+          onChanged();
+        }
+        if (other.getUserImage() != com.google.protobuf.ByteString.EMPTY) {
+          setUserImage(other.getUserImage());
+        }
+        this.mergeUnknownFields(other.unknownFields);
+        onChanged();
+        return this;
+      }
+
+      @Override
+      public final boolean isInitialized() {
+        return true;
+      }
+
+      @Override
+      public Builder mergeFrom(
+              com.google.protobuf.CodedInputStream input,
+              com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+              throws java.io.IOException {
+        SignupRequest parsedMessage = null;
+        try {
+          parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
+        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+          parsedMessage = (SignupRequest) e.getUnfinishedMessage();
+          throw e.unwrapIOException();
+        } finally {
+          if (parsedMessage != null) {
+            mergeFrom(parsedMessage);
+          }
+        }
+        return this;
+      }
+
+      private Object userName_ = "";
       /**
        * <code>string userName = 1;</code>
        * @return The userName.
        */
-      @Override
       public String getUserName() {
-        return instance.getUserName();
+        Object ref = userName_;
+        if (!(ref instanceof String)) {
+          com.google.protobuf.ByteString bs =
+                  (com.google.protobuf.ByteString) ref;
+          String s = bs.toStringUtf8();
+          userName_ = s;
+          return s;
+        } else {
+          return (String) ref;
+        }
       }
       /**
        * <code>string userName = 1;</code>
        * @return The bytes for userName.
        */
-      @Override
       public com.google.protobuf.ByteString
-          getUserNameBytes() {
-        return instance.getUserNameBytes();
+      getUserNameBytes() {
+        Object ref = userName_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b =
+                  com.google.protobuf.ByteString.copyFromUtf8(
+                          (String) ref);
+          userName_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
       }
       /**
        * <code>string userName = 1;</code>
@@ -2007,9 +3170,13 @@ public final class LoginSignupProto {
        * @return This builder for chaining.
        */
       public Builder setUserName(
-          String value) {
-        copyOnWrite();
-        instance.setUserName(value);
+              String value) {
+        if (value == null) {
+          throw new NullPointerException();
+        }
+
+        userName_ = value;
+        onChanged();
         return this;
       }
       /**
@@ -2017,8 +3184,9 @@ public final class LoginSignupProto {
        * @return This builder for chaining.
        */
       public Builder clearUserName() {
-        copyOnWrite();
-        instance.clearUserName();
+
+        userName_ = getDefaultInstance().getUserName();
+        onChanged();
         return this;
       }
       /**
@@ -2027,28 +3195,50 @@ public final class LoginSignupProto {
        * @return This builder for chaining.
        */
       public Builder setUserNameBytes(
-          com.google.protobuf.ByteString value) {
-        copyOnWrite();
-        instance.setUserNameBytes(value);
+              com.google.protobuf.ByteString value) {
+        if (value == null) {
+          throw new NullPointerException();
+        }
+        checkByteStringIsUtf8(value);
+
+        userName_ = value;
+        onChanged();
         return this;
       }
 
+      private Object emailId_ = "";
       /**
        * <code>string emailId = 2;</code>
        * @return The emailId.
        */
-      @Override
       public String getEmailId() {
-        return instance.getEmailId();
+        Object ref = emailId_;
+        if (!(ref instanceof String)) {
+          com.google.protobuf.ByteString bs =
+                  (com.google.protobuf.ByteString) ref;
+          String s = bs.toStringUtf8();
+          emailId_ = s;
+          return s;
+        } else {
+          return (String) ref;
+        }
       }
       /**
        * <code>string emailId = 2;</code>
        * @return The bytes for emailId.
        */
-      @Override
       public com.google.protobuf.ByteString
-          getEmailIdBytes() {
-        return instance.getEmailIdBytes();
+      getEmailIdBytes() {
+        Object ref = emailId_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b =
+                  com.google.protobuf.ByteString.copyFromUtf8(
+                          (String) ref);
+          emailId_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
       }
       /**
        * <code>string emailId = 2;</code>
@@ -2056,9 +3246,13 @@ public final class LoginSignupProto {
        * @return This builder for chaining.
        */
       public Builder setEmailId(
-          String value) {
-        copyOnWrite();
-        instance.setEmailId(value);
+              String value) {
+        if (value == null) {
+          throw new NullPointerException();
+        }
+
+        emailId_ = value;
+        onChanged();
         return this;
       }
       /**
@@ -2066,8 +3260,9 @@ public final class LoginSignupProto {
        * @return This builder for chaining.
        */
       public Builder clearEmailId() {
-        copyOnWrite();
-        instance.clearEmailId();
+
+        emailId_ = getDefaultInstance().getEmailId();
+        onChanged();
         return this;
       }
       /**
@@ -2076,28 +3271,50 @@ public final class LoginSignupProto {
        * @return This builder for chaining.
        */
       public Builder setEmailIdBytes(
-          com.google.protobuf.ByteString value) {
-        copyOnWrite();
-        instance.setEmailIdBytes(value);
+              com.google.protobuf.ByteString value) {
+        if (value == null) {
+          throw new NullPointerException();
+        }
+        checkByteStringIsUtf8(value);
+
+        emailId_ = value;
+        onChanged();
         return this;
       }
 
+      private Object mobileNo_ = "";
       /**
        * <code>string mobileNo = 3;</code>
        * @return The mobileNo.
        */
-      @Override
       public String getMobileNo() {
-        return instance.getMobileNo();
+        Object ref = mobileNo_;
+        if (!(ref instanceof String)) {
+          com.google.protobuf.ByteString bs =
+                  (com.google.protobuf.ByteString) ref;
+          String s = bs.toStringUtf8();
+          mobileNo_ = s;
+          return s;
+        } else {
+          return (String) ref;
+        }
       }
       /**
        * <code>string mobileNo = 3;</code>
        * @return The bytes for mobileNo.
        */
-      @Override
       public com.google.protobuf.ByteString
-          getMobileNoBytes() {
-        return instance.getMobileNoBytes();
+      getMobileNoBytes() {
+        Object ref = mobileNo_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b =
+                  com.google.protobuf.ByteString.copyFromUtf8(
+                          (String) ref);
+          mobileNo_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
       }
       /**
        * <code>string mobileNo = 3;</code>
@@ -2105,9 +3322,13 @@ public final class LoginSignupProto {
        * @return This builder for chaining.
        */
       public Builder setMobileNo(
-          String value) {
-        copyOnWrite();
-        instance.setMobileNo(value);
+              String value) {
+        if (value == null) {
+          throw new NullPointerException();
+        }
+
+        mobileNo_ = value;
+        onChanged();
         return this;
       }
       /**
@@ -2115,8 +3336,9 @@ public final class LoginSignupProto {
        * @return This builder for chaining.
        */
       public Builder clearMobileNo() {
-        copyOnWrite();
-        instance.clearMobileNo();
+
+        mobileNo_ = getDefaultInstance().getMobileNo();
+        onChanged();
         return this;
       }
       /**
@@ -2125,28 +3347,50 @@ public final class LoginSignupProto {
        * @return This builder for chaining.
        */
       public Builder setMobileNoBytes(
-          com.google.protobuf.ByteString value) {
-        copyOnWrite();
-        instance.setMobileNoBytes(value);
+              com.google.protobuf.ByteString value) {
+        if (value == null) {
+          throw new NullPointerException();
+        }
+        checkByteStringIsUtf8(value);
+
+        mobileNo_ = value;
+        onChanged();
         return this;
       }
 
+      private Object password_ = "";
       /**
        * <code>string password = 4;</code>
        * @return The password.
        */
-      @Override
       public String getPassword() {
-        return instance.getPassword();
+        Object ref = password_;
+        if (!(ref instanceof String)) {
+          com.google.protobuf.ByteString bs =
+                  (com.google.protobuf.ByteString) ref;
+          String s = bs.toStringUtf8();
+          password_ = s;
+          return s;
+        } else {
+          return (String) ref;
+        }
       }
       /**
        * <code>string password = 4;</code>
        * @return The bytes for password.
        */
-      @Override
       public com.google.protobuf.ByteString
-          getPasswordBytes() {
-        return instance.getPasswordBytes();
+      getPasswordBytes() {
+        Object ref = password_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b =
+                  com.google.protobuf.ByteString.copyFromUtf8(
+                          (String) ref);
+          password_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
       }
       /**
        * <code>string password = 4;</code>
@@ -2154,9 +3398,13 @@ public final class LoginSignupProto {
        * @return This builder for chaining.
        */
       public Builder setPassword(
-          String value) {
-        copyOnWrite();
-        instance.setPassword(value);
+              String value) {
+        if (value == null) {
+          throw new NullPointerException();
+        }
+
+        password_ = value;
+        onChanged();
         return this;
       }
       /**
@@ -2164,8 +3412,9 @@ public final class LoginSignupProto {
        * @return This builder for chaining.
        */
       public Builder clearPassword() {
-        copyOnWrite();
-        instance.clearPassword();
+
+        password_ = getDefaultInstance().getPassword();
+        onChanged();
         return this;
       }
       /**
@@ -2174,28 +3423,34 @@ public final class LoginSignupProto {
        * @return This builder for chaining.
        */
       public Builder setPasswordBytes(
-          com.google.protobuf.ByteString value) {
-        copyOnWrite();
-        instance.setPasswordBytes(value);
+              com.google.protobuf.ByteString value) {
+        if (value == null) {
+          throw new NullPointerException();
+        }
+        checkByteStringIsUtf8(value);
+
+        password_ = value;
+        onChanged();
         return this;
       }
 
+      private int roles_ = 0;
       /**
        * <code>.gbuddy.RoleType roles = 20;</code>
        * @return The enum numeric value on the wire for roles.
        */
-      @Override
-      public int getRolesValue() {
-        return instance.getRolesValue();
+      @Override public int getRolesValue() {
+        return roles_;
       }
       /**
        * <code>.gbuddy.RoleType roles = 20;</code>
-       * @param value The roles to set.
+       * @param value The enum numeric value on the wire for roles to set.
        * @return This builder for chaining.
        */
       public Builder setRolesValue(int value) {
-        copyOnWrite();
-        instance.setRolesValue(value);
+
+        roles_ = value;
+        onChanged();
         return this;
       }
       /**
@@ -2204,16 +3459,22 @@ public final class LoginSignupProto {
        */
       @Override
       public RoleType getRoles() {
-        return instance.getRoles();
+        @SuppressWarnings("deprecation")
+        RoleType result = RoleType.valueOf(roles_);
+        return result == null ? RoleType.UNRECOGNIZED : result;
       }
       /**
        * <code>.gbuddy.RoleType roles = 20;</code>
-       * @param value The enum numeric value on the wire for roles to set.
+       * @param value The roles to set.
        * @return This builder for chaining.
        */
       public Builder setRoles(RoleType value) {
-        copyOnWrite();
-        instance.setRoles(value);
+        if (value == null) {
+          throw new NullPointerException();
+        }
+
+        roles_ = value.getNumber();
+        onChanged();
         return this;
       }
       /**
@@ -2221,27 +3482,45 @@ public final class LoginSignupProto {
        * @return This builder for chaining.
        */
       public Builder clearRoles() {
-        copyOnWrite();
-        instance.clearRoles();
+
+        roles_ = 0;
+        onChanged();
         return this;
       }
 
+      private Object about_ = "";
       /**
        * <code>string about = 21;</code>
        * @return The about.
        */
-      @Override
       public String getAbout() {
-        return instance.getAbout();
+        Object ref = about_;
+        if (!(ref instanceof String)) {
+          com.google.protobuf.ByteString bs =
+                  (com.google.protobuf.ByteString) ref;
+          String s = bs.toStringUtf8();
+          about_ = s;
+          return s;
+        } else {
+          return (String) ref;
+        }
       }
       /**
        * <code>string about = 21;</code>
        * @return The bytes for about.
        */
-      @Override
       public com.google.protobuf.ByteString
-          getAboutBytes() {
-        return instance.getAboutBytes();
+      getAboutBytes() {
+        Object ref = about_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b =
+                  com.google.protobuf.ByteString.copyFromUtf8(
+                          (String) ref);
+          about_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
       }
       /**
        * <code>string about = 21;</code>
@@ -2249,9 +3528,13 @@ public final class LoginSignupProto {
        * @return This builder for chaining.
        */
       public Builder setAbout(
-          String value) {
-        copyOnWrite();
-        instance.setAbout(value);
+              String value) {
+        if (value == null) {
+          throw new NullPointerException();
+        }
+
+        about_ = value;
+        onChanged();
         return this;
       }
       /**
@@ -2259,8 +3542,9 @@ public final class LoginSignupProto {
        * @return This builder for chaining.
        */
       public Builder clearAbout() {
-        copyOnWrite();
-        instance.clearAbout();
+
+        about_ = getDefaultInstance().getAbout();
+        onChanged();
         return this;
       }
       /**
@@ -2269,19 +3553,25 @@ public final class LoginSignupProto {
        * @return This builder for chaining.
        */
       public Builder setAboutBytes(
-          com.google.protobuf.ByteString value) {
-        copyOnWrite();
-        instance.setAboutBytes(value);
+              com.google.protobuf.ByteString value) {
+        if (value == null) {
+          throw new NullPointerException();
+        }
+        checkByteStringIsUtf8(value);
+
+        about_ = value;
+        onChanged();
         return this;
       }
 
+      private com.google.protobuf.ByteString userImage_ = com.google.protobuf.ByteString.EMPTY;
       /**
        * <code>bytes userImage = 22;</code>
        * @return The userImage.
        */
       @Override
       public com.google.protobuf.ByteString getUserImage() {
-        return instance.getUserImage();
+        return userImage_;
       }
       /**
        * <code>bytes userImage = 22;</code>
@@ -2289,8 +3579,12 @@ public final class LoginSignupProto {
        * @return This builder for chaining.
        */
       public Builder setUserImage(com.google.protobuf.ByteString value) {
-        copyOnWrite();
-        instance.setUserImage(value);
+        if (value == null) {
+          throw new NullPointerException();
+        }
+
+        userImage_ = value;
+        onChanged();
         return this;
       }
       /**
@@ -2298,95 +3592,67 @@ public final class LoginSignupProto {
        * @return This builder for chaining.
        */
       public Builder clearUserImage() {
-        copyOnWrite();
-        instance.clearUserImage();
+
+        userImage_ = getDefaultInstance().getUserImage();
+        onChanged();
         return this;
       }
+      @Override
+      public final Builder setUnknownFields(
+              final com.google.protobuf.UnknownFieldSet unknownFields) {
+        return super.setUnknownFields(unknownFields);
+      }
+
+      @Override
+      public final Builder mergeUnknownFields(
+              final com.google.protobuf.UnknownFieldSet unknownFields) {
+        return super.mergeUnknownFields(unknownFields);
+      }
+
 
       // @@protoc_insertion_point(builder_scope:gbuddy.SignupRequest)
     }
-    @Override
-    @SuppressWarnings({"unchecked", "fallthrough"})
-    protected final Object dynamicMethod(
-        MethodToInvoke method,
-        Object arg0, Object arg1) {
-      switch (method) {
-        case NEW_MUTABLE_INSTANCE: {
-          return new SignupRequest();
-        }
-        case NEW_BUILDER: {
-          return new Builder();
-        }
-        case BUILD_MESSAGE_INFO: {
-            Object[] objects = new Object[] {
-              "userName_",
-              "emailId_",
-              "mobileNo_",
-              "password_",
-              "roles_",
-              "about_",
-              "userImage_",
-            };
-            String info =
-                "\u0000\u0007\u0000\u0000\u0001\u0016\u0007\u0000\u0000\u0000\u0001\u0208\u0002\u0208" +
-                "\u0003\u0208\u0004\u0208\u0014\f\u0015\u0208\u0016\n";
-            return newMessageInfo(DEFAULT_INSTANCE, info, objects);
-        }
-        // fall through
-        case GET_DEFAULT_INSTANCE: {
-          return DEFAULT_INSTANCE;
-        }
-        case GET_PARSER: {
-          com.google.protobuf.Parser<SignupRequest> parser = PARSER;
-          if (parser == null) {
-            synchronized (SignupRequest.class) {
-              parser = PARSER;
-              if (parser == null) {
-                parser =
-                    new DefaultInstanceBasedParser<SignupRequest>(
-                        DEFAULT_INSTANCE);
-                PARSER = parser;
-              }
-            }
-          }
-          return parser;
-      }
-      case GET_MEMOIZED_IS_INITIALIZED: {
-        return (byte) 1;
-      }
-      case SET_MEMOIZED_IS_INITIALIZED: {
-        return null;
-      }
-      }
-      throw new UnsupportedOperationException();
-    }
-
 
     // @@protoc_insertion_point(class_scope:gbuddy.SignupRequest)
     private static final SignupRequest DEFAULT_INSTANCE;
     static {
-      SignupRequest defaultInstance = new SignupRequest();
-      // New instances are implicitly immutable so no need to make
-      // immutable.
-      DEFAULT_INSTANCE = defaultInstance;
-      com.google.protobuf.GeneratedMessageLite.registerDefaultInstance(
-        SignupRequest.class, defaultInstance);
+      DEFAULT_INSTANCE = new SignupRequest();
     }
 
     public static SignupRequest getDefaultInstance() {
       return DEFAULT_INSTANCE;
     }
 
-    private static volatile com.google.protobuf.Parser<SignupRequest> PARSER;
+    private static final com.google.protobuf.Parser<SignupRequest>
+            PARSER = new com.google.protobuf.AbstractParser<SignupRequest>() {
+      @Override
+      public SignupRequest parsePartialFrom(
+              com.google.protobuf.CodedInputStream input,
+              com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+              throws com.google.protobuf.InvalidProtocolBufferException {
+        return new SignupRequest(input, extensionRegistry);
+      }
+    };
 
     public static com.google.protobuf.Parser<SignupRequest> parser() {
-      return DEFAULT_INSTANCE.getParserForType();
+      return PARSER;
     }
+
+    @Override
+    public com.google.protobuf.Parser<SignupRequest> getParserForType() {
+      return PARSER;
+    }
+
+    @Override
+    public SignupRequest getDefaultInstanceForType() {
+      return DEFAULT_INSTANCE;
+    }
+
   }
 
   public interface SignupResponseOrBuilder extends
-      // @@protoc_insertion_point(interface_extends:gbuddy.SignupResponse)
-      com.google.protobuf.MessageLiteOrBuilder {
+          // @@protoc_insertion_point(interface_extends:gbuddy.SignupResponse)
+          com.google.protobuf.MessageOrBuilder {
 
     /**
      * <code>.gbuddy.LoginResponse response = 1;</code>
@@ -2398,21 +3664,106 @@ public final class LoginSignupProto {
      * @return The response.
      */
     LoginResponse getResponse();
+    /**
+     * <code>.gbuddy.LoginResponse response = 1;</code>
+     */
+    LoginResponseOrBuilder getResponseOrBuilder();
   }
   /**
    * Protobuf type {@code gbuddy.SignupResponse}
    */
-  public  static final class SignupResponse extends
-      com.google.protobuf.GeneratedMessageLite<
-          SignupResponse, SignupResponse.Builder> implements
-      // @@protoc_insertion_point(message_implements:gbuddy.SignupResponse)
-      SignupResponseOrBuilder {
+  public static final class SignupResponse extends
+          com.google.protobuf.GeneratedMessageV3 implements
+          // @@protoc_insertion_point(message_implements:gbuddy.SignupResponse)
+          SignupResponseOrBuilder {
+    private static final long serialVersionUID = 0L;
+    // Use SignupResponse.newBuilder() to construct.
+    private SignupResponse(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
+      super(builder);
+    }
     private SignupResponse() {
     }
+
+    @Override
+    @SuppressWarnings({"unused"})
+    protected Object newInstance(
+            UnusedPrivateParameter unused) {
+      return new SignupResponse();
+    }
+
+    @Override
+    public final com.google.protobuf.UnknownFieldSet
+    getUnknownFields() {
+      return this.unknownFields;
+    }
+    private SignupResponse(
+            com.google.protobuf.CodedInputStream input,
+            com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+            throws com.google.protobuf.InvalidProtocolBufferException {
+      this();
+      if (extensionRegistry == null) {
+        throw new NullPointerException();
+      }
+      com.google.protobuf.UnknownFieldSet.Builder unknownFields =
+              com.google.protobuf.UnknownFieldSet.newBuilder();
+      try {
+        boolean done = false;
+        while (!done) {
+          int tag = input.readTag();
+          switch (tag) {
+            case 0:
+              done = true;
+              break;
+            case 10: {
+              LoginResponse.Builder subBuilder = null;
+              if (response_ != null) {
+                subBuilder = response_.toBuilder();
+              }
+              response_ = input.readMessage(LoginResponse.parser(), extensionRegistry);
+              if (subBuilder != null) {
+                subBuilder.mergeFrom(response_);
+                response_ = subBuilder.buildPartial();
+              }
+
+              break;
+            }
+            default: {
+              if (!parseUnknownField(
+                      input, unknownFields, extensionRegistry, tag)) {
+                done = true;
+              }
+              break;
+            }
+          }
+        }
+      } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+        throw e.setUnfinishedMessage(this);
+      } catch (java.io.IOException e) {
+        throw new com.google.protobuf.InvalidProtocolBufferException(
+                e).setUnfinishedMessage(this);
+      } finally {
+        this.unknownFields = unknownFields.build();
+        makeExtensionsImmutable();
+      }
+    }
+    public static final com.google.protobuf.Descriptors.Descriptor
+    getDescriptor() {
+      return LoginSignupProto.internal_static_gbuddy_SignupResponse_descriptor;
+    }
+
+    @Override
+    protected FieldAccessorTable
+    internalGetFieldAccessorTable() {
+      return LoginSignupProto.internal_static_gbuddy_SignupResponse_fieldAccessorTable
+              .ensureFieldAccessorsInitialized(
+                      SignupResponse.class, Builder.class);
+    }
+
     public static final int RESPONSE_FIELD_NUMBER = 1;
     private LoginResponse response_;
     /**
      * <code>.gbuddy.LoginResponse response = 1;</code>
+     * @return Whether the response field is set.
      */
     @Override
     public boolean hasResponse() {
@@ -2420,6 +3771,7 @@ public final class LoginSignupProto {
     }
     /**
      * <code>.gbuddy.LoginResponse response = 1;</code>
+     * @return The response.
      */
     @Override
     public LoginResponse getResponse() {
@@ -2428,251 +3780,570 @@ public final class LoginSignupProto {
     /**
      * <code>.gbuddy.LoginResponse response = 1;</code>
      */
-    private void setResponse(LoginResponse value) {
-      value.getClass();
-  response_ = value;
-      
-      }
-    /**
-     * <code>.gbuddy.LoginResponse response = 1;</code>
-     */
-    @SuppressWarnings({"ReferenceEquality"})
-    private void mergeResponse(LoginResponse value) {
-      value.getClass();
-  if (response_ != null &&
-          response_ != LoginResponse.getDefaultInstance()) {
-        response_ =
-          LoginResponse.newBuilder(response_).mergeFrom(value).buildPartial();
-      } else {
-        response_ = value;
-      }
-      
+    @Override
+    public LoginResponseOrBuilder getResponseOrBuilder() {
+      return getResponse();
     }
-    /**
-     * <code>.gbuddy.LoginResponse response = 1;</code>
-     */
-    private void clearResponse() {  response_ = null;
-      
+
+    private byte memoizedIsInitialized = -1;
+    @Override
+    public final boolean isInitialized() {
+      byte isInitialized = memoizedIsInitialized;
+      if (isInitialized == 1) return true;
+      if (isInitialized == 0) return false;
+
+      memoizedIsInitialized = 1;
+      return true;
+    }
+
+    @Override
+    public void writeTo(com.google.protobuf.CodedOutputStream output)
+            throws java.io.IOException {
+      if (response_ != null) {
+        output.writeMessage(1, getResponse());
+      }
+      unknownFields.writeTo(output);
+    }
+
+    @Override
+    public int getSerializedSize() {
+      int size = memoizedSize;
+      if (size != -1) return size;
+
+      size = 0;
+      if (response_ != null) {
+        size += com.google.protobuf.CodedOutputStream
+                .computeMessageSize(1, getResponse());
+      }
+      size += unknownFields.getSerializedSize();
+      memoizedSize = size;
+      return size;
+    }
+
+    @Override
+    public boolean equals(final Object obj) {
+      if (obj == this) {
+        return true;
+      }
+      if (!(obj instanceof SignupResponse)) {
+        return super.equals(obj);
+      }
+      SignupResponse other = (SignupResponse) obj;
+
+      if (hasResponse() != other.hasResponse()) return false;
+      if (hasResponse()) {
+        if (!getResponse()
+                .equals(other.getResponse())) return false;
+      }
+      if (!unknownFields.equals(other.unknownFields)) return false;
+      return true;
+    }
+
+    @Override
+    public int hashCode() {
+      if (memoizedHashCode != 0) {
+        return memoizedHashCode;
+      }
+      int hash = 41;
+      hash = (19 * hash) + getDescriptor().hashCode();
+      if (hasResponse()) {
+        hash = (37 * hash) + RESPONSE_FIELD_NUMBER;
+        hash = (53 * hash) + getResponse().hashCode();
+      }
+      hash = (29 * hash) + unknownFields.hashCode();
+      memoizedHashCode = hash;
+      return hash;
     }
 
     public static SignupResponse parseFrom(
-        java.nio.ByteBuffer data)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return com.google.protobuf.GeneratedMessageLite.parseFrom(
-          DEFAULT_INSTANCE, data);
+            java.nio.ByteBuffer data)
+            throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
     }
     public static SignupResponse parseFrom(
-        java.nio.ByteBuffer data,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return com.google.protobuf.GeneratedMessageLite.parseFrom(
-          DEFAULT_INSTANCE, data, extensionRegistry);
+            java.nio.ByteBuffer data,
+            com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+            throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
     }
     public static SignupResponse parseFrom(
-        com.google.protobuf.ByteString data)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return com.google.protobuf.GeneratedMessageLite.parseFrom(
-          DEFAULT_INSTANCE, data);
+            com.google.protobuf.ByteString data)
+            throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
     }
     public static SignupResponse parseFrom(
-        com.google.protobuf.ByteString data,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return com.google.protobuf.GeneratedMessageLite.parseFrom(
-          DEFAULT_INSTANCE, data, extensionRegistry);
+            com.google.protobuf.ByteString data,
+            com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+            throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
     }
     public static SignupResponse parseFrom(byte[] data)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return com.google.protobuf.GeneratedMessageLite.parseFrom(
-          DEFAULT_INSTANCE, data);
+            throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
     }
     public static SignupResponse parseFrom(
-        byte[] data,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return com.google.protobuf.GeneratedMessageLite.parseFrom(
-          DEFAULT_INSTANCE, data, extensionRegistry);
+            byte[] data,
+            com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+            throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
     }
     public static SignupResponse parseFrom(java.io.InputStream input)
-        throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageLite.parseFrom(
-          DEFAULT_INSTANCE, input);
+            throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+              .parseWithIOException(PARSER, input);
     }
     public static SignupResponse parseFrom(
-        java.io.InputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageLite.parseFrom(
-          DEFAULT_INSTANCE, input, extensionRegistry);
+            java.io.InputStream input,
+            com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+            throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+              .parseWithIOException(PARSER, input, extensionRegistry);
     }
     public static SignupResponse parseDelimitedFrom(java.io.InputStream input)
-        throws java.io.IOException {
-      return parseDelimitedFrom(DEFAULT_INSTANCE, input);
+            throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+              .parseDelimitedWithIOException(PARSER, input);
     }
     public static SignupResponse parseDelimitedFrom(
-        java.io.InputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws java.io.IOException {
-      return parseDelimitedFrom(DEFAULT_INSTANCE, input, extensionRegistry);
+            java.io.InputStream input,
+            com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+            throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+              .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
     }
     public static SignupResponse parseFrom(
-        com.google.protobuf.CodedInputStream input)
-        throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageLite.parseFrom(
-          DEFAULT_INSTANCE, input);
+            com.google.protobuf.CodedInputStream input)
+            throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+              .parseWithIOException(PARSER, input);
     }
     public static SignupResponse parseFrom(
-        com.google.protobuf.CodedInputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws java.io.IOException {
-      return com.google.protobuf.GeneratedMessageLite.parseFrom(
-          DEFAULT_INSTANCE, input, extensionRegistry);
+            com.google.protobuf.CodedInputStream input,
+            com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+            throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+              .parseWithIOException(PARSER, input, extensionRegistry);
     }
 
+    @Override
+    public Builder newBuilderForType() { return newBuilder(); }
     public static Builder newBuilder() {
-      return (Builder) DEFAULT_INSTANCE.createBuilder();
+      return DEFAULT_INSTANCE.toBuilder();
     }
     public static Builder newBuilder(SignupResponse prototype) {
-      return (Builder) DEFAULT_INSTANCE.createBuilder(prototype);
+      return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
+    }
+    @Override
+    public Builder toBuilder() {
+      return this == DEFAULT_INSTANCE
+              ? new Builder() : new Builder().mergeFrom(this);
     }
 
+    @Override
+    protected Builder newBuilderForType(
+            BuilderParent parent) {
+      Builder builder = new Builder(parent);
+      return builder;
+    }
     /**
      * Protobuf type {@code gbuddy.SignupResponse}
      */
     public static final class Builder extends
-        com.google.protobuf.GeneratedMessageLite.Builder<
-          SignupResponse, Builder> implements
-        // @@protoc_insertion_point(builder_implements:gbuddy.SignupResponse)
-        SignupResponseOrBuilder {
-      // Construct using com.example.gym.buddies.data.protos.LoginSignupProto.SignupResponse.newBuilder()
+            com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
+            // @@protoc_insertion_point(builder_implements:gbuddy.SignupResponse)
+            SignupResponseOrBuilder {
+      public static final com.google.protobuf.Descriptors.Descriptor
+      getDescriptor() {
+        return LoginSignupProto.internal_static_gbuddy_SignupResponse_descriptor;
+      }
+
+      @Override
+      protected FieldAccessorTable
+      internalGetFieldAccessorTable() {
+        return LoginSignupProto.internal_static_gbuddy_SignupResponse_fieldAccessorTable
+                .ensureFieldAccessorsInitialized(
+                        SignupResponse.class, Builder.class);
+      }
+
+      // Construct using com.example.gbuddy.protos.LoginSignupProto.SignupResponse.newBuilder()
       private Builder() {
-        super(DEFAULT_INSTANCE);
+        maybeForceBuilderInitialization();
       }
 
+      private Builder(
+              BuilderParent parent) {
+        super(parent);
+        maybeForceBuilderInitialization();
+      }
+      private void maybeForceBuilderInitialization() {
+        if (com.google.protobuf.GeneratedMessageV3
+                .alwaysUseFieldBuilders) {
+        }
+      }
+      @Override
+      public Builder clear() {
+        super.clear();
+        if (responseBuilder_ == null) {
+          response_ = null;
+        } else {
+          response_ = null;
+          responseBuilder_ = null;
+        }
+        return this;
+      }
 
+      @Override
+      public com.google.protobuf.Descriptors.Descriptor
+      getDescriptorForType() {
+        return LoginSignupProto.internal_static_gbuddy_SignupResponse_descriptor;
+      }
+
+      @Override
+      public SignupResponse getDefaultInstanceForType() {
+        return SignupResponse.getDefaultInstance();
+      }
+
+      @Override
+      public SignupResponse build() {
+        SignupResponse result = buildPartial();
+        if (!result.isInitialized()) {
+          throw newUninitializedMessageException(result);
+        }
+        return result;
+      }
+
+      @Override
+      public SignupResponse buildPartial() {
+        SignupResponse result = new SignupResponse(this);
+        if (responseBuilder_ == null) {
+          result.response_ = response_;
+        } else {
+          result.response_ = responseBuilder_.build();
+        }
+        onBuilt();
+        return result;
+      }
+
+      @Override
+      public Builder clone() {
+        return super.clone();
+      }
+      @Override
+      public Builder setField(
+              com.google.protobuf.Descriptors.FieldDescriptor field,
+              Object value) {
+        return super.setField(field, value);
+      }
+      @Override
+      public Builder clearField(
+              com.google.protobuf.Descriptors.FieldDescriptor field) {
+        return super.clearField(field);
+      }
+      @Override
+      public Builder clearOneof(
+              com.google.protobuf.Descriptors.OneofDescriptor oneof) {
+        return super.clearOneof(oneof);
+      }
+      @Override
+      public Builder setRepeatedField(
+              com.google.protobuf.Descriptors.FieldDescriptor field,
+              int index, Object value) {
+        return super.setRepeatedField(field, index, value);
+      }
+      @Override
+      public Builder addRepeatedField(
+              com.google.protobuf.Descriptors.FieldDescriptor field,
+              Object value) {
+        return super.addRepeatedField(field, value);
+      }
+      @Override
+      public Builder mergeFrom(com.google.protobuf.Message other) {
+        if (other instanceof SignupResponse) {
+          return mergeFrom((SignupResponse)other);
+        } else {
+          super.mergeFrom(other);
+          return this;
+        }
+      }
+
+      public Builder mergeFrom(SignupResponse other) {
+        if (other == SignupResponse.getDefaultInstance()) return this;
+        if (other.hasResponse()) {
+          mergeResponse(other.getResponse());
+        }
+        this.mergeUnknownFields(other.unknownFields);
+        onChanged();
+        return this;
+      }
+
+      @Override
+      public final boolean isInitialized() {
+        return true;
+      }
+
+      @Override
+      public Builder mergeFrom(
+              com.google.protobuf.CodedInputStream input,
+              com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+              throws java.io.IOException {
+        SignupResponse parsedMessage = null;
+        try {
+          parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
+        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+          parsedMessage = (SignupResponse) e.getUnfinishedMessage();
+          throw e.unwrapIOException();
+        } finally {
+          if (parsedMessage != null) {
+            mergeFrom(parsedMessage);
+          }
+        }
+        return this;
+      }
+
+      private LoginResponse response_;
+      private com.google.protobuf.SingleFieldBuilderV3<
+              LoginResponse, LoginResponse.Builder, LoginResponseOrBuilder> responseBuilder_;
       /**
        * <code>.gbuddy.LoginResponse response = 1;</code>
+       * @return Whether the response field is set.
        */
-      @Override
       public boolean hasResponse() {
-        return instance.hasResponse();
+        return responseBuilder_ != null || response_ != null;
       }
       /**
        * <code>.gbuddy.LoginResponse response = 1;</code>
+       * @return The response.
        */
-      @Override
       public LoginResponse getResponse() {
-        return instance.getResponse();
+        if (responseBuilder_ == null) {
+          return response_ == null ? LoginResponse.getDefaultInstance() : response_;
+        } else {
+          return responseBuilder_.getMessage();
+        }
       }
       /**
        * <code>.gbuddy.LoginResponse response = 1;</code>
        */
       public Builder setResponse(LoginResponse value) {
-        copyOnWrite();
-        instance.setResponse(value);
-        return this;
+        if (responseBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          response_ = value;
+          onChanged();
+        } else {
+          responseBuilder_.setMessage(value);
         }
+
+        return this;
+      }
       /**
        * <code>.gbuddy.LoginResponse response = 1;</code>
        */
       public Builder setResponse(
-          LoginResponse.Builder builderForValue) {
-        copyOnWrite();
-        instance.setResponse(builderForValue.build());
+              LoginResponse.Builder builderForValue) {
+        if (responseBuilder_ == null) {
+          response_ = builderForValue.build();
+          onChanged();
+        } else {
+          responseBuilder_.setMessage(builderForValue.build());
+        }
+
         return this;
       }
       /**
        * <code>.gbuddy.LoginResponse response = 1;</code>
        */
       public Builder mergeResponse(LoginResponse value) {
-        copyOnWrite();
-        instance.mergeResponse(value);
+        if (responseBuilder_ == null) {
+          if (response_ != null) {
+            response_ =
+                    LoginResponse.newBuilder(response_).mergeFrom(value).buildPartial();
+          } else {
+            response_ = value;
+          }
+          onChanged();
+        } else {
+          responseBuilder_.mergeFrom(value);
+        }
+
         return this;
       }
       /**
        * <code>.gbuddy.LoginResponse response = 1;</code>
        */
-      public Builder clearResponse() {  copyOnWrite();
-        instance.clearResponse();
+      public Builder clearResponse() {
+        if (responseBuilder_ == null) {
+          response_ = null;
+          onChanged();
+        } else {
+          response_ = null;
+          responseBuilder_ = null;
+        }
+
         return this;
       }
+      /**
+       * <code>.gbuddy.LoginResponse response = 1;</code>
+       */
+      public LoginResponse.Builder getResponseBuilder() {
+
+        onChanged();
+        return getResponseFieldBuilder().getBuilder();
+      }
+      /**
+       * <code>.gbuddy.LoginResponse response = 1;</code>
+       */
+      public LoginResponseOrBuilder getResponseOrBuilder() {
+        if (responseBuilder_ != null) {
+          return responseBuilder_.getMessageOrBuilder();
+        } else {
+          return response_ == null ?
+                  LoginResponse.getDefaultInstance() : response_;
+        }
+      }
+      /**
+       * <code>.gbuddy.LoginResponse response = 1;</code>
+       */
+      private com.google.protobuf.SingleFieldBuilderV3<
+              LoginResponse, LoginResponse.Builder, LoginResponseOrBuilder>
+      getResponseFieldBuilder() {
+        if (responseBuilder_ == null) {
+          responseBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
+                  LoginResponse, LoginResponse.Builder, LoginResponseOrBuilder>(
+                  getResponse(),
+                  getParentForChildren(),
+                  isClean());
+          response_ = null;
+        }
+        return responseBuilder_;
+      }
+      @Override
+      public final Builder setUnknownFields(
+              final com.google.protobuf.UnknownFieldSet unknownFields) {
+        return super.setUnknownFields(unknownFields);
+      }
+
+      @Override
+      public final Builder mergeUnknownFields(
+              final com.google.protobuf.UnknownFieldSet unknownFields) {
+        return super.mergeUnknownFields(unknownFields);
+      }
+
 
       // @@protoc_insertion_point(builder_scope:gbuddy.SignupResponse)
     }
-    @Override
-    @SuppressWarnings({"unchecked", "fallthrough"})
-    protected final Object dynamicMethod(
-        MethodToInvoke method,
-        Object arg0, Object arg1) {
-      switch (method) {
-        case NEW_MUTABLE_INSTANCE: {
-          return new SignupResponse();
-        }
-        case NEW_BUILDER: {
-          return new Builder();
-        }
-        case BUILD_MESSAGE_INFO: {
-            Object[] objects = new Object[] {
-              "response_",
-            };
-            String info =
-                "\u0000\u0001\u0000\u0000\u0001\u0001\u0001\u0000\u0000\u0000\u0001\t";
-            return newMessageInfo(DEFAULT_INSTANCE, info, objects);
-        }
-        // fall through
-        case GET_DEFAULT_INSTANCE: {
-          return DEFAULT_INSTANCE;
-        }
-        case GET_PARSER: {
-          com.google.protobuf.Parser<SignupResponse> parser = PARSER;
-          if (parser == null) {
-            synchronized (SignupResponse.class) {
-              parser = PARSER;
-              if (parser == null) {
-                parser =
-                    new DefaultInstanceBasedParser<SignupResponse>(
-                        DEFAULT_INSTANCE);
-                PARSER = parser;
-              }
-            }
-          }
-          return parser;
-      }
-      case GET_MEMOIZED_IS_INITIALIZED: {
-        return (byte) 1;
-      }
-      case SET_MEMOIZED_IS_INITIALIZED: {
-        return null;
-      }
-      }
-      throw new UnsupportedOperationException();
-    }
-
 
     // @@protoc_insertion_point(class_scope:gbuddy.SignupResponse)
     private static final SignupResponse DEFAULT_INSTANCE;
     static {
-      SignupResponse defaultInstance = new SignupResponse();
-      // New instances are implicitly immutable so no need to make
-      // immutable.
-      DEFAULT_INSTANCE = defaultInstance;
-      com.google.protobuf.GeneratedMessageLite.registerDefaultInstance(
-        SignupResponse.class, defaultInstance);
+      DEFAULT_INSTANCE = new SignupResponse();
     }
 
     public static SignupResponse getDefaultInstance() {
       return DEFAULT_INSTANCE;
     }
 
-    private static volatile com.google.protobuf.Parser<SignupResponse> PARSER;
+    private static final com.google.protobuf.Parser<SignupResponse>
+            PARSER = new com.google.protobuf.AbstractParser<SignupResponse>() {
+      @Override
+      public SignupResponse parsePartialFrom(
+              com.google.protobuf.CodedInputStream input,
+              com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+              throws com.google.protobuf.InvalidProtocolBufferException {
+        return new SignupResponse(input, extensionRegistry);
+      }
+    };
 
     public static com.google.protobuf.Parser<SignupResponse> parser() {
-      return DEFAULT_INSTANCE.getParserForType();
+      return PARSER;
     }
+
+    @Override
+    public com.google.protobuf.Parser<SignupResponse> getParserForType() {
+      return PARSER;
+    }
+
+    @Override
+    public SignupResponse getDefaultInstanceForType() {
+      return DEFAULT_INSTANCE;
+    }
+
   }
 
+  private static final com.google.protobuf.Descriptors.Descriptor
+          internal_static_gbuddy_LoginRequest_descriptor;
+  private static final
+  com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+          internal_static_gbuddy_LoginRequest_fieldAccessorTable;
+  private static final com.google.protobuf.Descriptors.Descriptor
+          internal_static_gbuddy_LoginResponse_descriptor;
+  private static final
+  com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+          internal_static_gbuddy_LoginResponse_fieldAccessorTable;
+  private static final com.google.protobuf.Descriptors.Descriptor
+          internal_static_gbuddy_SignupRequest_descriptor;
+  private static final
+  com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+          internal_static_gbuddy_SignupRequest_fieldAccessorTable;
+  private static final com.google.protobuf.Descriptors.Descriptor
+          internal_static_gbuddy_SignupResponse_descriptor;
+  private static final
+  com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+          internal_static_gbuddy_SignupResponse_fieldAccessorTable;
 
+  public static com.google.protobuf.Descriptors.FileDescriptor
+  getDescriptor() {
+    return descriptor;
+  }
+  private static  com.google.protobuf.Descriptors.FileDescriptor
+          descriptor;
   static {
+    String[] descriptorData = {
+            "\n\021loginsignup.proto\022\006gbuddy\"2\n\014LoginRequ" +
+                    "est\022\020\n\010username\030\001 \001(\t\022\020\n\010password\030\002 \001(\t\"" +
+                    "\264\001\n\rLoginResponse\022\020\n\010userName\030\001 \001(\t\022\017\n\007e" +
+                    "mailId\030\002 \001(\t\022\020\n\010mobileNo\030\003 \001(\t\022\r\n\005picId\030" +
+                    "\004 \001(\005\022\016\n\006userId\030\005 \001(\005\022\021\n\tuserImage\030\024 \001(\014" +
+                    "\022\r\n\005about\030\025 \001(\t\022\024\n\014responseCode\030\006 \001(\005\022\027\n" +
+                    "\017responseMessage\030\026 \001(\t\"\231\001\n\rSignupRequest" +
+                    "\022\020\n\010userName\030\001 \001(\t\022\017\n\007emailId\030\002 \001(\t\022\020\n\010m" +
+                    "obileNo\030\003 \001(\t\022\020\n\010password\030\004 \001(\t\022\037\n\005roles" +
+                    "\030\024 \001(\0162\020.gbuddy.RoleType\022\r\n\005about\030\025 \001(\t\022" +
+                    "\021\n\tuserImage\030\026 \001(\014\"9\n\016SignupResponse\022\'\n\010" +
+                    "response\030\001 \001(\0132\025.gbuddy.LoginResponse*6\n" +
+                    "\010RoleType\022\014\n\010APP_USER\020\000\022\r\n\tGYM_ADMIN\020\001\022\r" +
+                    "\n\tAPP_ADMIN\020\002B-\n\031com.example.gbuddy.prot" +
+                    "osB\020LoginSignupProtob\006proto3"
+    };
+    descriptor = com.google.protobuf.Descriptors.FileDescriptor
+            .internalBuildGeneratedFileFrom(descriptorData,
+                    new com.google.protobuf.Descriptors.FileDescriptor[] {
+                    });
+    internal_static_gbuddy_LoginRequest_descriptor =
+            getDescriptor().getMessageTypes().get(0);
+    internal_static_gbuddy_LoginRequest_fieldAccessorTable = new
+            com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+            internal_static_gbuddy_LoginRequest_descriptor,
+            new String[] { "Username", "Password", });
+    internal_static_gbuddy_LoginResponse_descriptor =
+            getDescriptor().getMessageTypes().get(1);
+    internal_static_gbuddy_LoginResponse_fieldAccessorTable = new
+            com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+            internal_static_gbuddy_LoginResponse_descriptor,
+            new String[] { "UserName", "EmailId", "MobileNo", "PicId", "UserId", "UserImage", "About", "ResponseCode", "ResponseMessage", });
+    internal_static_gbuddy_SignupRequest_descriptor =
+            getDescriptor().getMessageTypes().get(2);
+    internal_static_gbuddy_SignupRequest_fieldAccessorTable = new
+            com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+            internal_static_gbuddy_SignupRequest_descriptor,
+            new String[] { "UserName", "EmailId", "MobileNo", "Password", "Roles", "About", "UserImage", });
+    internal_static_gbuddy_SignupResponse_descriptor =
+            getDescriptor().getMessageTypes().get(3);
+    internal_static_gbuddy_SignupResponse_fieldAccessorTable = new
+            com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+            internal_static_gbuddy_SignupResponse_descriptor,
+            new String[] { "Response", });
   }
 
   // @@protoc_insertion_point(outer_class_scope)
