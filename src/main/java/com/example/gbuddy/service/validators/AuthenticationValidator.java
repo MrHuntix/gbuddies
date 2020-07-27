@@ -15,8 +15,8 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-public class AuthenticationValidators {
-    private static final Logger LOG = LoggerFactory.getLogger(AuthenticationValidators.class);
+public class AuthenticationValidator {
+    private static final Logger LOG = LoggerFactory.getLogger(AuthenticationValidator.class);
     
     @Autowired
     private UserDao userDao;

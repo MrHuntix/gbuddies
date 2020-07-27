@@ -4,30 +4,22 @@ import com.example.gbuddy.dao.UserDao;
 import com.example.gbuddy.exception.CustomException;
 import com.example.gbuddy.models.*;
 import com.example.gbuddy.protos.LoginSignupProto;
-import com.example.gbuddy.service.validators.AuthenticationValidators;
+import com.example.gbuddy.service.validators.AuthenticationValidator;
 import com.example.gbuddy.util.MapperUtil;
 import com.google.protobuf.ByteString;
-import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
 import java.sql.Blob;
-import java.sql.SQLException;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/auth")
@@ -42,7 +34,7 @@ public class AuthenticationController {
     private MapperUtil mapperUtil;
 
     @Autowired
-    private AuthenticationValidators authenticationValidators;
+    private AuthenticationValidator authenticationValidator;
 
     @PostMapping(value = "/signup")//, consumes = "application/x-protobuf", produces = "application/x-protobuf")
     public LoginSignupProto.SignupResponse signup(@Valid @RequestBody LoginSignupProto.SignupRequest userSignupRequest) {
@@ -51,23 +43,24 @@ public class AuthenticationController {
         LoginSignupProto.LoginResponse.Builder responseBuilder = LoginSignupProto.LoginResponse.newBuilder();
         LoginSignupProto.SignupResponse response;
         try {
-            List<String> validationMessage = authenticationValidators.validateSignupRequest(userSignupRequest);
-            if(!validationMessage.isEmpty()) {
+            List<String> validationMessage = authenticationValidator.validateSignupRequest(userSignupRequest);
+            if (!validationMessage.isEmpty()) {
                 logger.info("validation failed with {} issues", validationMessage.size());
-                responseBuilder.setResponseMessage(String.join("|", validationMessage));
-                responseBuilder.setResponseCode(HttpStatus.BAD_REQUEST.value());
+
                 throw new CustomException(String.join("|", validationMessage));
             }
             logger.info("validation completed in {} sec");
             user = mapperUtil.getUserFromUserSignupRequest(userSignupRequest);
             logger.info("creating new user, {}", user);
-            //user = userDao.save(user);
+            user = userDao.save(user);
             Blob image = user.getProfilePic().getUserImage();
-            responseBuilder.setUserImage(ByteString.copyFrom(image.getBytes(1, (int)image.length())));
-            responseBuilder.setResponseMessage("successfully created user");
-            responseBuilder.setResponseCode(HttpStatus.OK.value());
+            responseBuilder.setUserImage(ByteString.copyFrom(image.getBytes(1, (int) image.length())));
+            responseBuilder.setResponseMessage("successfully created user")
+                    .setResponseCode(HttpStatus.OK.value());
         } catch (Exception e) {
             logger.info("exception occurred during signup process");
+            responseBuilder.setResponseMessage(e.getMessage())
+                    .setResponseCode(HttpStatus.BAD_REQUEST.value());
             e.printStackTrace();
         } finally {
             response = mapperUtil.buildSignUpResponse(responseBuilder, user);
@@ -87,18 +80,20 @@ public class AuthenticationController {
         User user = null;
         logger.info("start or login process");
         try {
-            List<String> validationMessage = authenticationValidators.validateLoginRequest(userLoginRequest);
-            if(validationMessage.isEmpty()) {
+            List<String> validationMessage = authenticationValidator.validateLoginRequest(userLoginRequest);
+            if (validationMessage.isEmpty()) {
                 logger.info("validation failed with {} issues", validationMessage.size());
-                builder.setResponseMessage(String.join("|", validationMessage));
-                builder.setResponseCode(HttpStatus.BAD_REQUEST.value());
                 throw new CustomException(String.join("|", validationMessage));
             }
             user = userDao.getByUserName(userLoginRequest.getUsername()).get();
             Blob image = user.getProfilePic().getUserImage();
-            builder.setUserImage(ByteString.copyFrom(image.getBytes(1, (int)image.length())));
+            builder.setUserImage(ByteString.copyFrom(image.getBytes(1, (int) image.length())));
+            builder.setResponseMessage("login successful")
+                    .setResponseCode(HttpStatus.OK.value());
         } catch (Exception e) {
             logger.info("exception occured during login process");
+            builder.setResponseMessage(e.getMessage())
+                    .setResponseCode(HttpStatus.BAD_REQUEST.value());
             e.printStackTrace();
         } finally {
             response = mapperUtil.buildLoginResponse(builder, user);
@@ -115,7 +110,7 @@ public class AuthenticationController {
         User user = null;
         try {
             Optional<List<User>> users = userDao.getByUserIdIn(userId);
-            if(!users.isPresent()) {
+            if (!users.isPresent()) {
                 logger.info("no user present for id {}", userId.get(0));
                 return LoginSignupProto.LoginResponse.newBuilder()
                         .setResponseMessage("no user present for id " + userId)
@@ -125,10 +120,12 @@ public class AuthenticationController {
             user = users.get().get(0);
             logger.info("found user having id {}", user.getUserId());
             Blob image = user.getProfilePic().getUserImage();
-            responseBuilder.setUserImage(ByteString.copyFrom(image.getBytes(1, (int)image.length())));
+            responseBuilder.setUserImage(ByteString.copyFrom(image.getBytes(1, (int) image.length())))
+                    .setResponseMessage("user found in db")
+                    .setResponseCode(HttpStatus.OK.value());
         } catch (Exception e) {
             responseBuilder.setResponseMessage(e.getMessage())
-                .setResponseCode(HttpStatus.INTERNAL_SERVER_ERROR.value());
+                    .setResponseCode(HttpStatus.INTERNAL_SERVER_ERROR.value());
         } finally {
             response = mapperUtil.buildLoginResponse(responseBuilder, user);
         }
