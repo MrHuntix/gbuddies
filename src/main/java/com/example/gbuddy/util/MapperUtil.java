@@ -2,6 +2,7 @@ package com.example.gbuddy.util;
 
 import com.example.gbuddy.dao.ProfilePicDao;
 import com.example.gbuddy.models.*;
+import com.example.gbuddy.protos.GymProto;
 import com.example.gbuddy.protos.LoginSignupProto;
 import com.google.protobuf.ByteString;
 import org.apache.commons.lang.StringUtils;
@@ -16,19 +17,17 @@ import javax.sql.rowset.serial.SerialBlob;
 import java.io.IOException;
 import java.sql.Blob;
 import java.sql.SQLException;
+import java.util.List;
 
 @Component
 public class MapperUtil {
     private static final Logger logger = LoggerFactory.getLogger(MapperUtil.class);
 
-    @Autowired
-    private ProfilePicDao profilePicDao;
-
-    public Gym getGymFromRequest(GymRegisterRequest registerRequest) {
+    public Gym getGymFromRequest(GymProto.Gym request) {
         Gym gym = new Gym();
-        gym.setName(registerRequest.getName());
-        gym.setWebsite(registerRequest.getWebsite());
-        for (GymBranch branch : registerRequest.getBranches()) {
+        gym.setName(request.getName());
+        gym.setWebsite(request.getWebsite());
+        for (GymProto.Branch branch : request.getBranchesList()) {
             Branch b = new Branch();
             b.setGymId(gym);
             b.setLocality(branch.getLocality());
@@ -38,12 +37,8 @@ public class MapperUtil {
             b.setContact(branch.getContact());
             gym.getBranches().add(b);
         }
-        logger.info("persisting gym {}", gym);
+        logger.info("built gym entity {}", gym);
         return gym;
-    }
-
-    public boolean validateRequest(GymRegisterRequest registerRequest) {
-        return StringUtils.isNotEmpty(registerRequest.getName()) && StringUtils.isNotEmpty(registerRequest.getWebsite()) && !CollectionUtils.isEmpty(registerRequest.getBranches());
     }
 
     public User getUserFromUserSignupRequest(LoginSignupProto.SignupRequest userSignupRequest) throws SQLException, IOException {
@@ -62,14 +57,16 @@ public class MapperUtil {
     }
 
     public LoginSignupProto.SignupResponse buildSignUpResponse(LoginSignupProto.LoginResponse.Builder responseBuilder, User user) {
-        responseBuilder
-            .setUserName(user.getUserName())
-            .setEmailId(user.getEmailId())
-            .setMobileNo(user.getMobileNo())
-            .setPicId(user.getProfilePic().getPicId())
-            .setUserId(user.getUserId())
-            .setAbout(user.getAbout())
-            .build();
+        if(user!=null) {
+            responseBuilder
+                    .setUserName(user.getUserName())
+                    .setEmailId(user.getEmailId())
+                    .setMobileNo(user.getMobileNo())
+                    .setPicId(user.getProfilePic().getPicId())
+                    .setUserId(user.getUserId())
+                    .setAbout(user.getAbout())
+                    .build();
+        }
         logger.info("built signup response with message: {} and code: {}", responseBuilder.getResponseMessage(), responseBuilder.getResponseCode());
         return LoginSignupProto.SignupResponse.newBuilder().setResponse(responseBuilder.build()).build();
     }
@@ -82,5 +79,31 @@ public class MapperUtil {
                 .setUserId(user.getUserId())
                 .setAbout(user.getAbout())
                 .build();
+    }
+
+    public GymProto.FetchResponse getResponseFromEntity(List<Gym> gyms, GymProto.FetchResponse.Builder builder) {
+        logger.info("start of response builder");
+        gyms.forEach(gym -> builder.addGym(getGymProtoFromGymEntity(gym)));
+        return builder.build();
+    }
+
+    private GymProto.Gym getGymProtoFromGymEntity(Gym gym) {
+        GymProto.Gym.Builder builder = GymProto.Gym.newBuilder();
+        int gymId = gym.getId();
+        builder.setId(gym.getId())
+                .setName(gym.getName())
+                .setWebsite(gym.getWebsite());
+        gym.getBranches().forEach(branch -> {
+            GymProto.Branch.Builder branchBuilder = GymProto.Branch.newBuilder();
+            branchBuilder.setId(branch.getId())
+                    .setGymId(gymId)
+                    .setLocality(branch.getLocality())
+                    .setCity(branch.getCity())
+                    .setLatitude(branch.getLatitude())
+                    .setLongitude(branch.getLongitude())
+                    .setContact(branch.getContact());
+            builder.addBranches(branchBuilder.build());
+        });
+        return builder.build();
     }
 }
