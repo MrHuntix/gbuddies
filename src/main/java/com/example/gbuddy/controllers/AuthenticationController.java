@@ -54,7 +54,7 @@ public class AuthenticationController {
             logger.info("creating new user, {}", user);
             user = userDao.save(user);
             Blob image = user.getProfilePic().getUserImage();
-            responseBuilder.setUserImage(ByteString.copyFrom(image.getBytes(1, (int) image.length())));
+            responseBuilder.setUserImage(ByteString.copyFrom(image.getBytes(1, Math.toIntExact(image.length()))));
             responseBuilder.setResponseMessage("successfully created user")
                     .setResponseCode(HttpStatus.OK.value());
         } catch (Exception e) {
@@ -87,7 +87,7 @@ public class AuthenticationController {
             }
             user = userDao.getByUserName(userLoginRequest.getUsername()).get();
             Blob image = user.getProfilePic().getUserImage();
-            builder.setUserImage(ByteString.copyFrom(image.getBytes(1, (int) image.length())));
+            builder.setUserImage(ByteString.copyFrom(image.getBytes(1, Math.toIntExact(image.length()))));
             builder.setResponseMessage("login successful")
                     .setResponseCode(HttpStatus.OK.value());
         } catch (Exception e) {
@@ -120,7 +120,7 @@ public class AuthenticationController {
             user = users.get().get(0);
             logger.info("found user having id {}", user.getUserId());
             Blob image = user.getProfilePic().getUserImage();
-            responseBuilder.setUserImage(ByteString.copyFrom(image.getBytes(1, (int) image.length())))
+            responseBuilder.setUserImage(ByteString.copyFrom(image.getBytes(1, Math.toIntExact(image.length()))))
                     .setResponseMessage("user found in db")
                     .setResponseCode(HttpStatus.OK.value());
         } catch (Exception e) {
