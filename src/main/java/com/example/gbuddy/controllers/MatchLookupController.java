@@ -4,6 +4,7 @@ import com.example.gbuddy.models.ChatResponse;
 import com.example.gbuddy.models.Match;
 import com.example.gbuddy.models.MatchLookup;
 import com.example.gbuddy.models.MatchResponse;
+import com.example.gbuddy.protos.MatchLookupProto;
 import com.example.gbuddy.service.MatchLookupService;
 import com.example.gbuddy.util.MatcherConst;
 import org.slf4j.Logger;
@@ -45,11 +46,9 @@ public class MatchLookupController {
      * @return
      */
     @PutMapping(value = "/buddy/requester/{requesterId}/gym/{gymId}/branch/{branchId}")
-    public ResponseEntity<MatchResponse> addForLookup(@PathVariable("requesterId") int requesterId, @PathVariable("gymId") int gymId, @PathVariable("branchId") int branchId) {
+    public MatchLookupProto.MatchResponse addForLookup(@PathVariable("requesterId") int requesterId, @PathVariable("gymId") int gymId, @PathVariable("branchId") int branchId) {
         logger.info("adding for lookup requesterid: {}, gymid: {}, branch id: {}", requesterId, gymId, branchId);
-        return matchLookupService.addForLookup(requesterId, gymId, branchId) ?
-                ResponseEntity.ok(new MatchResponse("lookup reference created")) :
-                ResponseEntity.ok(new MatchResponse("lookup reference already exists"));
+        return matchLookupService.addForLookup(requesterId, gymId, branchId);
     }
 
     /**
@@ -67,11 +66,9 @@ public class MatchLookupController {
      * @return
      */
     @PutMapping(value = "/like/{matchLookupId}/by/{userId}")
-    public ResponseEntity<MatchResponse> like(@PathVariable("matchLookupId") int matchLookupId, @PathVariable("userId") int userId) {
+    public MatchLookupProto.MatchResponse like(@PathVariable("matchLookupId") int matchLookupId, @PathVariable("userId") int userId) {
         logger.info("liking matchLookupId: {}, userId: {}", matchLookupId, userId);
-        return matchLookupService.like(matchLookupId, userId) ?
-                ResponseEntity.ok(new MatchResponse("like request created")) :
-                ResponseEntity.ok(new MatchResponse("like request already exists"));
+        return matchLookupService.like(matchLookupId, userId);
     }
 
     /**
@@ -86,15 +83,14 @@ public class MatchLookupController {
      * @param matchId pk of MATCH table
      * @return
      */
-    @PutMapping(value = "/dislike/{matchId}")
-    public ResponseEntity<MatchResponse> unmatch(@PathVariable("matchId") int matchId) {
+    @PutMapping(value = "/unmatch/{matchId}")
+    public MatchLookupProto.MatchResponse unmatch(@PathVariable("matchId") int matchId) {
         logger.info("unmatching: {}", matchId);
-        return matchLookupService.disike(matchId) ?
-                ResponseEntity.ok(new MatchResponse("unmatched")) : ResponseEntity.ok(new MatchResponse("no like request present"));
+        return matchLookupService.unmatch(matchId);
     }
 
     /**
-     * in matches tab
+     * use only for getting suitable matches for a single gym,branch,requester id pair
      * if gymid, branchid, requestid present
      * if status == UNMATCHED and resuestid != requesting_user
      * return all matching records
@@ -107,28 +103,23 @@ public class MatchLookupController {
      * @return
      */
     @GetMapping(value = "/all/{requesterId}/gym/{gymId}/branch/{branchId}")
-    public ResponseEntity<List<MatchLookup>> getSuitableMatches(@PathVariable("requesterId") int requesterId, @PathVariable("gymId") int gymId,
+    public MatchLookupProto.LookupResponse getSuitableMatches(@PathVariable("requesterId") int requesterId, @PathVariable("gymId") int gymId,
                                                                 @PathVariable("branchId") int branchId) {
         logger.info("getting suitable matches for user id: {} for gym id: {} and branch id: {}", requesterId, gymId, branchId);
-        List<MatchLookup> matches = matchLookupService.getSuitableMatches(requesterId, gymId, branchId);
-        logger.info("found {} potential matches", matches.size());
-        return !matches.isEmpty()? ResponseEntity.ok(matches)
-                : ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+        return matchLookupService.getSuitableMatches(requesterId, gymId, branchId);
     }
 
     /**
      * for requester id get all the gb -> (gym,branch) id pairs
      * for each gb get lookup info where status is unmatched.
+     * use in matches tab
      * @param requesterId
      * @return
      */
     @GetMapping(value = "/derive/{requesterId}")
-    public ResponseEntity<List<MatchLookup>> deriveMatches(@PathVariable("requesterId") int requesterId) {
+    public MatchLookupProto.LookupResponse deriveMatches(@PathVariable("requesterId") int requesterId) {
         logger.info("deriving matches for user id: {}", requesterId);
-        List<MatchLookup> matches = matchLookupService.deriveMatches(requesterId);
-        logger.info("derived {} matches", matches.size());
-        return !matches.isEmpty()? ResponseEntity.ok(matches)
-                : ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+        return matchLookupService.deriveMatches(requesterId);
     }
 
     @GetMapping(value = "/matched/{requesterId}")

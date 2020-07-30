@@ -1,9 +1,12 @@
 package com.example.gbuddy.util;
 
+import com.example.gbuddy.dao.BranchDao;
 import com.example.gbuddy.dao.ProfilePicDao;
+import com.example.gbuddy.dao.UserDao;
 import com.example.gbuddy.models.*;
 import com.example.gbuddy.protos.GymProto;
 import com.example.gbuddy.protos.LoginSignupProto;
+import com.example.gbuddy.protos.MatchLookupProto;
 import com.google.protobuf.ByteString;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
@@ -18,10 +21,17 @@ import java.io.IOException;
 import java.sql.Blob;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Objects;
 
 @Component
 public class MapperUtil {
     private static final Logger logger = LoggerFactory.getLogger(MapperUtil.class);
+
+    @Autowired
+    private UserDao userDao;
+
+    @Autowired
+    private BranchDao branchDao;
 
     public Gym getGymFromRequest(GymProto.Gym request) {
         Gym gym = new Gym();
@@ -105,5 +115,45 @@ public class MapperUtil {
             builder.addBranches(branchBuilder.build());
         });
         return builder.build();
+    }
+
+    public void getResponseFromMatchLookup(List<MatchLookup> matchLookupList, MatchLookupProto.LookupResponse.Builder builder) {
+        matchLookupList.forEach(matchLookup -> {
+            User user = userDao.getByUserId(matchLookup.getRequesterId()).orElse(null);
+            Branch branch = branchDao.selectGymBranchRecordById(matchLookup.getBranchId(), matchLookup.getGymId()).orElse(null);
+            if(Objects.isNull(user) || Objects.isNull(branch)) {
+                logger.info("got empty result for user and gym for lookup id {}. Skipping record", matchLookup.getId());
+            } else {
+                MatchLookupProto.MatchLookup.Builder lookupBuilder = MatchLookupProto.MatchLookup.newBuilder();
+                try {
+                    lookupBuilder.setId(matchLookup.getId())
+                    .setStatus(MatchLookupProto.Status.valueOf(matchLookup.getStatus()))
+                    .setGym(MatchLookupProto.Gym.newBuilder()
+                        .setGymId(branch.getGymId().getId())
+                        .setGymName(branch.getGymId().getName())
+                        .setWebsite(branch.getGymId().getWebsite())
+                        .setBranch(MatchLookupProto.Branch.newBuilder()
+                            .setBranchId(branch.getId())
+                            .setLocality(branch.getLocality())
+                            .setCity(branch.getCity())
+                            .setLatitude(branch.getLatitude())
+                            .setLongitude(branch.getLongitude())
+                            .setContact(branch.getContact())
+                        ))
+                    .setUser(MatchLookupProto.User.newBuilder()
+                        .setUserId(user.getUserId())
+                        .setUserName(user.getEmailId())
+                        .setMobileNo(user.getMobileNo())
+                        .setUserImage(ByteString.copyFrom(user.getProfilePic().getUserImage().getBytes(1, Math.toIntExact(user.getProfilePic().getUserImage().length()))))
+                        .setAbout(user.getAbout()));
+                    builder.addLookups(lookupBuilder.build());
+                    logger.info("built and added lookup for match lookup id {}", matchLookup.getId());
+                } catch (Exception e) {
+                    logger.info("got exception while buiding match lookup for match lookup id {}", matchLookup.getId());
+                    e.printStackTrace();
+                }
+            }
+        });
+        logger.info("completed buiding process");
     }
 }
