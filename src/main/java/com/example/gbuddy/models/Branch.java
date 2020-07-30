@@ -12,8 +12,12 @@ import javax.persistence.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode
-@ToString
+@NamedQueries({
+        @NamedQuery(name = "Branch.selectGymBranchRecordById", query = Branch.selectGymBranchRecordById)
+})
 public class Branch {
+    public static final String selectGymBranchRecordById = "FROM Branch b WHERE b.id = :branchId AND b.gymId.id = :gymId";
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
@@ -37,4 +41,16 @@ public class Branch {
     @JoinColumn(name = "gymId")
     @JsonIgnore
     private Gym gymId;
+
+    @Override
+    public String toString() {
+        return "Branch{" +
+                "id=" + id +
+                ", locality='" + locality + '\'' +
+                ", city='" + city + '\'' +
+                ", latitude=" + latitude +
+                ", longitude=" + longitude +
+                ", contact='" + contact + '\'' +
+                '}';
+    }
 }

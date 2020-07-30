@@ -15,7 +15,13 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@NamedQueries({
+        @NamedQuery(name = "Gym.selectGymBranchRecordById", query = Gym.selectGymBranchRecordById)
+})
+
 public class Gym{
+    public static final String selectGymBranchRecordById = "SELECT g FROM Gym g JOIN g.branches b WHERE g.id = :gymId AND b.id = :branchId";
+
     @Column(name = "id")
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
