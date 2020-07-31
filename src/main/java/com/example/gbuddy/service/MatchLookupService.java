@@ -104,7 +104,8 @@ public class MatchLookupService {
             builder.setMessage(CommonConstants.LIKED.getMessage())
                     .setResponseCode(HttpStatus.OK.value());
         } catch (Exception e) {
-
+            builder.setMessage(e.getMessage())
+                    .setResponseCode(HttpStatus.UNPROCESSABLE_ENTITY.value());
         }
         return builder.build();
     }
