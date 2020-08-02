@@ -123,8 +123,8 @@ public class MatchLookupController {
     }
 
     @GetMapping(value = "/matched/{requesterId}")
-    public ResponseEntity<List<ChatResponse>> getMatched(@PathVariable("requesterId") int requesterId) {
+    public MatchLookupProto.ChatResponse getMatched(@PathVariable("requesterId") int requesterId) {
         logger.info("start of matched fetch process for requester {}", requesterId);
-        return ResponseEntity.ok(matchLookupService.matched(requesterId));
+        return matchLookupService.matched(requesterId);
     }
 }

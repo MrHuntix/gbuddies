@@ -9,6 +9,7 @@ public enum CommonConstants {
     NO_RECORD_IN_MATCH_LOOKUP("no record present in match lookup table"),
     CANNOT_LIKE("unable to process request for like"),
     IMPOSSIBLE_STATE("impossible state"),
+    REQUEST_ALREADY_EXISTS("a request already exists, check your requests tab"),
     LIKED("like process completed"),
     UNMATCH_FAIL("unable to process request for unmatching"),
     UNMATCH_SUCCESS("unmatch request successful");

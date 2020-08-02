@@ -11,4 +11,6 @@ import java.util.List;
 @Transactional
 public interface MatchDao extends JpaRepository<Match, Integer> {
     public List<Match> getMatched(int id);
+    List<Match> getAllByRequester(int requesterId);
+    List<Match> getAllByRequestee(int requesteeId);
 }

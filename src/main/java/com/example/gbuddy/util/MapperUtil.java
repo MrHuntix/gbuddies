@@ -3,6 +3,7 @@ package com.example.gbuddy.util;
 import com.example.gbuddy.dao.BranchDao;
 import com.example.gbuddy.dao.ProfilePicDao;
 import com.example.gbuddy.dao.UserDao;
+import com.example.gbuddy.exception.CustomException;
 import com.example.gbuddy.models.*;
 import com.example.gbuddy.protos.GymProto;
 import com.example.gbuddy.protos.LoginSignupProto;
@@ -67,7 +68,7 @@ public class MapperUtil {
     }
 
     public LoginSignupProto.SignupResponse buildSignUpResponse(LoginSignupProto.LoginResponse.Builder responseBuilder, User user) {
-        if(user!=null) {
+        if (user != null) {
             responseBuilder
                     .setUserName(user.getUserName())
                     .setEmailId(user.getEmailId())
@@ -121,31 +122,31 @@ public class MapperUtil {
         matchLookupList.forEach(matchLookup -> {
             User user = userDao.getByUserId(matchLookup.getRequesterId()).orElse(null);
             Branch branch = branchDao.selectGymBranchRecordById(matchLookup.getBranchId(), matchLookup.getGymId()).orElse(null);
-            if(Objects.isNull(user) || Objects.isNull(branch)) {
+            if (Objects.isNull(user) || Objects.isNull(branch)) {
                 logger.info("got empty result for user and gym for lookup id {}. Skipping record", matchLookup.getId());
             } else {
                 MatchLookupProto.MatchLookup.Builder lookupBuilder = MatchLookupProto.MatchLookup.newBuilder();
                 try {
                     lookupBuilder.setId(matchLookup.getId())
-                    .setStatus(MatchLookupProto.Status.valueOf(matchLookup.getStatus()))
-                    .setGym(MatchLookupProto.Gym.newBuilder()
-                        .setGymId(branch.getGymId().getId())
-                        .setGymName(branch.getGymId().getName())
-                        .setWebsite(branch.getGymId().getWebsite())
-                        .setBranch(MatchLookupProto.Branch.newBuilder()
-                            .setBranchId(branch.getId())
-                            .setLocality(branch.getLocality())
-                            .setCity(branch.getCity())
-                            .setLatitude(branch.getLatitude())
-                            .setLongitude(branch.getLongitude())
-                            .setContact(branch.getContact())
-                        ))
-                    .setUser(MatchLookupProto.User.newBuilder()
-                        .setUserId(user.getUserId())
-                        .setUserName(user.getEmailId())
-                        .setMobileNo(user.getMobileNo())
-                        .setUserImage(ByteString.copyFrom(user.getProfilePic().getUserImage().getBytes(1, Math.toIntExact(user.getProfilePic().getUserImage().length()))))
-                        .setAbout(user.getAbout()));
+                            .setStatus(MatchLookupProto.Status.valueOf(matchLookup.getStatus()))
+                            .setGym(MatchLookupProto.Gym.newBuilder()
+                                    .setGymId(branch.getGymId().getId())
+                                    .setGymName(branch.getGymId().getName())
+                                    .setWebsite(branch.getGymId().getWebsite())
+                                    .setBranch(MatchLookupProto.Branch.newBuilder()
+                                            .setBranchId(branch.getId())
+                                            .setLocality(branch.getLocality())
+                                            .setCity(branch.getCity())
+                                            .setLatitude(branch.getLatitude())
+                                            .setLongitude(branch.getLongitude())
+                                            .setContact(branch.getContact())
+                                    ))
+                            .setUser(MatchLookupProto.User.newBuilder()
+                                    .setUserId(user.getUserId())
+                                    .setUserName(user.getEmailId())
+                                    .setMobileNo(user.getMobileNo())
+                                    .setUserImage(ByteString.copyFrom(user.getProfilePic().getUserImage().getBytes(1, Math.toIntExact(user.getProfilePic().getUserImage().length()))))
+                                    .setAbout(user.getAbout()));
                     builder.addLookups(lookupBuilder.build());
                     logger.info("built and added lookup for match lookup id {}", matchLookup.getId());
                 } catch (Exception e) {
@@ -155,5 +156,46 @@ public class MapperUtil {
             }
         });
         logger.info("completed buiding process");
+    }
+
+    public void getResponseFromMatches(MatchLookupProto.ChatResponse.Builder builder, List<Match> matches) {
+        logger.info("building response for chat for {} matches", matches.size());
+        matches.forEach(match -> {
+            try {
+                MatchLookupProto.Match.Builder matchBuilder = MatchLookupProto.Match.newBuilder();
+                Branch branch = branchDao.selectGymBranchRecordById(match.getBranchId(), match.getGymId()).orElse(null);
+                User user = userDao.getByUserId(match.getRequestee()).orElse(null);
+                if (Objects.isNull(branch) || Objects.isNull(user)) {
+                    logger.info("skipping building record for match id {} as branch or user is null", match.getId());
+                    throw new CustomException("skipping building of match record");
+                }
+                matchBuilder.setMatchId(match.getId())
+                        .setLookupId(match.getLookupId())
+                        .setUser(MatchLookupProto.User.newBuilder()
+                                .setUserId(user.getUserId())
+                                .setUserName(user.getUserName())
+                                .setMobileNo(user.getMobileNo())
+                                .setUserImage(ByteString.copyFrom(user.getProfilePic().getUserImage().getBytes(1, Math.toIntExact(user.getProfilePic().getUserImage().length()))))
+                                .setAbout(user.getAbout())
+                                .build())
+                        .setGym(MatchLookupProto.Gym.newBuilder()
+                                .setGymId(branch.getGymId().getId())
+                                .setGymName(branch.getGymId().getName())
+                                .setWebsite(branch.getGymId().getWebsite())
+                                .setBranch(MatchLookupProto.Branch.newBuilder()
+                                        .setBranchId(branch.getId())
+                                        .setLocality(branch.getLocality())
+                                        .setCity(branch.getCity())
+                                        .setLatitude(branch.getLatitude())
+                                        .setLongitude(branch.getLongitude())
+                                        .setContact(branch.getContact())
+                                ));
+                builder.addMatches(matchBuilder.build());
+            } catch (Exception e) {
+                logger.info("failed building mactch object for match id {}", match.getId());
+                e.printStackTrace();
+                return;
+            }
+        });
     }
 }

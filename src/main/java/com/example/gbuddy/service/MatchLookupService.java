@@ -84,22 +84,31 @@ public class MatchLookupService {
                 LOG.info("user id({}) and requester id({}) is same", userId, lookup.getRequesterId());
                 throw new CustomException(CommonConstants.CANNOT_LIKE.getMessage());
             }
-            if (MatcherConst.MATCHED.getName().equals(lookup.getStatus())) {
-                LOG.info("record found in MATCH_LOOKUP for id {}, with status {}. SHOULD NOT HAPPEN", matchLookupId, lookup.getStatus());
-                throw new CustomException(CommonConstants.IMPOSSIBLE_STATE.getMessage());
+            if (MatchLookupProto.Status.MATCHED.name().equals(lookup.getStatus())) {
+                LOG.info("record found in MATCH_LOOKUP for id {}, with status {}. REQUEST ALREADY EXISTS", matchLookupId, lookup.getStatus());
+                throw new CustomException(CommonConstants.REQUEST_ALREADY_EXISTS.getMessage());
             }
             LOG.info("record found in MATCH_LOOKUP for id {}, with status {}. CREATING MATCH", matchLookupId, lookup.getStatus());
-            lookup.setStatus(MatcherConst.MATCHED.getName());
-            requesterLookup.setStatus(MatcherConst.MATCHED.getName());
+            lookup.setStatus(MatchLookupProto.Status.MATCHED.name());
+            requesterLookup.setStatus(MatchLookupProto.Status.MATCHED.name());
             matchLookupDao.save(lookup);
             matchLookupDao.save(requesterLookup);
-            Match match = new Match();
-            match.setRequester(userId);
-            match.setLookupId(lookup.getId());
-            match.setGymId(lookup.getGymId());
-            match.setBranchId(lookup.getBranchId());
-            match.setRequestee(lookup.getRequesterId());
-            matchDao.save(match);
+            //create a match request table and add the record there
+            Match requesterMatch = new Match();
+            requesterMatch.setRequester(userId);
+            requesterMatch.setLookupId(lookup.getId());
+            requesterMatch.setGymId(lookup.getGymId());
+            requesterMatch.setBranchId(lookup.getBranchId());
+            requesterMatch.setRequestee(lookup.getRequesterId());
+            Match requesteeMatch = new Match();
+            requesteeMatch.setRequester(lookup.getRequesterId());
+            requesteeMatch.setLookupId(lookup.getId());
+            requesteeMatch.setGymId(lookup.getGymId());
+            requesteeMatch.setBranchId(lookup.getBranchId());
+            requesteeMatch.setRequestee(userId);
+            matchDao.save(requesterMatch);
+            matchDao.save(requesteeMatch);
+
             LOG.info("like process completed for match lookup id {} by user id {}", matchLookupId, userId);
             builder.setMessage(CommonConstants.LIKED.getMessage())
                     .setResponseCode(HttpStatus.OK.value());
@@ -177,7 +186,6 @@ public class MatchLookupService {
         LOG.info("deriving matches for user id {}", requesterId);
         MatchLookupProto.LookupResponse.Builder builder = MatchLookupProto.LookupResponse.newBuilder();
         try {
-            List<MatchLookup> derivedMatches = new ArrayList<>();
             List<MatchLookup> matchLookupsForRequester = matchLookupDao.getMatchesByRequestIdAndStatus(requesterId, matcherConst.getName());
             if(CollectionUtils.isEmpty(matchLookupsForRequester)) {
                 LOG.info("there is no match_lookup entries for requester id :{}", requesterId);
@@ -198,46 +206,24 @@ public class MatchLookupService {
         return builder.build();
     }
 
-    public List<ChatResponse> matched(int requesterId) {
-        List<Match> matches = matchDao.getMatched(requesterId);
-        List<ChatResponse> chatResponses = new ArrayList<>();
-        for (Match match: matches) {
-            LOG.info("deriving chatresponse for {}", match);
-            ChatResponse chatResponse = new ChatResponse();
-            chatResponse.setMatch_id(match.getId());
-            chatResponse.setLookup_id(match.getLookupId());
-            Gym gym = gymDao.findById(match.getGymId()).orElse(null);
-
-            if(gym == null) {
-                LOG.info("for match {}, no gym exists with id {}", match.getId(), match.getGymId());
-                continue;
+    public MatchLookupProto.ChatResponse matched(int requesterId) {
+        MatchLookupProto.ChatResponse.Builder builder = MatchLookupProto.ChatResponse.newBuilder();
+        try {
+            List<Match> matches = matchDao.getAllByRequester(requesterId);
+            if(CollectionUtils.isEmpty(matches)) {
+                LOG.info("there is no matches present for requester id {}", requesterId);
+                throw new CustomException(MatchLookupConstants.NO_MATCHES_AVAILABLE.getMessage());
             }
-            Branch branch = branchDao.findById(match.getBranchId()).orElse(null);
-            if(branch == null) {
-                LOG.info("for match {}, no branch exists with id {}", match.getId(), match.getGymId());
-                continue;
-            }
-            int userId = 0;
-            if(match.getRequester() == requesterId) {
-                LOG.info("using requestee id");
-                userId = match.getRequestee();
-            }
-            if(match.getRequestee() == requesterId) {
-                LOG.info("using requester id");
-                userId = match.getRequester();
-            }
-            User user = userDao.
-                    getByUserId(userId).orElse(null);
-            if(user == null) {
-                LOG.info("for match {}, no user exists with id {}", match.getId(), match.getGymId());
-                continue;
-            }
-            chatResponse.setGymName(gym.getName());
-            chatResponse.setWebsite(gym.getWebsite());
-            chatResponse.setBranch(branch);
-            chatResponse.setUser(user);
-            chatResponses.add(chatResponse);
+            mapperUtil.getResponseFromMatches(builder, matches);
+            LOG.info("completed building chat response");
+            builder.setMessage(MatchLookupConstants.MATCH_RESPONSE_CREATED.getMessage())
+                    .setResponseCode(HttpStatus.OK.value());
+        } catch (Exception e) {
+            builder.setMessage(e.getMessage())
+                    .setResponseCode(HttpStatus.UNPROCESSABLE_ENTITY.value());
+            LOG.info("failed building match response for requester id {}", requesterId);
+            e.printStackTrace();
         }
-        return chatResponses;
+        return builder.build();
     }
 }

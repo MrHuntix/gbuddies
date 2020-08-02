@@ -5868,6 +5868,1983 @@ public final class MatchLookupProto {
 
   }
 
+  public interface MatchOrBuilder extends
+      // @@protoc_insertion_point(interface_extends:gbuddy.Match)
+      com.google.protobuf.MessageOrBuilder {
+
+    /**
+     * <code>int32 matchId = 1;</code>
+     * @return The matchId.
+     */
+    int getMatchId();
+
+    /**
+     * <code>int32 lookupId = 2;</code>
+     * @return The lookupId.
+     */
+    int getLookupId();
+
+    /**
+     * <code>.gbuddy.User user = 16;</code>
+     * @return Whether the user field is set.
+     */
+    boolean hasUser();
+    /**
+     * <code>.gbuddy.User user = 16;</code>
+     * @return The user.
+     */
+    User getUser();
+    /**
+     * <code>.gbuddy.User user = 16;</code>
+     */
+    UserOrBuilder getUserOrBuilder();
+
+    /**
+     * <code>.gbuddy.Gym gym = 17;</code>
+     * @return Whether the gym field is set.
+     */
+    boolean hasGym();
+    /**
+     * <code>.gbuddy.Gym gym = 17;</code>
+     * @return The gym.
+     */
+    Gym getGym();
+    /**
+     * <code>.gbuddy.Gym gym = 17;</code>
+     */
+    GymOrBuilder getGymOrBuilder();
+  }
+  /**
+   * Protobuf type {@code gbuddy.Match}
+   */
+  public static final class Match extends
+      com.google.protobuf.GeneratedMessageV3 implements
+      // @@protoc_insertion_point(message_implements:gbuddy.Match)
+      MatchOrBuilder {
+  private static final long serialVersionUID = 0L;
+    // Use Match.newBuilder() to construct.
+    private Match(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
+      super(builder);
+    }
+    private Match() {
+    }
+
+    @Override
+    @SuppressWarnings({"unused"})
+    protected Object newInstance(
+        UnusedPrivateParameter unused) {
+      return new Match();
+    }
+
+    @Override
+    public final com.google.protobuf.UnknownFieldSet
+    getUnknownFields() {
+      return this.unknownFields;
+    }
+    private Match(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      this();
+      if (extensionRegistry == null) {
+        throw new NullPointerException();
+      }
+      com.google.protobuf.UnknownFieldSet.Builder unknownFields =
+          com.google.protobuf.UnknownFieldSet.newBuilder();
+      try {
+        boolean done = false;
+        while (!done) {
+          int tag = input.readTag();
+          switch (tag) {
+            case 0:
+              done = true;
+              break;
+            case 8: {
+
+              matchId_ = input.readInt32();
+              break;
+            }
+            case 16: {
+
+              lookupId_ = input.readInt32();
+              break;
+            }
+            case 130: {
+              User.Builder subBuilder = null;
+              if (user_ != null) {
+                subBuilder = user_.toBuilder();
+              }
+              user_ = input.readMessage(User.parser(), extensionRegistry);
+              if (subBuilder != null) {
+                subBuilder.mergeFrom(user_);
+                user_ = subBuilder.buildPartial();
+              }
+
+              break;
+            }
+            case 138: {
+              Gym.Builder subBuilder = null;
+              if (gym_ != null) {
+                subBuilder = gym_.toBuilder();
+              }
+              gym_ = input.readMessage(Gym.parser(), extensionRegistry);
+              if (subBuilder != null) {
+                subBuilder.mergeFrom(gym_);
+                gym_ = subBuilder.buildPartial();
+              }
+
+              break;
+            }
+            default: {
+              if (!parseUnknownField(
+                  input, unknownFields, extensionRegistry, tag)) {
+                done = true;
+              }
+              break;
+            }
+          }
+        }
+      } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+        throw e.setUnfinishedMessage(this);
+      } catch (java.io.IOException e) {
+        throw new com.google.protobuf.InvalidProtocolBufferException(
+            e).setUnfinishedMessage(this);
+      } finally {
+        this.unknownFields = unknownFields.build();
+        makeExtensionsImmutable();
+      }
+    }
+    public static final com.google.protobuf.Descriptors.Descriptor
+        getDescriptor() {
+      return MatchLookupProto.internal_static_gbuddy_Match_descriptor;
+    }
+
+    @Override
+    protected FieldAccessorTable
+        internalGetFieldAccessorTable() {
+      return MatchLookupProto.internal_static_gbuddy_Match_fieldAccessorTable
+          .ensureFieldAccessorsInitialized(
+              Match.class, Builder.class);
+    }
+
+    public static final int MATCHID_FIELD_NUMBER = 1;
+    private int matchId_;
+    /**
+     * <code>int32 matchId = 1;</code>
+     * @return The matchId.
+     */
+    @Override
+    public int getMatchId() {
+      return matchId_;
+    }
+
+    public static final int LOOKUPID_FIELD_NUMBER = 2;
+    private int lookupId_;
+    /**
+     * <code>int32 lookupId = 2;</code>
+     * @return The lookupId.
+     */
+    @Override
+    public int getLookupId() {
+      return lookupId_;
+    }
+
+    public static final int USER_FIELD_NUMBER = 16;
+    private User user_;
+    /**
+     * <code>.gbuddy.User user = 16;</code>
+     * @return Whether the user field is set.
+     */
+    @Override
+    public boolean hasUser() {
+      return user_ != null;
+    }
+    /**
+     * <code>.gbuddy.User user = 16;</code>
+     * @return The user.
+     */
+    @Override
+    public User getUser() {
+      return user_ == null ? User.getDefaultInstance() : user_;
+    }
+    /**
+     * <code>.gbuddy.User user = 16;</code>
+     */
+    @Override
+    public UserOrBuilder getUserOrBuilder() {
+      return getUser();
+    }
+
+    public static final int GYM_FIELD_NUMBER = 17;
+    private Gym gym_;
+    /**
+     * <code>.gbuddy.Gym gym = 17;</code>
+     * @return Whether the gym field is set.
+     */
+    @Override
+    public boolean hasGym() {
+      return gym_ != null;
+    }
+    /**
+     * <code>.gbuddy.Gym gym = 17;</code>
+     * @return The gym.
+     */
+    @Override
+    public Gym getGym() {
+      return gym_ == null ? Gym.getDefaultInstance() : gym_;
+    }
+    /**
+     * <code>.gbuddy.Gym gym = 17;</code>
+     */
+    @Override
+    public GymOrBuilder getGymOrBuilder() {
+      return getGym();
+    }
+
+    private byte memoizedIsInitialized = -1;
+    @Override
+    public final boolean isInitialized() {
+      byte isInitialized = memoizedIsInitialized;
+      if (isInitialized == 1) return true;
+      if (isInitialized == 0) return false;
+
+      memoizedIsInitialized = 1;
+      return true;
+    }
+
+    @Override
+    public void writeTo(com.google.protobuf.CodedOutputStream output)
+                        throws java.io.IOException {
+      if (matchId_ != 0) {
+        output.writeInt32(1, matchId_);
+      }
+      if (lookupId_ != 0) {
+        output.writeInt32(2, lookupId_);
+      }
+      if (user_ != null) {
+        output.writeMessage(16, getUser());
+      }
+      if (gym_ != null) {
+        output.writeMessage(17, getGym());
+      }
+      unknownFields.writeTo(output);
+    }
+
+    @Override
+    public int getSerializedSize() {
+      int size = memoizedSize;
+      if (size != -1) return size;
+
+      size = 0;
+      if (matchId_ != 0) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeInt32Size(1, matchId_);
+      }
+      if (lookupId_ != 0) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeInt32Size(2, lookupId_);
+      }
+      if (user_ != null) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeMessageSize(16, getUser());
+      }
+      if (gym_ != null) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeMessageSize(17, getGym());
+      }
+      size += unknownFields.getSerializedSize();
+      memoizedSize = size;
+      return size;
+    }
+
+    @Override
+    public boolean equals(final Object obj) {
+      if (obj == this) {
+       return true;
+      }
+      if (!(obj instanceof Match)) {
+        return super.equals(obj);
+      }
+      Match other = (Match) obj;
+
+      if (getMatchId()
+          != other.getMatchId()) return false;
+      if (getLookupId()
+          != other.getLookupId()) return false;
+      if (hasUser() != other.hasUser()) return false;
+      if (hasUser()) {
+        if (!getUser()
+            .equals(other.getUser())) return false;
+      }
+      if (hasGym() != other.hasGym()) return false;
+      if (hasGym()) {
+        if (!getGym()
+            .equals(other.getGym())) return false;
+      }
+      if (!unknownFields.equals(other.unknownFields)) return false;
+      return true;
+    }
+
+    @Override
+    public int hashCode() {
+      if (memoizedHashCode != 0) {
+        return memoizedHashCode;
+      }
+      int hash = 41;
+      hash = (19 * hash) + getDescriptor().hashCode();
+      hash = (37 * hash) + MATCHID_FIELD_NUMBER;
+      hash = (53 * hash) + getMatchId();
+      hash = (37 * hash) + LOOKUPID_FIELD_NUMBER;
+      hash = (53 * hash) + getLookupId();
+      if (hasUser()) {
+        hash = (37 * hash) + USER_FIELD_NUMBER;
+        hash = (53 * hash) + getUser().hashCode();
+      }
+      if (hasGym()) {
+        hash = (37 * hash) + GYM_FIELD_NUMBER;
+        hash = (53 * hash) + getGym().hashCode();
+      }
+      hash = (29 * hash) + unknownFields.hashCode();
+      memoizedHashCode = hash;
+      return hash;
+    }
+
+    public static Match parseFrom(
+        java.nio.ByteBuffer data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static Match parseFrom(
+        java.nio.ByteBuffer data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static Match parseFrom(
+        com.google.protobuf.ByteString data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static Match parseFrom(
+        com.google.protobuf.ByteString data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static Match parseFrom(byte[] data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static Match parseFrom(
+        byte[] data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static Match parseFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input);
+    }
+    public static Match parseFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input, extensionRegistry);
+    }
+    public static Match parseDelimitedFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseDelimitedWithIOException(PARSER, input);
+    }
+    public static Match parseDelimitedFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
+    }
+    public static Match parseFrom(
+        com.google.protobuf.CodedInputStream input)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input);
+    }
+    public static Match parseFrom(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input, extensionRegistry);
+    }
+
+    @Override
+    public Builder newBuilderForType() { return newBuilder(); }
+    public static Builder newBuilder() {
+      return DEFAULT_INSTANCE.toBuilder();
+    }
+    public static Builder newBuilder(Match prototype) {
+      return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
+    }
+    @Override
+    public Builder toBuilder() {
+      return this == DEFAULT_INSTANCE
+          ? new Builder() : new Builder().mergeFrom(this);
+    }
+
+    @Override
+    protected Builder newBuilderForType(
+        BuilderParent parent) {
+      Builder builder = new Builder(parent);
+      return builder;
+    }
+    /**
+     * Protobuf type {@code gbuddy.Match}
+     */
+    public static final class Builder extends
+        com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
+        // @@protoc_insertion_point(builder_implements:gbuddy.Match)
+        MatchOrBuilder {
+      public static final com.google.protobuf.Descriptors.Descriptor
+          getDescriptor() {
+        return MatchLookupProto.internal_static_gbuddy_Match_descriptor;
+      }
+
+      @Override
+      protected FieldAccessorTable
+          internalGetFieldAccessorTable() {
+        return MatchLookupProto.internal_static_gbuddy_Match_fieldAccessorTable
+            .ensureFieldAccessorsInitialized(
+                Match.class, Builder.class);
+      }
+
+      // Construct using com.example.gbuddy.protos.MatchLookupProto.Match.newBuilder()
+      private Builder() {
+        maybeForceBuilderInitialization();
+      }
+
+      private Builder(
+          BuilderParent parent) {
+        super(parent);
+        maybeForceBuilderInitialization();
+      }
+      private void maybeForceBuilderInitialization() {
+        if (com.google.protobuf.GeneratedMessageV3
+                .alwaysUseFieldBuilders) {
+        }
+      }
+      @Override
+      public Builder clear() {
+        super.clear();
+        matchId_ = 0;
+
+        lookupId_ = 0;
+
+        if (userBuilder_ == null) {
+          user_ = null;
+        } else {
+          user_ = null;
+          userBuilder_ = null;
+        }
+        if (gymBuilder_ == null) {
+          gym_ = null;
+        } else {
+          gym_ = null;
+          gymBuilder_ = null;
+        }
+        return this;
+      }
+
+      @Override
+      public com.google.protobuf.Descriptors.Descriptor
+          getDescriptorForType() {
+        return MatchLookupProto.internal_static_gbuddy_Match_descriptor;
+      }
+
+      @Override
+      public Match getDefaultInstanceForType() {
+        return Match.getDefaultInstance();
+      }
+
+      @Override
+      public Match build() {
+        Match result = buildPartial();
+        if (!result.isInitialized()) {
+          throw newUninitializedMessageException(result);
+        }
+        return result;
+      }
+
+      @Override
+      public Match buildPartial() {
+        Match result = new Match(this);
+        result.matchId_ = matchId_;
+        result.lookupId_ = lookupId_;
+        if (userBuilder_ == null) {
+          result.user_ = user_;
+        } else {
+          result.user_ = userBuilder_.build();
+        }
+        if (gymBuilder_ == null) {
+          result.gym_ = gym_;
+        } else {
+          result.gym_ = gymBuilder_.build();
+        }
+        onBuilt();
+        return result;
+      }
+
+      @Override
+      public Builder clone() {
+        return super.clone();
+      }
+      @Override
+      public Builder setField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          Object value) {
+        return super.setField(field, value);
+      }
+      @Override
+      public Builder clearField(
+          com.google.protobuf.Descriptors.FieldDescriptor field) {
+        return super.clearField(field);
+      }
+      @Override
+      public Builder clearOneof(
+          com.google.protobuf.Descriptors.OneofDescriptor oneof) {
+        return super.clearOneof(oneof);
+      }
+      @Override
+      public Builder setRepeatedField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          int index, Object value) {
+        return super.setRepeatedField(field, index, value);
+      }
+      @Override
+      public Builder addRepeatedField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          Object value) {
+        return super.addRepeatedField(field, value);
+      }
+      @Override
+      public Builder mergeFrom(com.google.protobuf.Message other) {
+        if (other instanceof Match) {
+          return mergeFrom((Match)other);
+        } else {
+          super.mergeFrom(other);
+          return this;
+        }
+      }
+
+      public Builder mergeFrom(Match other) {
+        if (other == Match.getDefaultInstance()) return this;
+        if (other.getMatchId() != 0) {
+          setMatchId(other.getMatchId());
+        }
+        if (other.getLookupId() != 0) {
+          setLookupId(other.getLookupId());
+        }
+        if (other.hasUser()) {
+          mergeUser(other.getUser());
+        }
+        if (other.hasGym()) {
+          mergeGym(other.getGym());
+        }
+        this.mergeUnknownFields(other.unknownFields);
+        onChanged();
+        return this;
+      }
+
+      @Override
+      public final boolean isInitialized() {
+        return true;
+      }
+
+      @Override
+      public Builder mergeFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws java.io.IOException {
+        Match parsedMessage = null;
+        try {
+          parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
+        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+          parsedMessage = (Match) e.getUnfinishedMessage();
+          throw e.unwrapIOException();
+        } finally {
+          if (parsedMessage != null) {
+            mergeFrom(parsedMessage);
+          }
+        }
+        return this;
+      }
+
+      private int matchId_ ;
+      /**
+       * <code>int32 matchId = 1;</code>
+       * @return The matchId.
+       */
+      @Override
+      public int getMatchId() {
+        return matchId_;
+      }
+      /**
+       * <code>int32 matchId = 1;</code>
+       * @param value The matchId to set.
+       * @return This builder for chaining.
+       */
+      public Builder setMatchId(int value) {
+        
+        matchId_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>int32 matchId = 1;</code>
+       * @return This builder for chaining.
+       */
+      public Builder clearMatchId() {
+        
+        matchId_ = 0;
+        onChanged();
+        return this;
+      }
+
+      private int lookupId_ ;
+      /**
+       * <code>int32 lookupId = 2;</code>
+       * @return The lookupId.
+       */
+      @Override
+      public int getLookupId() {
+        return lookupId_;
+      }
+      /**
+       * <code>int32 lookupId = 2;</code>
+       * @param value The lookupId to set.
+       * @return This builder for chaining.
+       */
+      public Builder setLookupId(int value) {
+        
+        lookupId_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>int32 lookupId = 2;</code>
+       * @return This builder for chaining.
+       */
+      public Builder clearLookupId() {
+        
+        lookupId_ = 0;
+        onChanged();
+        return this;
+      }
+
+      private User user_;
+      private com.google.protobuf.SingleFieldBuilderV3<
+          User, User.Builder, UserOrBuilder> userBuilder_;
+      /**
+       * <code>.gbuddy.User user = 16;</code>
+       * @return Whether the user field is set.
+       */
+      public boolean hasUser() {
+        return userBuilder_ != null || user_ != null;
+      }
+      /**
+       * <code>.gbuddy.User user = 16;</code>
+       * @return The user.
+       */
+      public User getUser() {
+        if (userBuilder_ == null) {
+          return user_ == null ? User.getDefaultInstance() : user_;
+        } else {
+          return userBuilder_.getMessage();
+        }
+      }
+      /**
+       * <code>.gbuddy.User user = 16;</code>
+       */
+      public Builder setUser(User value) {
+        if (userBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          user_ = value;
+          onChanged();
+        } else {
+          userBuilder_.setMessage(value);
+        }
+
+        return this;
+      }
+      /**
+       * <code>.gbuddy.User user = 16;</code>
+       */
+      public Builder setUser(
+          User.Builder builderForValue) {
+        if (userBuilder_ == null) {
+          user_ = builderForValue.build();
+          onChanged();
+        } else {
+          userBuilder_.setMessage(builderForValue.build());
+        }
+
+        return this;
+      }
+      /**
+       * <code>.gbuddy.User user = 16;</code>
+       */
+      public Builder mergeUser(User value) {
+        if (userBuilder_ == null) {
+          if (user_ != null) {
+            user_ =
+              User.newBuilder(user_).mergeFrom(value).buildPartial();
+          } else {
+            user_ = value;
+          }
+          onChanged();
+        } else {
+          userBuilder_.mergeFrom(value);
+        }
+
+        return this;
+      }
+      /**
+       * <code>.gbuddy.User user = 16;</code>
+       */
+      public Builder clearUser() {
+        if (userBuilder_ == null) {
+          user_ = null;
+          onChanged();
+        } else {
+          user_ = null;
+          userBuilder_ = null;
+        }
+
+        return this;
+      }
+      /**
+       * <code>.gbuddy.User user = 16;</code>
+       */
+      public User.Builder getUserBuilder() {
+        
+        onChanged();
+        return getUserFieldBuilder().getBuilder();
+      }
+      /**
+       * <code>.gbuddy.User user = 16;</code>
+       */
+      public UserOrBuilder getUserOrBuilder() {
+        if (userBuilder_ != null) {
+          return userBuilder_.getMessageOrBuilder();
+        } else {
+          return user_ == null ?
+              User.getDefaultInstance() : user_;
+        }
+      }
+      /**
+       * <code>.gbuddy.User user = 16;</code>
+       */
+      private com.google.protobuf.SingleFieldBuilderV3<
+          User, User.Builder, UserOrBuilder>
+          getUserFieldBuilder() {
+        if (userBuilder_ == null) {
+          userBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
+              User, User.Builder, UserOrBuilder>(
+                  getUser(),
+                  getParentForChildren(),
+                  isClean());
+          user_ = null;
+        }
+        return userBuilder_;
+      }
+
+      private Gym gym_;
+      private com.google.protobuf.SingleFieldBuilderV3<
+          Gym, Gym.Builder, GymOrBuilder> gymBuilder_;
+      /**
+       * <code>.gbuddy.Gym gym = 17;</code>
+       * @return Whether the gym field is set.
+       */
+      public boolean hasGym() {
+        return gymBuilder_ != null || gym_ != null;
+      }
+      /**
+       * <code>.gbuddy.Gym gym = 17;</code>
+       * @return The gym.
+       */
+      public Gym getGym() {
+        if (gymBuilder_ == null) {
+          return gym_ == null ? Gym.getDefaultInstance() : gym_;
+        } else {
+          return gymBuilder_.getMessage();
+        }
+      }
+      /**
+       * <code>.gbuddy.Gym gym = 17;</code>
+       */
+      public Builder setGym(Gym value) {
+        if (gymBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          gym_ = value;
+          onChanged();
+        } else {
+          gymBuilder_.setMessage(value);
+        }
+
+        return this;
+      }
+      /**
+       * <code>.gbuddy.Gym gym = 17;</code>
+       */
+      public Builder setGym(
+          Gym.Builder builderForValue) {
+        if (gymBuilder_ == null) {
+          gym_ = builderForValue.build();
+          onChanged();
+        } else {
+          gymBuilder_.setMessage(builderForValue.build());
+        }
+
+        return this;
+      }
+      /**
+       * <code>.gbuddy.Gym gym = 17;</code>
+       */
+      public Builder mergeGym(Gym value) {
+        if (gymBuilder_ == null) {
+          if (gym_ != null) {
+            gym_ =
+              Gym.newBuilder(gym_).mergeFrom(value).buildPartial();
+          } else {
+            gym_ = value;
+          }
+          onChanged();
+        } else {
+          gymBuilder_.mergeFrom(value);
+        }
+
+        return this;
+      }
+      /**
+       * <code>.gbuddy.Gym gym = 17;</code>
+       */
+      public Builder clearGym() {
+        if (gymBuilder_ == null) {
+          gym_ = null;
+          onChanged();
+        } else {
+          gym_ = null;
+          gymBuilder_ = null;
+        }
+
+        return this;
+      }
+      /**
+       * <code>.gbuddy.Gym gym = 17;</code>
+       */
+      public Gym.Builder getGymBuilder() {
+        
+        onChanged();
+        return getGymFieldBuilder().getBuilder();
+      }
+      /**
+       * <code>.gbuddy.Gym gym = 17;</code>
+       */
+      public GymOrBuilder getGymOrBuilder() {
+        if (gymBuilder_ != null) {
+          return gymBuilder_.getMessageOrBuilder();
+        } else {
+          return gym_ == null ?
+              Gym.getDefaultInstance() : gym_;
+        }
+      }
+      /**
+       * <code>.gbuddy.Gym gym = 17;</code>
+       */
+      private com.google.protobuf.SingleFieldBuilderV3<
+          Gym, Gym.Builder, GymOrBuilder>
+          getGymFieldBuilder() {
+        if (gymBuilder_ == null) {
+          gymBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
+              Gym, Gym.Builder, GymOrBuilder>(
+                  getGym(),
+                  getParentForChildren(),
+                  isClean());
+          gym_ = null;
+        }
+        return gymBuilder_;
+      }
+      @Override
+      public final Builder setUnknownFields(
+          final com.google.protobuf.UnknownFieldSet unknownFields) {
+        return super.setUnknownFields(unknownFields);
+      }
+
+      @Override
+      public final Builder mergeUnknownFields(
+          final com.google.protobuf.UnknownFieldSet unknownFields) {
+        return super.mergeUnknownFields(unknownFields);
+      }
+
+
+      // @@protoc_insertion_point(builder_scope:gbuddy.Match)
+    }
+
+    // @@protoc_insertion_point(class_scope:gbuddy.Match)
+    private static final Match DEFAULT_INSTANCE;
+    static {
+      DEFAULT_INSTANCE = new Match();
+    }
+
+    public static Match getDefaultInstance() {
+      return DEFAULT_INSTANCE;
+    }
+
+    private static final com.google.protobuf.Parser<Match>
+        PARSER = new com.google.protobuf.AbstractParser<Match>() {
+      @Override
+      public Match parsePartialFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        return new Match(input, extensionRegistry);
+      }
+    };
+
+    public static com.google.protobuf.Parser<Match> parser() {
+      return PARSER;
+    }
+
+    @Override
+    public com.google.protobuf.Parser<Match> getParserForType() {
+      return PARSER;
+    }
+
+    @Override
+    public Match getDefaultInstanceForType() {
+      return DEFAULT_INSTANCE;
+    }
+
+  }
+
+  public interface ChatResponseOrBuilder extends
+      // @@protoc_insertion_point(interface_extends:gbuddy.ChatResponse)
+      com.google.protobuf.MessageOrBuilder {
+
+    /**
+     * <code>int32 responseCode = 1;</code>
+     * @return The responseCode.
+     */
+    int getResponseCode();
+
+    /**
+     * <code>string message = 2;</code>
+     * @return The message.
+     */
+    String getMessage();
+    /**
+     * <code>string message = 2;</code>
+     * @return The bytes for message.
+     */
+    com.google.protobuf.ByteString
+        getMessageBytes();
+
+    /**
+     * <code>repeated .gbuddy.Match matches = 17;</code>
+     */
+    java.util.List<Match>
+        getMatchesList();
+    /**
+     * <code>repeated .gbuddy.Match matches = 17;</code>
+     */
+    Match getMatches(int index);
+    /**
+     * <code>repeated .gbuddy.Match matches = 17;</code>
+     */
+    int getMatchesCount();
+    /**
+     * <code>repeated .gbuddy.Match matches = 17;</code>
+     */
+    java.util.List<? extends MatchOrBuilder>
+        getMatchesOrBuilderList();
+    /**
+     * <code>repeated .gbuddy.Match matches = 17;</code>
+     */
+    MatchOrBuilder getMatchesOrBuilder(
+            int index);
+  }
+  /**
+   * Protobuf type {@code gbuddy.ChatResponse}
+   */
+  public static final class ChatResponse extends
+      com.google.protobuf.GeneratedMessageV3 implements
+      // @@protoc_insertion_point(message_implements:gbuddy.ChatResponse)
+      ChatResponseOrBuilder {
+  private static final long serialVersionUID = 0L;
+    // Use ChatResponse.newBuilder() to construct.
+    private ChatResponse(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
+      super(builder);
+    }
+    private ChatResponse() {
+      message_ = "";
+      matches_ = java.util.Collections.emptyList();
+    }
+
+    @Override
+    @SuppressWarnings({"unused"})
+    protected Object newInstance(
+        UnusedPrivateParameter unused) {
+      return new ChatResponse();
+    }
+
+    @Override
+    public final com.google.protobuf.UnknownFieldSet
+    getUnknownFields() {
+      return this.unknownFields;
+    }
+    private ChatResponse(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      this();
+      if (extensionRegistry == null) {
+        throw new NullPointerException();
+      }
+      int mutable_bitField0_ = 0;
+      com.google.protobuf.UnknownFieldSet.Builder unknownFields =
+          com.google.protobuf.UnknownFieldSet.newBuilder();
+      try {
+        boolean done = false;
+        while (!done) {
+          int tag = input.readTag();
+          switch (tag) {
+            case 0:
+              done = true;
+              break;
+            case 8: {
+
+              responseCode_ = input.readInt32();
+              break;
+            }
+            case 18: {
+              String s = input.readStringRequireUtf8();
+
+              message_ = s;
+              break;
+            }
+            case 138: {
+              if (!((mutable_bitField0_ & 0x00000001) != 0)) {
+                matches_ = new java.util.ArrayList<Match>();
+                mutable_bitField0_ |= 0x00000001;
+              }
+              matches_.add(
+                  input.readMessage(Match.parser(), extensionRegistry));
+              break;
+            }
+            default: {
+              if (!parseUnknownField(
+                  input, unknownFields, extensionRegistry, tag)) {
+                done = true;
+              }
+              break;
+            }
+          }
+        }
+      } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+        throw e.setUnfinishedMessage(this);
+      } catch (java.io.IOException e) {
+        throw new com.google.protobuf.InvalidProtocolBufferException(
+            e).setUnfinishedMessage(this);
+      } finally {
+        if (((mutable_bitField0_ & 0x00000001) != 0)) {
+          matches_ = java.util.Collections.unmodifiableList(matches_);
+        }
+        this.unknownFields = unknownFields.build();
+        makeExtensionsImmutable();
+      }
+    }
+    public static final com.google.protobuf.Descriptors.Descriptor
+        getDescriptor() {
+      return MatchLookupProto.internal_static_gbuddy_ChatResponse_descriptor;
+    }
+
+    @Override
+    protected FieldAccessorTable
+        internalGetFieldAccessorTable() {
+      return MatchLookupProto.internal_static_gbuddy_ChatResponse_fieldAccessorTable
+          .ensureFieldAccessorsInitialized(
+              ChatResponse.class, Builder.class);
+    }
+
+    public static final int RESPONSECODE_FIELD_NUMBER = 1;
+    private int responseCode_;
+    /**
+     * <code>int32 responseCode = 1;</code>
+     * @return The responseCode.
+     */
+    @Override
+    public int getResponseCode() {
+      return responseCode_;
+    }
+
+    public static final int MESSAGE_FIELD_NUMBER = 2;
+    private volatile Object message_;
+    /**
+     * <code>string message = 2;</code>
+     * @return The message.
+     */
+    @Override
+    public String getMessage() {
+      Object ref = message_;
+      if (ref instanceof String) {
+        return (String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        String s = bs.toStringUtf8();
+        message_ = s;
+        return s;
+      }
+    }
+    /**
+     * <code>string message = 2;</code>
+     * @return The bytes for message.
+     */
+    @Override
+    public com.google.protobuf.ByteString
+        getMessageBytes() {
+      Object ref = message_;
+      if (ref instanceof String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (String) ref);
+        message_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+
+    public static final int MATCHES_FIELD_NUMBER = 17;
+    private java.util.List<Match> matches_;
+    /**
+     * <code>repeated .gbuddy.Match matches = 17;</code>
+     */
+    @Override
+    public java.util.List<Match> getMatchesList() {
+      return matches_;
+    }
+    /**
+     * <code>repeated .gbuddy.Match matches = 17;</code>
+     */
+    @Override
+    public java.util.List<? extends MatchOrBuilder>
+        getMatchesOrBuilderList() {
+      return matches_;
+    }
+    /**
+     * <code>repeated .gbuddy.Match matches = 17;</code>
+     */
+    @Override
+    public int getMatchesCount() {
+      return matches_.size();
+    }
+    /**
+     * <code>repeated .gbuddy.Match matches = 17;</code>
+     */
+    @Override
+    public Match getMatches(int index) {
+      return matches_.get(index);
+    }
+    /**
+     * <code>repeated .gbuddy.Match matches = 17;</code>
+     */
+    @Override
+    public MatchOrBuilder getMatchesOrBuilder(
+        int index) {
+      return matches_.get(index);
+    }
+
+    private byte memoizedIsInitialized = -1;
+    @Override
+    public final boolean isInitialized() {
+      byte isInitialized = memoizedIsInitialized;
+      if (isInitialized == 1) return true;
+      if (isInitialized == 0) return false;
+
+      memoizedIsInitialized = 1;
+      return true;
+    }
+
+    @Override
+    public void writeTo(com.google.protobuf.CodedOutputStream output)
+                        throws java.io.IOException {
+      if (responseCode_ != 0) {
+        output.writeInt32(1, responseCode_);
+      }
+      if (!getMessageBytes().isEmpty()) {
+        com.google.protobuf.GeneratedMessageV3.writeString(output, 2, message_);
+      }
+      for (int i = 0; i < matches_.size(); i++) {
+        output.writeMessage(17, matches_.get(i));
+      }
+      unknownFields.writeTo(output);
+    }
+
+    @Override
+    public int getSerializedSize() {
+      int size = memoizedSize;
+      if (size != -1) return size;
+
+      size = 0;
+      if (responseCode_ != 0) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeInt32Size(1, responseCode_);
+      }
+      if (!getMessageBytes().isEmpty()) {
+        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(2, message_);
+      }
+      for (int i = 0; i < matches_.size(); i++) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeMessageSize(17, matches_.get(i));
+      }
+      size += unknownFields.getSerializedSize();
+      memoizedSize = size;
+      return size;
+    }
+
+    @Override
+    public boolean equals(final Object obj) {
+      if (obj == this) {
+       return true;
+      }
+      if (!(obj instanceof ChatResponse)) {
+        return super.equals(obj);
+      }
+      ChatResponse other = (ChatResponse) obj;
+
+      if (getResponseCode()
+          != other.getResponseCode()) return false;
+      if (!getMessage()
+          .equals(other.getMessage())) return false;
+      if (!getMatchesList()
+          .equals(other.getMatchesList())) return false;
+      if (!unknownFields.equals(other.unknownFields)) return false;
+      return true;
+    }
+
+    @Override
+    public int hashCode() {
+      if (memoizedHashCode != 0) {
+        return memoizedHashCode;
+      }
+      int hash = 41;
+      hash = (19 * hash) + getDescriptor().hashCode();
+      hash = (37 * hash) + RESPONSECODE_FIELD_NUMBER;
+      hash = (53 * hash) + getResponseCode();
+      hash = (37 * hash) + MESSAGE_FIELD_NUMBER;
+      hash = (53 * hash) + getMessage().hashCode();
+      if (getMatchesCount() > 0) {
+        hash = (37 * hash) + MATCHES_FIELD_NUMBER;
+        hash = (53 * hash) + getMatchesList().hashCode();
+      }
+      hash = (29 * hash) + unknownFields.hashCode();
+      memoizedHashCode = hash;
+      return hash;
+    }
+
+    public static ChatResponse parseFrom(
+        java.nio.ByteBuffer data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static ChatResponse parseFrom(
+        java.nio.ByteBuffer data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static ChatResponse parseFrom(
+        com.google.protobuf.ByteString data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static ChatResponse parseFrom(
+        com.google.protobuf.ByteString data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static ChatResponse parseFrom(byte[] data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static ChatResponse parseFrom(
+        byte[] data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static ChatResponse parseFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input);
+    }
+    public static ChatResponse parseFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input, extensionRegistry);
+    }
+    public static ChatResponse parseDelimitedFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseDelimitedWithIOException(PARSER, input);
+    }
+    public static ChatResponse parseDelimitedFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
+    }
+    public static ChatResponse parseFrom(
+        com.google.protobuf.CodedInputStream input)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input);
+    }
+    public static ChatResponse parseFrom(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input, extensionRegistry);
+    }
+
+    @Override
+    public Builder newBuilderForType() { return newBuilder(); }
+    public static Builder newBuilder() {
+      return DEFAULT_INSTANCE.toBuilder();
+    }
+    public static Builder newBuilder(ChatResponse prototype) {
+      return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
+    }
+    @Override
+    public Builder toBuilder() {
+      return this == DEFAULT_INSTANCE
+          ? new Builder() : new Builder().mergeFrom(this);
+    }
+
+    @Override
+    protected Builder newBuilderForType(
+        BuilderParent parent) {
+      Builder builder = new Builder(parent);
+      return builder;
+    }
+    /**
+     * Protobuf type {@code gbuddy.ChatResponse}
+     */
+    public static final class Builder extends
+        com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
+        // @@protoc_insertion_point(builder_implements:gbuddy.ChatResponse)
+        ChatResponseOrBuilder {
+      public static final com.google.protobuf.Descriptors.Descriptor
+          getDescriptor() {
+        return MatchLookupProto.internal_static_gbuddy_ChatResponse_descriptor;
+      }
+
+      @Override
+      protected FieldAccessorTable
+          internalGetFieldAccessorTable() {
+        return MatchLookupProto.internal_static_gbuddy_ChatResponse_fieldAccessorTable
+            .ensureFieldAccessorsInitialized(
+                ChatResponse.class, Builder.class);
+      }
+
+      // Construct using com.example.gbuddy.protos.MatchLookupProto.ChatResponse.newBuilder()
+      private Builder() {
+        maybeForceBuilderInitialization();
+      }
+
+      private Builder(
+          BuilderParent parent) {
+        super(parent);
+        maybeForceBuilderInitialization();
+      }
+      private void maybeForceBuilderInitialization() {
+        if (com.google.protobuf.GeneratedMessageV3
+                .alwaysUseFieldBuilders) {
+          getMatchesFieldBuilder();
+        }
+      }
+      @Override
+      public Builder clear() {
+        super.clear();
+        responseCode_ = 0;
+
+        message_ = "";
+
+        if (matchesBuilder_ == null) {
+          matches_ = java.util.Collections.emptyList();
+          bitField0_ = (bitField0_ & ~0x00000001);
+        } else {
+          matchesBuilder_.clear();
+        }
+        return this;
+      }
+
+      @Override
+      public com.google.protobuf.Descriptors.Descriptor
+          getDescriptorForType() {
+        return MatchLookupProto.internal_static_gbuddy_ChatResponse_descriptor;
+      }
+
+      @Override
+      public ChatResponse getDefaultInstanceForType() {
+        return ChatResponse.getDefaultInstance();
+      }
+
+      @Override
+      public ChatResponse build() {
+        ChatResponse result = buildPartial();
+        if (!result.isInitialized()) {
+          throw newUninitializedMessageException(result);
+        }
+        return result;
+      }
+
+      @Override
+      public ChatResponse buildPartial() {
+        ChatResponse result = new ChatResponse(this);
+        int from_bitField0_ = bitField0_;
+        result.responseCode_ = responseCode_;
+        result.message_ = message_;
+        if (matchesBuilder_ == null) {
+          if (((bitField0_ & 0x00000001) != 0)) {
+            matches_ = java.util.Collections.unmodifiableList(matches_);
+            bitField0_ = (bitField0_ & ~0x00000001);
+          }
+          result.matches_ = matches_;
+        } else {
+          result.matches_ = matchesBuilder_.build();
+        }
+        onBuilt();
+        return result;
+      }
+
+      @Override
+      public Builder clone() {
+        return super.clone();
+      }
+      @Override
+      public Builder setField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          Object value) {
+        return super.setField(field, value);
+      }
+      @Override
+      public Builder clearField(
+          com.google.protobuf.Descriptors.FieldDescriptor field) {
+        return super.clearField(field);
+      }
+      @Override
+      public Builder clearOneof(
+          com.google.protobuf.Descriptors.OneofDescriptor oneof) {
+        return super.clearOneof(oneof);
+      }
+      @Override
+      public Builder setRepeatedField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          int index, Object value) {
+        return super.setRepeatedField(field, index, value);
+      }
+      @Override
+      public Builder addRepeatedField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          Object value) {
+        return super.addRepeatedField(field, value);
+      }
+      @Override
+      public Builder mergeFrom(com.google.protobuf.Message other) {
+        if (other instanceof ChatResponse) {
+          return mergeFrom((ChatResponse)other);
+        } else {
+          super.mergeFrom(other);
+          return this;
+        }
+      }
+
+      public Builder mergeFrom(ChatResponse other) {
+        if (other == ChatResponse.getDefaultInstance()) return this;
+        if (other.getResponseCode() != 0) {
+          setResponseCode(other.getResponseCode());
+        }
+        if (!other.getMessage().isEmpty()) {
+          message_ = other.message_;
+          onChanged();
+        }
+        if (matchesBuilder_ == null) {
+          if (!other.matches_.isEmpty()) {
+            if (matches_.isEmpty()) {
+              matches_ = other.matches_;
+              bitField0_ = (bitField0_ & ~0x00000001);
+            } else {
+              ensureMatchesIsMutable();
+              matches_.addAll(other.matches_);
+            }
+            onChanged();
+          }
+        } else {
+          if (!other.matches_.isEmpty()) {
+            if (matchesBuilder_.isEmpty()) {
+              matchesBuilder_.dispose();
+              matchesBuilder_ = null;
+              matches_ = other.matches_;
+              bitField0_ = (bitField0_ & ~0x00000001);
+              matchesBuilder_ = 
+                com.google.protobuf.GeneratedMessageV3.alwaysUseFieldBuilders ?
+                   getMatchesFieldBuilder() : null;
+            } else {
+              matchesBuilder_.addAllMessages(other.matches_);
+            }
+          }
+        }
+        this.mergeUnknownFields(other.unknownFields);
+        onChanged();
+        return this;
+      }
+
+      @Override
+      public final boolean isInitialized() {
+        return true;
+      }
+
+      @Override
+      public Builder mergeFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws java.io.IOException {
+        ChatResponse parsedMessage = null;
+        try {
+          parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
+        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+          parsedMessage = (ChatResponse) e.getUnfinishedMessage();
+          throw e.unwrapIOException();
+        } finally {
+          if (parsedMessage != null) {
+            mergeFrom(parsedMessage);
+          }
+        }
+        return this;
+      }
+      private int bitField0_;
+
+      private int responseCode_ ;
+      /**
+       * <code>int32 responseCode = 1;</code>
+       * @return The responseCode.
+       */
+      @Override
+      public int getResponseCode() {
+        return responseCode_;
+      }
+      /**
+       * <code>int32 responseCode = 1;</code>
+       * @param value The responseCode to set.
+       * @return This builder for chaining.
+       */
+      public Builder setResponseCode(int value) {
+        
+        responseCode_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>int32 responseCode = 1;</code>
+       * @return This builder for chaining.
+       */
+      public Builder clearResponseCode() {
+        
+        responseCode_ = 0;
+        onChanged();
+        return this;
+      }
+
+      private Object message_ = "";
+      /**
+       * <code>string message = 2;</code>
+       * @return The message.
+       */
+      public String getMessage() {
+        Object ref = message_;
+        if (!(ref instanceof String)) {
+          com.google.protobuf.ByteString bs =
+              (com.google.protobuf.ByteString) ref;
+          String s = bs.toStringUtf8();
+          message_ = s;
+          return s;
+        } else {
+          return (String) ref;
+        }
+      }
+      /**
+       * <code>string message = 2;</code>
+       * @return The bytes for message.
+       */
+      public com.google.protobuf.ByteString
+          getMessageBytes() {
+        Object ref = message_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (String) ref);
+          message_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <code>string message = 2;</code>
+       * @param value The message to set.
+       * @return This builder for chaining.
+       */
+      public Builder setMessage(
+          String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  
+        message_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>string message = 2;</code>
+       * @return This builder for chaining.
+       */
+      public Builder clearMessage() {
+        
+        message_ = getDefaultInstance().getMessage();
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>string message = 2;</code>
+       * @param value The bytes for message to set.
+       * @return This builder for chaining.
+       */
+      public Builder setMessageBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  checkByteStringIsUtf8(value);
+        
+        message_ = value;
+        onChanged();
+        return this;
+      }
+
+      private java.util.List<Match> matches_ =
+        java.util.Collections.emptyList();
+      private void ensureMatchesIsMutable() {
+        if (!((bitField0_ & 0x00000001) != 0)) {
+          matches_ = new java.util.ArrayList<Match>(matches_);
+          bitField0_ |= 0x00000001;
+         }
+      }
+
+      private com.google.protobuf.RepeatedFieldBuilderV3<
+          Match, Match.Builder, MatchOrBuilder> matchesBuilder_;
+
+      /**
+       * <code>repeated .gbuddy.Match matches = 17;</code>
+       */
+      public java.util.List<Match> getMatchesList() {
+        if (matchesBuilder_ == null) {
+          return java.util.Collections.unmodifiableList(matches_);
+        } else {
+          return matchesBuilder_.getMessageList();
+        }
+      }
+      /**
+       * <code>repeated .gbuddy.Match matches = 17;</code>
+       */
+      public int getMatchesCount() {
+        if (matchesBuilder_ == null) {
+          return matches_.size();
+        } else {
+          return matchesBuilder_.getCount();
+        }
+      }
+      /**
+       * <code>repeated .gbuddy.Match matches = 17;</code>
+       */
+      public Match getMatches(int index) {
+        if (matchesBuilder_ == null) {
+          return matches_.get(index);
+        } else {
+          return matchesBuilder_.getMessage(index);
+        }
+      }
+      /**
+       * <code>repeated .gbuddy.Match matches = 17;</code>
+       */
+      public Builder setMatches(
+          int index, Match value) {
+        if (matchesBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          ensureMatchesIsMutable();
+          matches_.set(index, value);
+          onChanged();
+        } else {
+          matchesBuilder_.setMessage(index, value);
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .gbuddy.Match matches = 17;</code>
+       */
+      public Builder setMatches(
+          int index, Match.Builder builderForValue) {
+        if (matchesBuilder_ == null) {
+          ensureMatchesIsMutable();
+          matches_.set(index, builderForValue.build());
+          onChanged();
+        } else {
+          matchesBuilder_.setMessage(index, builderForValue.build());
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .gbuddy.Match matches = 17;</code>
+       */
+      public Builder addMatches(Match value) {
+        if (matchesBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          ensureMatchesIsMutable();
+          matches_.add(value);
+          onChanged();
+        } else {
+          matchesBuilder_.addMessage(value);
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .gbuddy.Match matches = 17;</code>
+       */
+      public Builder addMatches(
+          int index, Match value) {
+        if (matchesBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          ensureMatchesIsMutable();
+          matches_.add(index, value);
+          onChanged();
+        } else {
+          matchesBuilder_.addMessage(index, value);
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .gbuddy.Match matches = 17;</code>
+       */
+      public Builder addMatches(
+          Match.Builder builderForValue) {
+        if (matchesBuilder_ == null) {
+          ensureMatchesIsMutable();
+          matches_.add(builderForValue.build());
+          onChanged();
+        } else {
+          matchesBuilder_.addMessage(builderForValue.build());
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .gbuddy.Match matches = 17;</code>
+       */
+      public Builder addMatches(
+          int index, Match.Builder builderForValue) {
+        if (matchesBuilder_ == null) {
+          ensureMatchesIsMutable();
+          matches_.add(index, builderForValue.build());
+          onChanged();
+        } else {
+          matchesBuilder_.addMessage(index, builderForValue.build());
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .gbuddy.Match matches = 17;</code>
+       */
+      public Builder addAllMatches(
+          Iterable<? extends Match> values) {
+        if (matchesBuilder_ == null) {
+          ensureMatchesIsMutable();
+          com.google.protobuf.AbstractMessageLite.Builder.addAll(
+              values, matches_);
+          onChanged();
+        } else {
+          matchesBuilder_.addAllMessages(values);
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .gbuddy.Match matches = 17;</code>
+       */
+      public Builder clearMatches() {
+        if (matchesBuilder_ == null) {
+          matches_ = java.util.Collections.emptyList();
+          bitField0_ = (bitField0_ & ~0x00000001);
+          onChanged();
+        } else {
+          matchesBuilder_.clear();
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .gbuddy.Match matches = 17;</code>
+       */
+      public Builder removeMatches(int index) {
+        if (matchesBuilder_ == null) {
+          ensureMatchesIsMutable();
+          matches_.remove(index);
+          onChanged();
+        } else {
+          matchesBuilder_.remove(index);
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .gbuddy.Match matches = 17;</code>
+       */
+      public Match.Builder getMatchesBuilder(
+          int index) {
+        return getMatchesFieldBuilder().getBuilder(index);
+      }
+      /**
+       * <code>repeated .gbuddy.Match matches = 17;</code>
+       */
+      public MatchOrBuilder getMatchesOrBuilder(
+          int index) {
+        if (matchesBuilder_ == null) {
+          return matches_.get(index);  } else {
+          return matchesBuilder_.getMessageOrBuilder(index);
+        }
+      }
+      /**
+       * <code>repeated .gbuddy.Match matches = 17;</code>
+       */
+      public java.util.List<? extends MatchOrBuilder>
+           getMatchesOrBuilderList() {
+        if (matchesBuilder_ != null) {
+          return matchesBuilder_.getMessageOrBuilderList();
+        } else {
+          return java.util.Collections.unmodifiableList(matches_);
+        }
+      }
+      /**
+       * <code>repeated .gbuddy.Match matches = 17;</code>
+       */
+      public Match.Builder addMatchesBuilder() {
+        return getMatchesFieldBuilder().addBuilder(
+            Match.getDefaultInstance());
+      }
+      /**
+       * <code>repeated .gbuddy.Match matches = 17;</code>
+       */
+      public Match.Builder addMatchesBuilder(
+          int index) {
+        return getMatchesFieldBuilder().addBuilder(
+            index, Match.getDefaultInstance());
+      }
+      /**
+       * <code>repeated .gbuddy.Match matches = 17;</code>
+       */
+      public java.util.List<Match.Builder>
+           getMatchesBuilderList() {
+        return getMatchesFieldBuilder().getBuilderList();
+      }
+      private com.google.protobuf.RepeatedFieldBuilderV3<
+          Match, Match.Builder, MatchOrBuilder>
+          getMatchesFieldBuilder() {
+        if (matchesBuilder_ == null) {
+          matchesBuilder_ = new com.google.protobuf.RepeatedFieldBuilderV3<
+              Match, Match.Builder, MatchOrBuilder>(
+                  matches_,
+                  ((bitField0_ & 0x00000001) != 0),
+                  getParentForChildren(),
+                  isClean());
+          matches_ = null;
+        }
+        return matchesBuilder_;
+      }
+      @Override
+      public final Builder setUnknownFields(
+          final com.google.protobuf.UnknownFieldSet unknownFields) {
+        return super.setUnknownFields(unknownFields);
+      }
+
+      @Override
+      public final Builder mergeUnknownFields(
+          final com.google.protobuf.UnknownFieldSet unknownFields) {
+        return super.mergeUnknownFields(unknownFields);
+      }
+
+
+      // @@protoc_insertion_point(builder_scope:gbuddy.ChatResponse)
+    }
+
+    // @@protoc_insertion_point(class_scope:gbuddy.ChatResponse)
+    private static final ChatResponse DEFAULT_INSTANCE;
+    static {
+      DEFAULT_INSTANCE = new ChatResponse();
+    }
+
+    public static ChatResponse getDefaultInstance() {
+      return DEFAULT_INSTANCE;
+    }
+
+    private static final com.google.protobuf.Parser<ChatResponse>
+        PARSER = new com.google.protobuf.AbstractParser<ChatResponse>() {
+      @Override
+      public ChatResponse parsePartialFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        return new ChatResponse(input, extensionRegistry);
+      }
+    };
+
+    public static com.google.protobuf.Parser<ChatResponse> parser() {
+      return PARSER;
+    }
+
+    @Override
+    public com.google.protobuf.Parser<ChatResponse> getParserForType() {
+      return PARSER;
+    }
+
+    @Override
+    public ChatResponse getDefaultInstanceForType() {
+      return DEFAULT_INSTANCE;
+    }
+
+  }
+
   private static final com.google.protobuf.Descriptors.Descriptor
     internal_static_gbuddy_MatchResponse_descriptor;
   private static final 
@@ -5898,6 +7875,16 @@ public final class MatchLookupProto {
   private static final 
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
       internal_static_gbuddy_LookupResponse_fieldAccessorTable;
+  private static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_gbuddy_Match_descriptor;
+  private static final 
+    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_gbuddy_Match_fieldAccessorTable;
+  private static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_gbuddy_ChatResponse_descriptor;
+  private static final 
+    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_gbuddy_ChatResponse_fieldAccessorTable;
 
   public static com.google.protobuf.Descriptors.FileDescriptor
       getDescriptor() {
@@ -5921,10 +7908,14 @@ public final class MatchLookupProto {
       "\n\010latitude\030\004 \001(\001\022\021\n\tlongitude\030\005 \001(\001\022\017\n\007c" +
       "ontact\030\006 \001(\t\"]\n\016LookupResponse\022\024\n\014respon" +
       "seCode\030\001 \001(\005\022\017\n\007message\030\002 \001(\t\022$\n\007lookups" +
-      "\030\021 \003(\0132\023.gbuddy.MatchLookup*3\n\006Status\022\013\n" +
-      "\007MATCHED\020\000\022\r\n\tUNMATCHED\020\001\022\r\n\tREQUESTED\020\002" +
-      "B-\n\031com.example.gbuddy.protosB\020MatchLook" +
-      "upProtob\006proto3"
+      "\030\021 \003(\0132\023.gbuddy.MatchLookup\"`\n\005Match\022\017\n\007" +
+      "matchId\030\001 \001(\005\022\020\n\010lookupId\030\002 \001(\005\022\032\n\004user\030" +
+      "\020 \001(\0132\014.gbuddy.User\022\030\n\003gym\030\021 \001(\0132\013.gbudd" +
+      "y.Gym\"U\n\014ChatResponse\022\024\n\014responseCode\030\001 " +
+      "\001(\005\022\017\n\007message\030\002 \001(\t\022\036\n\007matches\030\021 \003(\0132\r." +
+      "gbuddy.Match*3\n\006Status\022\013\n\007MATCHED\020\000\022\r\n\tU" +
+      "NMATCHED\020\001\022\r\n\tREQUESTED\020\002B-\n\031com.example" +
+      ".gbuddy.protosB\020MatchLookupProtob\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,
@@ -5966,6 +7957,18 @@ public final class MatchLookupProto {
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_gbuddy_LookupResponse_descriptor,
         new String[] { "ResponseCode", "Message", "Lookups", });
+    internal_static_gbuddy_Match_descriptor =
+      getDescriptor().getMessageTypes().get(6);
+    internal_static_gbuddy_Match_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        internal_static_gbuddy_Match_descriptor,
+        new String[] { "MatchId", "LookupId", "User", "Gym", });
+    internal_static_gbuddy_ChatResponse_descriptor =
+      getDescriptor().getMessageTypes().get(7);
+    internal_static_gbuddy_ChatResponse_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        internal_static_gbuddy_ChatResponse_descriptor,
+        new String[] { "ResponseCode", "Message", "Matches", });
   }
 
   // @@protoc_insertion_point(outer_class_scope)
