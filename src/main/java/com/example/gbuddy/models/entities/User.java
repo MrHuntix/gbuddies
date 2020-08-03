@@ -1,4 +1,4 @@
-package com.example.gbuddy.models;
+package com.example.gbuddy.models.entities;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -12,19 +12,26 @@ import java.io.Serializable;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class User implements Serializable{
+public class User implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+
     private int userId;
+
     private String userName;
+
     private String emailId;
+
     private String mobileNo;
+
     private String password;
+
     private String roles;
+
     private String about;
+
     @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER, optional = false)
-    @JoinColumn(name = "picId", referencedColumnName = "picId")//, nullable = false)
-//    @JoinColumn(name = "picId", referencedColumnName = "picId")
+    @JoinColumn(name = "picId", referencedColumnName = "picId")
     private ProfilePic profilePic;
 }

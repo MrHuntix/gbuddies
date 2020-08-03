@@ -3,13 +3,12 @@ package com.example.gbuddy.controllers;
 import com.example.gbuddy.dao.BranchDao;
 import com.example.gbuddy.dao.GymDao;
 import com.example.gbuddy.exception.CustomException;
-import com.example.gbuddy.models.Branch;
-import com.example.gbuddy.models.Gym;
+import com.example.gbuddy.models.entities.Branch;
+import com.example.gbuddy.models.entities.Gym;
 import com.example.gbuddy.models.constants.CommonConstants;
-import com.example.gbuddy.protos.GymProto;
+import com.example.gbuddy.models.protos.GymProto;
 import com.example.gbuddy.service.validators.GymValidator;
 import com.example.gbuddy.util.MapperUtil;
-import org.apache.commons.lang.ObjectUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,7 +18,6 @@ import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/gym")
@@ -118,7 +116,7 @@ public class GymController {
                     .setLatitude(branch.getLatitude())
                     .setLongitude(branch.getLongitude());
             logger.info("completed building coordinate response");
-        } catch(Exception e) {
+        } catch (Exception e) {
             builder.setMessage(e.getMessage())
                     .setResponseCode(HttpStatus.INTERNAL_SERVER_ERROR.value());
             logger.info("exception during coordinate request");
