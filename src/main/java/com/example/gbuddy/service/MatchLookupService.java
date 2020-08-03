@@ -2,12 +2,13 @@ package com.example.gbuddy.service;
 
 import com.example.gbuddy.dao.*;
 import com.example.gbuddy.exception.CustomException;
-import com.example.gbuddy.models.*;
 import com.example.gbuddy.models.constants.CommonConstants;
 import com.example.gbuddy.models.constants.MatchLookupConstants;
-import com.example.gbuddy.protos.MatchLookupProto;
+import com.example.gbuddy.models.entities.Match;
+import com.example.gbuddy.models.entities.MatchLookup;
+import com.example.gbuddy.models.protos.MatchLookupProto;
 import com.example.gbuddy.util.MapperUtil;
-import com.example.gbuddy.util.MatcherConst;
+import com.example.gbuddy.models.constants.MatcherConst;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,29 +17,19 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-import java.util.Optional;
 
 @Component
 @Transactional
 public class MatchLookupService {
     private static final Logger LOG = LoggerFactory.getLogger(MatchLookupService.class);
+
     @Autowired
     private MatchLookupDao matchLookupDao;
 
     @Autowired
     private MatchDao matchDao;
-
-    @Autowired
-    private GymDao gymDao;
-
-    @Autowired
-    private BranchDao branchDao;
-
-    @Autowired
-    private UserDao userDao;
 
     @Autowired
     private MapperUtil mapperUtil;
@@ -47,7 +38,7 @@ public class MatchLookupService {
         MatchLookupProto.MatchResponse.Builder builder = MatchLookupProto.MatchResponse.newBuilder();
         try {
             MatchLookup lookup = matchLookupDao.getRequestMatch(gymId, branchId, requesterId);
-            if (lookup!=null && (MatcherConst.MATCHED.getName().equals(lookup.getStatus()) || MatcherConst.UNMATCHED.getName().equals(lookup.getStatus()))) {
+            if (lookup != null && (MatcherConst.MATCHED.getName().equals(lookup.getStatus()) || MatcherConst.UNMATCHED.getName().equals(lookup.getStatus()))) {
                 LOG.info("request already exists(id: {}, status: {})", lookup.getId(), lookup.getStatus());
                 throw new CustomException(String.format(CommonConstants.LOOKUP_REQUEST_EXISTS.getMessage(), lookup.getId(), lookup.getStatus()));
             }
@@ -129,12 +120,12 @@ public class MatchLookupService {
                 throw new CustomException(CommonConstants.UNMATCH_FAIL.getMessage());
             }
             MatchLookup requester = matchLookupDao.getRequestMatch(match.getGymId(), match.getBranchId(), match.getRequester());
-            if(!Objects.isNull(requester) && !MatcherConst.MATCHED.getName().equalsIgnoreCase(requester.getStatus())) {
+            if (!Objects.isNull(requester) && !MatcherConst.MATCHED.getName().equalsIgnoreCase(requester.getStatus())) {
                 LOG.info("Got requester. Status {}", requester.getStatus());
                 throw new CustomException(CommonConstants.UNMATCH_FAIL.getMessage());
             }
             MatchLookup requestee = matchLookupDao.getRequestMatch(match.getGymId(), match.getBranchId(), match.getRequestee());
-            if(!Objects.isNull(requestee) && !MatcherConst.MATCHED.getName().equalsIgnoreCase(requestee.getStatus())) {
+            if (!Objects.isNull(requestee) && !MatcherConst.MATCHED.getName().equalsIgnoreCase(requestee.getStatus())) {
                 LOG.info("Got requestee. Status {}", requester.getStatus());
                 throw new CustomException(CommonConstants.UNMATCH_FAIL.getMessage());
             }
@@ -163,7 +154,7 @@ public class MatchLookupService {
         MatchLookupProto.LookupResponse.Builder builder = MatchLookupProto.LookupResponse.newBuilder();
         try {
             List<MatchLookup> matches = matchLookupDao.possibleMatches(gymId, branchId, requesterId, MatcherConst.UNMATCHED.getName());
-            if(CollectionUtils.isEmpty(matches)) {
+            if (CollectionUtils.isEmpty(matches)) {
                 LOG.info("there are no records in match lookup table");
                 throw new CustomException(MatchLookupConstants.NO_MATCH_LOOKUP_RECORD.getMessage());
             }
@@ -187,13 +178,13 @@ public class MatchLookupService {
         MatchLookupProto.LookupResponse.Builder builder = MatchLookupProto.LookupResponse.newBuilder();
         try {
             List<MatchLookup> matchLookupsForRequester = matchLookupDao.getMatchesByRequestIdAndStatus(requesterId, matcherConst.getName());
-            if(CollectionUtils.isEmpty(matchLookupsForRequester)) {
+            if (CollectionUtils.isEmpty(matchLookupsForRequester)) {
                 LOG.info("there is no match_lookup entries for requester id :{}", requesterId);
                 throw new CustomException(MatchLookupConstants.NO_MATCH_LOOKUP_RECORD.getMessage());
             }
             matchLookupsForRequester.forEach(matchLookup -> {
                 List<MatchLookup> matches = matchLookupDao.possibleMatches(matchLookup.getGymId(), matchLookup.getBranchId(), requesterId, matcherConst.getName());
-                if(!CollectionUtils.isEmpty(matches))
+                if (!CollectionUtils.isEmpty(matches))
                     mapperUtil.getResponseFromMatchLookup(matches, builder);
             });
             LOG.info("derived {} matches", builder.getLookupsList().size());
@@ -210,7 +201,7 @@ public class MatchLookupService {
         MatchLookupProto.ChatResponse.Builder builder = MatchLookupProto.ChatResponse.newBuilder();
         try {
             List<Match> matches = matchDao.getAllByRequester(requesterId);
-            if(CollectionUtils.isEmpty(matches)) {
+            if (CollectionUtils.isEmpty(matches)) {
                 LOG.info("there is no matches present for requester id {}", requesterId);
                 throw new CustomException(MatchLookupConstants.NO_MATCHES_AVAILABLE.getMessage());
             }

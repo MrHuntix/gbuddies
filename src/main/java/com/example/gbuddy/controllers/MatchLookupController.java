@@ -1,21 +1,12 @@
 package com.example.gbuddy.controllers;
 
-import com.example.gbuddy.models.ChatResponse;
-import com.example.gbuddy.models.Match;
-import com.example.gbuddy.models.MatchLookup;
-import com.example.gbuddy.models.MatchResponse;
-import com.example.gbuddy.protos.MatchLookupProto;
+import com.example.gbuddy.models.protos.MatchLookupProto;
 import com.example.gbuddy.service.MatchLookupService;
-import com.example.gbuddy.util.MatcherConst;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
-import java.util.Objects;
 
 @RestController
 @RequestMapping("/match")
@@ -104,7 +95,7 @@ public class MatchLookupController {
      */
     @GetMapping(value = "/all/{requesterId}/gym/{gymId}/branch/{branchId}")
     public MatchLookupProto.LookupResponse getSuitableMatches(@PathVariable("requesterId") int requesterId, @PathVariable("gymId") int gymId,
-                                                                @PathVariable("branchId") int branchId) {
+                                                              @PathVariable("branchId") int branchId) {
         logger.info("getting suitable matches for user id: {} for gym id: {} and branch id: {}", requesterId, gymId, branchId);
         return matchLookupService.getSuitableMatches(requesterId, gymId, branchId);
     }
@@ -113,6 +104,7 @@ public class MatchLookupController {
      * for requester id get all the gb -> (gym,branch) id pairs
      * for each gb get lookup info where status is unmatched.
      * use in matches tab
+     *
      * @param requesterId
      * @return
      */

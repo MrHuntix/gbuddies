@@ -1,4 +1,4 @@
-package com.example.gbuddy.util;
+package com.example.gbuddy.models.constants;
 
 import lombok.Getter;
 

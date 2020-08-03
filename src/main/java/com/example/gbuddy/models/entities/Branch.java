@@ -1,4 +1,4 @@
-package com.example.gbuddy.models;
+package com.example.gbuddy.models.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;

@@ -2,8 +2,8 @@ package com.example.gbuddy.controllers;
 
 import com.example.gbuddy.dao.UserDao;
 import com.example.gbuddy.exception.CustomException;
-import com.example.gbuddy.models.*;
-import com.example.gbuddy.protos.LoginSignupProto;
+import com.example.gbuddy.models.entities.User;
+import com.example.gbuddy.models.protos.LoginSignupProto;
 import com.example.gbuddy.service.validators.AuthenticationValidator;
 import com.example.gbuddy.util.MapperUtil;
 import com.google.protobuf.ByteString;
@@ -36,7 +36,7 @@ public class AuthenticationController {
     @Autowired
     private AuthenticationValidator authenticationValidator;
 
-    @PostMapping(value = "/signup")//, consumes = "application/x-protobuf", produces = "application/x-protobuf")
+    @PostMapping(value = "/signup")
     public LoginSignupProto.SignupResponse signup(@Valid @RequestBody LoginSignupProto.SignupRequest userSignupRequest) {
         logger.info("starting signup process");
         User user = null;
@@ -73,7 +73,7 @@ public class AuthenticationController {
     @POST
     @Path("/login")
     @CrossOrigin
-    @PostMapping(value = "/login")//, consumes = "application/x-protobuf", produces = "application/x-protobuf")
+    @PostMapping(value = "/login")
     public LoginSignupProto.LoginResponse login(@Valid @RequestBody LoginSignupProto.LoginRequest userLoginRequest) {
         LoginSignupProto.LoginResponse.Builder builder = LoginSignupProto.LoginResponse.newBuilder();
         LoginSignupProto.LoginResponse response;
@@ -136,9 +136,5 @@ public class AuthenticationController {
     @GetMapping("/test")
     public ResponseEntity test() {
         return ResponseEntity.ok("authentication server is up and running");
-    }
-
-    private UserSignupResponse getUserResponse(String responseMessage, String responseStatus, int responseCode) {
-        return new UserSignupResponse(responseMessage, responseStatus, responseCode);
     }
 }

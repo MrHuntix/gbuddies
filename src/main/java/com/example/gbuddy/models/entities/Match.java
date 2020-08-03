@@ -1,4 +1,4 @@
-package com.example.gbuddy.models;
+package com.example.gbuddy.models.entities;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

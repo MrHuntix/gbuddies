@@ -1,25 +1,20 @@
 package com.example.gbuddy.util;
 
 import com.example.gbuddy.dao.BranchDao;
-import com.example.gbuddy.dao.ProfilePicDao;
 import com.example.gbuddy.dao.UserDao;
 import com.example.gbuddy.exception.CustomException;
-import com.example.gbuddy.models.*;
-import com.example.gbuddy.protos.GymProto;
-import com.example.gbuddy.protos.LoginSignupProto;
-import com.example.gbuddy.protos.MatchLookupProto;
+import com.example.gbuddy.models.entities.*;
+import com.example.gbuddy.models.protos.GymProto;
+import com.example.gbuddy.models.protos.LoginSignupProto;
+import com.example.gbuddy.models.protos.MatchLookupProto;
 import com.google.protobuf.ByteString;
-import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
-import org.springframework.util.CollectionUtils;
 
 import javax.sql.rowset.serial.SerialBlob;
 import java.io.IOException;
-import java.sql.Blob;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Objects;
