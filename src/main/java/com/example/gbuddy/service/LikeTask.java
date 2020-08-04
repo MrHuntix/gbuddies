@@ -59,14 +59,13 @@ public class LikeTask implements Runnable {
                 throw new CustomException(String.format(MatchRequestConstants.REQUEST_ALREADY_EXISTS.getStatus(), id));
             }
             LOG.info("{}-task, record found in MATCH_LOOKUP for id {}, with status {}. CREATING MATCH", Thread.currentThread().getName(), matchLookupId, requesteeLookup.getStatus());
-            requesteeLookup.setStatus(MatchLookupProto.Status.REQUESTED.name());
-            requesterLookup.setStatus(MatchLookupProto.Status.REQUESTED.name());
-            matchLookupDao.save(requesteeLookup);
-            matchLookupDao.save(requesterLookup);
+//            requesteeLookup.setStatus(MatchLookupProto.Status.REQUESTED.name());
+//            requesterLookup.setStatus(MatchLookupProto.Status.REQUESTED.name());
+//            matchLookupDao.save(requesteeLookup);
+//            matchLookupDao.save(requesterLookup);
             LOG.info("{}-task, updated status to requested for match lookup record {}, {}", Thread.currentThread().getName(), requesteeLookup.getId(), requesterLookup.getId());
             matchRequestDao.save(buildmatchRequest(requesteeLookup, requesterLookup));
             LOG.info("{}-task, match request entry made for lookup id {}", Thread.currentThread().getName(), matchLookupId);
-            Thread.sleep(30000);
         } catch (Exception e) {
             LOG.info("{}-task, exception occurred", Thread.currentThread().getName());
             e.printStackTrace();
