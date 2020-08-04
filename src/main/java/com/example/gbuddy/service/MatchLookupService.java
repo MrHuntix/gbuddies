@@ -34,10 +34,13 @@ public class MatchLookupService {
     @Autowired
     private MapperUtil mapperUtil;
 
+    @Autowired
+    private LikeProcessor likeProcessor;
+
     public MatchLookupProto.MatchResponse addForLookup(int requesterId, int gymId, int branchId) {
         MatchLookupProto.MatchResponse.Builder builder = MatchLookupProto.MatchResponse.newBuilder();
         try {
-            MatchLookup lookup = matchLookupDao.getRequestMatch(gymId, branchId, requesterId);
+            MatchLookup lookup = matchLookupDao.getRequestMatch(gymId, branchId, requesterId).orElse(null);
             if (lookup != null && (MatcherConst.MATCHED.getName().equals(lookup.getStatus()) || MatcherConst.UNMATCHED.getName().equals(lookup.getStatus()))) {
                 LOG.info("request already exists(id: {}, status: {})", lookup.getId(), lookup.getStatus());
                 throw new CustomException(String.format(CommonConstants.LOOKUP_REQUEST_EXISTS.getMessage(), lookup.getId(), lookup.getStatus()));
@@ -63,50 +66,10 @@ public class MatchLookupService {
 
     public MatchLookupProto.MatchResponse like(int matchLookupId, int userId) {
         MatchLookupProto.MatchResponse.Builder builder = MatchLookupProto.MatchResponse.newBuilder();
-        LOG.info("start of like process for match lookup id {} and user id {}", matchLookupId, userId);
-        try {
-            MatchLookup lookup = matchLookupDao.getById(matchLookupId);
-            MatchLookup requesterLookup = matchLookupDao.getRequestMatch(lookup.getGymId(), lookup.getBranchId(), userId);
-            if (Objects.isNull(lookup) || Objects.isNull(requesterLookup)) {
-                LOG.info("no record in MATCH_LOOKUP for matchLookUpId {} and userId {}", matchLookupId, userId);
-                throw new CustomException(CommonConstants.CANNOT_LIKE.getMessage());
-            }
-            if (lookup.getRequesterId() == userId) {
-                LOG.info("user id({}) and requester id({}) is same", userId, lookup.getRequesterId());
-                throw new CustomException(CommonConstants.CANNOT_LIKE.getMessage());
-            }
-            if (MatchLookupProto.Status.MATCHED.name().equals(lookup.getStatus())) {
-                LOG.info("record found in MATCH_LOOKUP for id {}, with status {}. REQUEST ALREADY EXISTS", matchLookupId, lookup.getStatus());
-                throw new CustomException(CommonConstants.REQUEST_ALREADY_EXISTS.getMessage());
-            }
-            LOG.info("record found in MATCH_LOOKUP for id {}, with status {}. CREATING MATCH", matchLookupId, lookup.getStatus());
-            lookup.setStatus(MatchLookupProto.Status.MATCHED.name());
-            requesterLookup.setStatus(MatchLookupProto.Status.MATCHED.name());
-            matchLookupDao.save(lookup);
-            matchLookupDao.save(requesterLookup);
-            //create a match request table and add the record there
-            Match requesterMatch = new Match();
-            requesterMatch.setRequester(userId);
-            requesterMatch.setLookupId(lookup.getId());
-            requesterMatch.setGymId(lookup.getGymId());
-            requesterMatch.setBranchId(lookup.getBranchId());
-            requesterMatch.setRequestee(lookup.getRequesterId());
-            Match requesteeMatch = new Match();
-            requesteeMatch.setRequester(lookup.getRequesterId());
-            requesteeMatch.setLookupId(lookup.getId());
-            requesteeMatch.setGymId(lookup.getGymId());
-            requesteeMatch.setBranchId(lookup.getBranchId());
-            requesteeMatch.setRequestee(userId);
-            matchDao.save(requesterMatch);
-            matchDao.save(requesteeMatch);
-
-            LOG.info("like process completed for match lookup id {} by user id {}", matchLookupId, userId);
-            builder.setMessage(CommonConstants.LIKED.getMessage())
-                    .setResponseCode(HttpStatus.OK.value());
-        } catch (Exception e) {
-            builder.setMessage(e.getMessage())
-                    .setResponseCode(HttpStatus.UNPROCESSABLE_ENTITY.value());
-        }
+        LOG.info("start of like process for match lookup id {} requested by user id {}", matchLookupId, userId);
+        likeProcessor.submitLikeRequest(matchLookupId, userId);
+        builder.setMessage(MatchLookupConstants.BUDDY_REQUEST_SENT.getMessage())
+                .setResponseCode(HttpStatus.OK.value());
         return builder.build();
     }
 
@@ -119,12 +82,12 @@ public class MatchLookupService {
                 LOG.info("no record in MATCHES found for id: {}", matchId);
                 throw new CustomException(CommonConstants.UNMATCH_FAIL.getMessage());
             }
-            MatchLookup requester = matchLookupDao.getRequestMatch(match.getGymId(), match.getBranchId(), match.getRequester());
+            MatchLookup requester = matchLookupDao.getRequestMatch(match.getGymId(), match.getBranchId(), match.getRequester()).orElse(null);
             if (!Objects.isNull(requester) && !MatcherConst.MATCHED.getName().equalsIgnoreCase(requester.getStatus())) {
                 LOG.info("Got requester. Status {}", requester.getStatus());
                 throw new CustomException(CommonConstants.UNMATCH_FAIL.getMessage());
             }
-            MatchLookup requestee = matchLookupDao.getRequestMatch(match.getGymId(), match.getBranchId(), match.getRequestee());
+            MatchLookup requestee = matchLookupDao.getRequestMatch(match.getGymId(), match.getBranchId(), match.getRequestee()).orElse(null);
             if (!Objects.isNull(requestee) && !MatcherConst.MATCHED.getName().equalsIgnoreCase(requestee.getStatus())) {
                 LOG.info("Got requestee. Status {}", requester.getStatus());
                 throw new CustomException(CommonConstants.UNMATCH_FAIL.getMessage());

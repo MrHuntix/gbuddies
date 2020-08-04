@@ -7,6 +7,7 @@ import org.springframework.stereotype.Component;
 
 import javax.transaction.Transactional;
 import java.util.List;
+import java.util.Optional;
 
 @Component
 @Transactional
@@ -21,7 +22,7 @@ public interface MatchLookupDao extends JpaRepository<MatchLookup, Integer> {
 
     List<MatchLookup> getMatchesByRequestIdAndStatus(@Param("requesterId") int requesterId, @Param("status") String status);
 
-    MatchLookup getById(int id);
+    Optional<MatchLookup> getById(int id);
 
-    MatchLookup getRequestMatch(@Param("gymId") int gymId, @Param("branchId") int branchId, @Param("requesterId") int requesterId);
+    Optional<MatchLookup> getRequestMatch(@Param("gymId") int gymId, @Param("branchId") int branchId, @Param("requesterId") int requesterId);
 }

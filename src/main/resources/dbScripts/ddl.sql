@@ -1,3 +1,12 @@
+create table BUDDY_GRAPH
+(
+	id int auto_increment
+		primary key,
+	userId int not null,
+	userBuddy int not null
+)
+;
+
 create table GEN_GYM
 (
 	id int auto_increment
@@ -87,5 +96,17 @@ alter table MATCHES
 	add constraint MATCH_FK_LOOKUP_ID
 		foreign key (lookup_id) references MATCH_LOOKUP (id)
 			on update cascade on delete cascade
+;
+
+create table MATCH_REQUEST
+(
+	id int auto_increment
+		primary key,
+	lookupRequesterId int not null,
+	lookupRequesteeId int not null,
+	userRequesterId int not null,
+	userRequesteeId int not null,
+	status varchar(20) default 'REQUESTED' not null
+)
 ;
 
