@@ -11,7 +11,11 @@ import javax.persistence.*;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@NamedQueries({
+        @NamedQuery(name = "MatchRequest.getMatchRequest", query = MatchRequest.getMatchRequest)
+})
 public class MatchRequest {
+    public static final String getMatchRequest = "SELECT m FROM MatchRequest m WHERE m.lookupRequesterId = :lookupRequesterId AND m.lookupRequesteeId = :lookupRequesteeId AND m.userRequesterId = :userRequesterId AND m.userRequesteeId = :userRequesteeId";
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
