@@ -30,6 +30,7 @@ public class MapperUtil {
     private BranchDao branchDao;
 
     public Gym getGymFromRequest(GymProto.Gym request) {
+        logger.info("building gym entity from proto for gym {}", request.getName());
         Gym gym = new Gym();
         gym.setName(request.getName());
         gym.setWebsite(request.getWebsite());
@@ -48,6 +49,7 @@ public class MapperUtil {
     }
 
     public User getUserFromUserSignupRequest(LoginSignupProto.SignupRequest userSignupRequest) throws SQLException, IOException {
+        logger.info("building user entity from proto for use {}", userSignupRequest.getUserName());
         ProfilePic profilePic = new ProfilePic();
         profilePic.setUserImage(new SerialBlob(userSignupRequest.getUserImage().toByteArray()));
         User user = new User();
@@ -59,25 +61,28 @@ public class MapperUtil {
         user.setRoles(userSignupRequest.getRoles().name());
         user.setProfilePic(profilePic);
         profilePic.setUser(user);
+        logger.info("built user entity");
         return user;
     }
 
     public LoginSignupProto.SignupResponse buildSignUpResponse(LoginSignupProto.LoginResponse.Builder responseBuilder, User user) {
+        logger.info("building signup response proto");
         if (user != null) {
             responseBuilder
-                    .setUserName(user.getUserName())
-                    .setEmailId(user.getEmailId())
-                    .setMobileNo(user.getMobileNo())
-                    .setPicId(user.getProfilePic().getPicId())
-                    .setUserId(user.getUserId())
-                    .setAbout(user.getAbout())
-                    .build();
+                .setUserName(user.getUserName())
+                .setEmailId(user.getEmailId())
+                .setMobileNo(user.getMobileNo())
+                .setPicId(user.getProfilePic().getPicId())
+                .setUserId(user.getUserId())
+                .setAbout(user.getAbout())
+                .build();
         }
         logger.info("built signup response with message: {} and code: {}", responseBuilder.getResponseMessage(), responseBuilder.getResponseCode());
         return LoginSignupProto.SignupResponse.newBuilder().setResponse(responseBuilder.build()).build();
     }
 
     public LoginSignupProto.LoginResponse buildLoginResponse(LoginSignupProto.LoginResponse.Builder builder, User user) {
+        logger.info("building login response proto");
         return builder.setUserName(user.getUserName())
                 .setEmailId(user.getEmailId())
                 .setMobileNo(user.getMobileNo())
@@ -88,12 +93,14 @@ public class MapperUtil {
     }
 
     public GymProto.FetchResponse getResponseFromEntity(List<Gym> gyms, GymProto.FetchResponse.Builder builder) {
-        logger.info("start of response builder");
+        logger.info("building fetch response for gyms");
         gyms.forEach(gym -> builder.addGym(getGymProtoFromGymEntity(gym)));
+        logger.info("built fetch response");
         return builder.build();
     }
 
     private GymProto.Gym getGymProtoFromGymEntity(Gym gym) {
+        logger.info("building gym proto from entity for gym {}", gym.getName());
         GymProto.Gym.Builder builder = GymProto.Gym.newBuilder();
         int gymId = gym.getId();
         builder.setId(gym.getId())
@@ -113,17 +120,18 @@ public class MapperUtil {
         return builder.build();
     }
 
-    public void getResponseFromMatchLookup(List<MatchLookup> matchLookupList, MatchLookupProto.LookupResponse.Builder builder) {
-        matchLookupList.forEach(matchLookup -> {
-            User user = userDao.getByUserId(matchLookup.getRequesterId()).orElse(null);
-            Branch branch = branchDao.selectGymBranchRecordById(matchLookup.getBranchId(), matchLookup.getGymId()).orElse(null);
+    public void getResponseFromMatchLookup(List<MatchLookup> requestees, MatchLookupProto.LookupResponse.Builder builder) {
+        logger.info("in mapper adding {} requestee to lookup response", requestees.size());
+        requestees.forEach(requestee -> {
+            User user = userDao.getByUserId(requestee.getRequesterId()).orElse(null);
+            Branch branch = branchDao.selectGymBranchRecordById(requestee.getBranchId(), requestee.getGymId()).orElse(null);
             if (Objects.isNull(user) || Objects.isNull(branch)) {
-                logger.info("got empty result for user and gym for lookup id {}. Skipping record", matchLookup.getId());
+                logger.info("got empty result for user and gym for lookup id {}. Skipping record", requestee.getId());
             } else {
                 MatchLookupProto.MatchLookup.Builder lookupBuilder = MatchLookupProto.MatchLookup.newBuilder();
                 try {
-                    lookupBuilder.setId(matchLookup.getId())
-                            .setStatus(MatchLookupProto.Status.valueOf(matchLookup.getStatus()))
+                    lookupBuilder.setId(requestee.getId())
+                            .setStatus(MatchLookupProto.Status.valueOf(requestee.getStatus()))
                             .setGym(MatchLookupProto.Gym.newBuilder()
                                     .setGymId(branch.getGymId().getId())
                                     .setGymName(branch.getGymId().getName())
@@ -143,14 +151,14 @@ public class MapperUtil {
                                     .setUserImage(ByteString.copyFrom(user.getProfilePic().getUserImage().getBytes(1, Math.toIntExact(user.getProfilePic().getUserImage().length()))))
                                     .setAbout(user.getAbout()));
                     builder.addLookups(lookupBuilder.build());
-                    logger.info("built and added lookup for match lookup id {}", matchLookup.getId());
+                    logger.info("built and added requestee having match lookup id {}", requestee.getId());
                 } catch (Exception e) {
-                    logger.info("got exception while buiding match lookup for match lookup id {}", matchLookup.getId());
+                    logger.info("got exception while buiding requestee having match lookup id {}", requestee.getId());
                     e.printStackTrace();
                 }
             }
         });
-        logger.info("completed buiding process");
+        logger.info("completed building process");
     }
 
     public void getResponseFromMatches(MatchLookupProto.ChatResponse.Builder builder, List<Match> matches) {
