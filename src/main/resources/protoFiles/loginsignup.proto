@@ -2,7 +2,7 @@ syntax = "proto3";
 
 package gbuddy;
 
-option java_package = "com.example.gym.buddies.data.protos";
+option java_package = "com.example.gbuddy.models.protos";
 option java_outer_classname = "LoginSignupProto";
 
 message LoginRequest {
