@@ -114,9 +114,21 @@ public class MatchLookupController {
         return matchLookupService.deriveMatches(requesterId);
     }
 
-    @GetMapping(value = "/matched/{requesterId}")
-    public MatchLookupProto.ChatResponse getMatched(@PathVariable("requesterId") int requesterId) {
-        logger.info("start of matched fetch process for requester {}", requesterId);
-        return matchLookupService.matched(requesterId);
+    @GetMapping(value = "/friends/{userId}")
+    public MatchLookupProto.FriendResponse getFriends(@PathVariable("userId") int userId) {
+        logger.info("fetching friends for {}", userId);
+        return matchLookupService.friends(userId);
+    }
+
+    @GetMapping(value = "/requests/{requesterId}")
+    public MatchLookupProto.FriendRequestsResponse getFriendRequests(@PathVariable("requesterId") int requesterId) {
+        logger.info("fetching friend requests for user {}", requesterId);
+        return matchLookupService.getFriendRequests(requesterId);
+    }
+
+    @PutMapping(value = "/accept/{matchRequestId}")
+    public MatchLookupProto.MatchResponse acceptFriendRequest(@PathVariable("matchRequestId") int matchRequestId) {
+        logger.info("accepting friend request {}", matchRequestId);
+        return matchLookupService.acceptFriendRequest(matchRequestId);
     }
 }

@@ -1,5 +1,6 @@
 package com.example.gbuddy.service;
 
+import com.example.gbuddy.dao.BuddyGraphDao;
 import com.example.gbuddy.dao.MatchLookupDao;
 import com.example.gbuddy.dao.MatchRequestDao;
 import org.slf4j.Logger;
@@ -24,7 +25,10 @@ public class LikeProcessor {
     private int maxPoolSize;
 
     @Value("${like.processor.thread.prefix}")
-    private String prefix;
+    private String likePrefix;
+
+    @Value("${friend.request.processor.thread.prefix}")
+    private String friendRequestPrefix;
 
     @Autowired
     private MatchLookupDao matchLookupDao;
@@ -32,27 +36,52 @@ public class LikeProcessor {
     @Autowired
     private MatchRequestDao matchRequestDao;
 
-    private ReentrantLock reentrantLock = null;
+    @Autowired
+    private BuddyGraphDao buddyGraphDao;
 
-    private ThreadPoolTaskExecutor executor = null;
+    private ReentrantLock likeLock = null;
+
+    private ReentrantLock friendRequestLock = null;
+
+    private ThreadPoolTaskExecutor likeExecutor = null;
+
+    private ThreadPoolTaskExecutor friendRequestExecutor = null;
 
     @PostConstruct
     private void init() {
-        reentrantLock = new ReentrantLock(true);
-        executor = new ThreadPoolTaskExecutor();
-        executor.setCorePoolSize(corePoolSize);
-        executor.setMaxPoolSize(maxPoolSize);
-        executor.setThreadNamePrefix(prefix);
-        executor.setWaitForTasksToCompleteOnShutdown(true);
-        executor.setKeepAliveSeconds(Integer.MAX_VALUE);
-        executor.initialize();
-        LOG.info("init completed");
+        likeLock = new ReentrantLock(true);
+        likeExecutor = new ThreadPoolTaskExecutor();
+        likeExecutor.setCorePoolSize(corePoolSize);
+        likeExecutor.setMaxPoolSize(maxPoolSize);
+        likeExecutor.setThreadNamePrefix(likePrefix);
+        likeExecutor.setWaitForTasksToCompleteOnShutdown(true);
+        likeExecutor.setKeepAliveSeconds(Integer.MAX_VALUE);
+        likeExecutor.initialize();
+        LOG.info("init completed for like executor");
 
+        friendRequestLock = new ReentrantLock(true);
+        friendRequestExecutor = new ThreadPoolTaskExecutor();
+        friendRequestExecutor.setCorePoolSize(corePoolSize);
+        friendRequestExecutor.setMaxPoolSize(maxPoolSize);
+        friendRequestExecutor.setThreadNamePrefix(friendRequestPrefix);
+        friendRequestExecutor.setWaitForTasksToCompleteOnShutdown(true);
+        friendRequestExecutor.setKeepAliveSeconds(Integer.MAX_VALUE);
+        friendRequestExecutor.initialize();
+        LOG.info("init completed for friend request executor");
     }
 
     void submitLikeRequest(int matchLookupId, int userId) {
         try {
-            executor.execute(new LikeTask(matchLookupDao, matchRequestDao, reentrantLock, matchLookupId, userId));
+            likeExecutor.execute(new LikeTask(matchLookupDao, matchRequestDao, likeLock, matchLookupId, userId));
+        } catch (Exception e) {
+            LOG.info("exception {}", e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
+    void submitFriendRequest(int matchRequestId) {
+        try {
+            friendRequestExecutor.execute(new FriendRequestTask(matchRequestId, friendRequestLock, matchLookupDao, matchRequestDao, buddyGraphDao));
         } catch (Exception e) {
             LOG.info("exception {}", e.getMessage());
             e.printStackTrace();
@@ -61,9 +90,9 @@ public class LikeProcessor {
 
     @PreDestroy
     private void destory() {
-        if(executor!=null) {
+        if (likeExecutor != null) {
             LOG.info("shutting down executor");
-            executor.shutdown();
+            likeExecutor.shutdown();
         }
     }
 }

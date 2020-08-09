@@ -1,8 +1,11 @@
 package com.example.gbuddy.util;
 
 import com.example.gbuddy.dao.BranchDao;
+import com.example.gbuddy.dao.MatchLookupDao;
+import com.example.gbuddy.dao.MatchRequestDao;
 import com.example.gbuddy.dao.UserDao;
 import com.example.gbuddy.exception.CustomException;
+import com.example.gbuddy.models.constants.MatchRequestConstants;
 import com.example.gbuddy.models.entities.*;
 import com.example.gbuddy.models.protos.GymProto;
 import com.example.gbuddy.models.protos.LoginSignupProto;
@@ -15,6 +18,7 @@ import org.springframework.stereotype.Component;
 
 import javax.sql.rowset.serial.SerialBlob;
 import java.io.IOException;
+import java.sql.Blob;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Objects;
@@ -28,6 +32,12 @@ public class MapperUtil {
 
     @Autowired
     private BranchDao branchDao;
+
+    @Autowired
+    private MatchLookupDao matchLookupDao;
+
+    @Autowired
+    private MatchRequestDao matchRequestDao;
 
     public Gym getGymFromRequest(GymProto.Gym request) {
         logger.info("building gym entity from proto for gym {}", request.getName());
@@ -69,13 +79,13 @@ public class MapperUtil {
         logger.info("building signup response proto");
         if (user != null) {
             responseBuilder
-                .setUserName(user.getUserName())
-                .setEmailId(user.getEmailId())
-                .setMobileNo(user.getMobileNo())
-                .setPicId(user.getProfilePic().getPicId())
-                .setUserId(user.getUserId())
-                .setAbout(user.getAbout())
-                .build();
+                    .setUserName(user.getUserName())
+                    .setEmailId(user.getEmailId())
+                    .setMobileNo(user.getMobileNo())
+                    .setPicId(user.getProfilePic().getPicId())
+                    .setUserId(user.getUserId())
+                    .setAbout(user.getAbout())
+                    .build();
         }
         logger.info("built signup response with message: {} and code: {}", responseBuilder.getResponseMessage(), responseBuilder.getResponseCode());
         return LoginSignupProto.SignupResponse.newBuilder().setResponse(responseBuilder.build()).build();
@@ -123,62 +133,78 @@ public class MapperUtil {
     public void getResponseFromMatchLookup(List<MatchLookup> requestees, MatchLookupProto.LookupResponse.Builder builder) {
         logger.info("in mapper adding {} requestee to lookup response", requestees.size());
         requestees.forEach(requestee -> {
-            User user = userDao.getByUserId(requestee.getRequesterId()).orElse(null);
-            Branch branch = branchDao.selectGymBranchRecordById(requestee.getBranchId(), requestee.getGymId()).orElse(null);
-            if (Objects.isNull(user) || Objects.isNull(branch)) {
-                logger.info("got empty result for user and gym for lookup id {}. Skipping record", requestee.getId());
-            } else {
-                MatchLookupProto.MatchLookup.Builder lookupBuilder = MatchLookupProto.MatchLookup.newBuilder();
-                try {
-                    lookupBuilder.setId(requestee.getId())
-                            .setStatus(MatchLookupProto.Status.valueOf(requestee.getStatus()))
-                            .setGym(MatchLookupProto.Gym.newBuilder()
-                                    .setGymId(branch.getGymId().getId())
-                                    .setGymName(branch.getGymId().getName())
-                                    .setWebsite(branch.getGymId().getWebsite())
-                                    .setBranch(MatchLookupProto.Branch.newBuilder()
-                                            .setBranchId(branch.getId())
-                                            .setLocality(branch.getLocality())
-                                            .setCity(branch.getCity())
-                                            .setLatitude(branch.getLatitude())
-                                            .setLongitude(branch.getLongitude())
-                                            .setContact(branch.getContact())
-                                    ))
-                            .setUser(MatchLookupProto.User.newBuilder()
-                                    .setUserId(user.getUserId())
-                                    .setUserName(user.getEmailId())
-                                    .setMobileNo(user.getMobileNo())
-                                    .setUserImage(ByteString.copyFrom(user.getProfilePic().getUserImage().getBytes(1, Math.toIntExact(user.getProfilePic().getUserImage().length()))))
-                                    .setAbout(user.getAbout()));
-                    builder.addLookups(lookupBuilder.build());
-                    logger.info("built and added requestee having match lookup id {}", requestee.getId());
-                } catch (Exception e) {
-                    logger.info("got exception while buiding requestee having match lookup id {}", requestee.getId());
-                    e.printStackTrace();
+            try {
+                User user = userDao.getByUserId(requestee.getRequesterId()).orElse(null);
+                if (Objects.isNull(user)) {
+                    throw new CustomException(String.format(MatchRequestConstants.NO_USER_PRESENT.getStatus(), requestee.getRequesterId()));
                 }
+                Branch branch = branchDao.selectGymBranchRecordById(requestee.getBranchId(), requestee.getGymId()).orElse(null);
+                if (Objects.isNull(branch)) {
+                    throw new CustomException(String.format(MatchRequestConstants.NO_BRANCH_PRESENT.getStatus(), requestee.getGymId(), requestee.getBranchId()));
+                }
+                MatchLookupProto.MatchLookup.Builder lookupBuilder = MatchLookupProto.MatchLookup.newBuilder();
+
+                lookupBuilder.setId(requestee.getId())
+                        .setStatus(MatchLookupProto.Status.valueOf(requestee.getStatus()))
+                        .setGym(MatchLookupProto.Gym.newBuilder()
+                                .setGymId(branch.getGymId().getId())
+                                .setGymName(branch.getGymId().getName())
+                                .setWebsite(branch.getGymId().getWebsite())
+                                .setBranch(MatchLookupProto.Branch.newBuilder()
+                                        .setBranchId(branch.getId())
+                                        .setLocality(branch.getLocality())
+                                        .setCity(branch.getCity())
+                                        .setLatitude(branch.getLatitude())
+                                        .setLongitude(branch.getLongitude())
+                                        .setContact(branch.getContact())
+                                ))
+                        .setUser(MatchLookupProto.User.newBuilder()
+                                .setUserId(user.getUserId())
+                                .setUserName(user.getEmailId())
+                                .setMobileNo(user.getMobileNo())
+                                .setUserImage(generateImageByteString(user.getProfilePic().getUserImage()))
+                                .setAbout(user.getAbout()));
+                builder.addLookups(lookupBuilder.build());
+                logger.info("built and added requestee having match lookup id {}", requestee.getId());
+            } catch (Exception e) {
+                logger.info("got exception while buiding requestee having match lookup id {}", requestee.getId());
+                e.printStackTrace();
             }
+
         });
         logger.info("completed building process");
     }
 
-    public void getResponseFromMatches(MatchLookupProto.ChatResponse.Builder builder, List<Match> matches) {
-        logger.info("building response for chat for {} matches", matches.size());
-        matches.forEach(match -> {
+    public void getResponseFromMatches(MatchLookupProto.FriendResponse.Builder builder, List<BuddyGraph> friends) {
+        logger.info("building response for {} friends", friends.size());
+        friends.forEach(friend -> {
             try {
-                MatchLookupProto.Match.Builder matchBuilder = MatchLookupProto.Match.newBuilder();
-                Branch branch = branchDao.selectGymBranchRecordById(match.getBranchId(), match.getGymId()).orElse(null);
-                User user = userDao.getByUserId(match.getRequestee()).orElse(null);
-                if (Objects.isNull(branch) || Objects.isNull(user)) {
-                    logger.info("skipping building record for match id {} as branch or user is null", match.getId());
-                    throw new CustomException("skipping building of match record");
+                MatchLookupProto.Friend.Builder friendBuilder = MatchLookupProto.Friend.newBuilder();
+                MatchRequest matchRequest = matchRequestDao.findById(friend.getMatchRequestId()).orElse(null);
+                if (Objects.isNull(matchRequest)) {
+                    throw new CustomException(String.format(MatchRequestConstants.NO_MATCH_REQUEST_PRESENT.getStatus(), friend.getMatchRequestId()));
                 }
-                matchBuilder.setMatchId(match.getId())
-                        .setLookupId(match.getLookupId())
+                if (Objects.nonNull(matchRequest) && !MatchRequestConstants.ACCEPTED.getStatus().equalsIgnoreCase(matchRequest.getStatus())) {
+                    throw new CustomException(String.format(MatchRequestConstants.MATCH_REQUEST_STATUS_NOT_ACCEPTED.getStatus(), matchRequest.getId(), matchRequest.getStatus()));
+                }
+                MatchLookup matchLookup = matchLookupDao.getById(matchRequest.getLookupRequesteeId()).orElse(null);
+                if (Objects.isNull(matchLookup)) {
+                    throw new CustomException(String.format(MatchRequestConstants.NO_MATCH_LOOKUP_RECORD.getStatus(), matchRequest.getLookupRequesteeId()));
+                }
+                Branch branch = branchDao.selectGymBranchRecordById(matchLookup.getBranchId(), matchLookup.getGymId()).orElse(null);
+                if (Objects.isNull(branch)) {
+                    throw new CustomException(String.format(MatchRequestConstants.NO_BRANCH_PRESENT.getStatus(), matchLookup.getGymId(), matchLookup.getBranchId()));
+                }
+                User user = userDao.getByUserId(friend.getUserBuddy()).orElse(null);
+                if (Objects.isNull(user)) {
+                    throw new CustomException(String.format(MatchRequestConstants.NO_USER_PRESENT.getStatus(), friend.getUserBuddy()));
+                }
+                friendBuilder.setMatchRequestId(matchRequest.getId())
                         .setUser(MatchLookupProto.User.newBuilder()
                                 .setUserId(user.getUserId())
                                 .setUserName(user.getUserName())
                                 .setMobileNo(user.getMobileNo())
-                                .setUserImage(ByteString.copyFrom(user.getProfilePic().getUserImage().getBytes(1, Math.toIntExact(user.getProfilePic().getUserImage().length()))))
+                                .setUserImage(generateImageByteString(user.getProfilePic().getUserImage()))
                                 .setAbout(user.getAbout())
                                 .build())
                         .setGym(MatchLookupProto.Gym.newBuilder()
@@ -193,12 +219,72 @@ public class MapperUtil {
                                         .setLongitude(branch.getLongitude())
                                         .setContact(branch.getContact())
                                 ));
-                builder.addMatches(matchBuilder.build());
+                builder.addFriends(friendBuilder.build());
             } catch (Exception e) {
-                logger.info("failed building mactch object for match id {}", match.getId());
+                logger.info("failed building friend for {}", friend.getId());
+                e.printStackTrace();
+            }
+        });
+    }
+
+    public void buildFriendRequests(MatchLookupProto.FriendRequestsResponse.Builder builder, List<MatchRequest> requests) {
+        requests.forEach(request -> {
+            try {
+                MatchLookupProto.FriendRequest.Builder friendRequest = MatchLookupProto.FriendRequest.newBuilder();
+                MatchLookup matchLookup = matchLookupDao.getById(request.getLookupRequesterId()).orElse(null);
+                friendRequest.setMatchRequestId(request.getId())
+                        .setUser(buildUserForMatchLookup(matchLookup))
+                        .setGym(buildGymForMatchLookup(matchLookup));
+                builder.addFriendRequests(friendRequest.build());
+            } catch (Exception e) {
+                logger.info(e.getMessage());
                 e.printStackTrace();
                 return;
             }
         });
+    }
+
+    private MatchLookupProto.User buildUserForMatchLookup(MatchLookup matchLookup) throws CustomException, SQLException {
+        MatchLookupProto.User.Builder user = MatchLookupProto.User.newBuilder();
+        if (Objects.isNull(matchLookup)) {
+            throw new CustomException(String.format(MatchRequestConstants.NO_LOOKUP_PRESENT.getStatus(), matchLookup.getRequesterId()));
+        }
+        User userFromDb = userDao.getByUserId(matchLookup.getRequesterId()).orElse(null);
+        if (Objects.isNull(userFromDb)) {
+            throw new CustomException(String.format(MatchRequestConstants.NO_USER_PRESENT.getStatus(), matchLookup.getRequesterId()));
+        }
+        user.setUserId(userFromDb.getUserId())
+                .setUserName(userFromDb.getUserName())
+                .setMobileNo(userFromDb.getMobileNo())
+                .setUserImage(generateImageByteString(userFromDb.getProfilePic().getUserImage()))
+                .setAbout(userFromDb.getAbout());
+        return user.build();
+    }
+
+    private ByteString generateImageByteString(Blob image) throws SQLException {
+        return ByteString.copyFrom(image.getBytes(1, Math.toIntExact(image.length())));
+    }
+
+    private MatchLookupProto.Gym buildGymForMatchLookup(MatchLookup matchLookup) throws CustomException {
+        MatchLookupProto.Gym.Builder gym = MatchLookupProto.Gym.newBuilder();
+        if (Objects.isNull(matchLookup)) {
+            throw new CustomException(String.format(MatchRequestConstants.NO_LOOKUP_PRESENT.getStatus(), matchLookup.getRequesterId()));
+        }
+        Branch branch = branchDao.selectGymBranchRecordById(matchLookup.getBranchId(), matchLookup.getGymId()).orElse(null);
+        if (Objects.isNull(branch)) {
+            throw new CustomException(String.format(MatchRequestConstants.NO_BRANCH_PRESENT.getStatus(), matchLookup.getGymId(), matchLookup.getBranchId()));
+        }
+        gym.setGymId(branch.getGymId().getId())
+                .setGymName(branch.getGymId().getName())
+                .setWebsite(branch.getGymId().getWebsite())
+                .setBranch(MatchLookupProto.Branch.newBuilder()
+                        .setBranchId(branch.getId())
+                        .setLocality(branch.getLocality())
+                        .setCity(branch.getCity())
+                        .setLatitude(branch.getLatitude())
+                        .setLongitude(branch.getLongitude())
+                        .setContact(branch.getContact())
+                        .build());
+        return gym.build();
     }
 }

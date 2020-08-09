@@ -1,15 +1,20 @@
 package com.example.gbuddy.service;
 
-import com.example.gbuddy.dao.*;
+import com.example.gbuddy.dao.BuddyGraphDao;
+import com.example.gbuddy.dao.MatchDao;
+import com.example.gbuddy.dao.MatchLookupDao;
+import com.example.gbuddy.dao.MatchRequestDao;
 import com.example.gbuddy.exception.CustomException;
 import com.example.gbuddy.models.constants.CommonConstants;
 import com.example.gbuddy.models.constants.MatchLookupConstants;
+import com.example.gbuddy.models.constants.MatchRequestConstants;
+import com.example.gbuddy.models.constants.MatcherConst;
+import com.example.gbuddy.models.entities.BuddyGraph;
 import com.example.gbuddy.models.entities.Match;
 import com.example.gbuddy.models.entities.MatchLookup;
 import com.example.gbuddy.models.entities.MatchRequest;
 import com.example.gbuddy.models.protos.MatchLookupProto;
 import com.example.gbuddy.util.MapperUtil;
-import com.example.gbuddy.models.constants.MatcherConst;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,6 +48,9 @@ public class MatchLookupService {
 
     @Autowired
     private LikeProcessor likeProcessor;
+
+    @Autowired
+    private BuddyGraphDao buddyGraphDao;
 
     private BiPredicate<MatchLookup, MatchLookup> doesRequestExist = (requester, requestee) -> {
         Optional<MatchRequest> request = matchRequestDao.getMatchRequest(requester.getId(), requestee.getId(), requester.getRequesterId(), requestee.getRequesterId());
@@ -175,24 +183,50 @@ public class MatchLookupService {
         return builder.build();
     }
 
-    public MatchLookupProto.ChatResponse matched(int requesterId) {
-        MatchLookupProto.ChatResponse.Builder builder = MatchLookupProto.ChatResponse.newBuilder();
+    public MatchLookupProto.FriendResponse friends(int userId) {
+        MatchLookupProto.FriendResponse.Builder builder = MatchLookupProto.FriendResponse.newBuilder();
         try {
-            List<Match> matches = matchDao.getAllByRequester(requesterId);
-            if (CollectionUtils.isEmpty(matches)) {
-                LOG.info("there is no matches present for requester id {}", requesterId);
-                throw new CustomException(MatchLookupConstants.NO_MATCHES_AVAILABLE.getMessage());
+            List<BuddyGraph> friends = buddyGraphDao.getByUserId(userId);
+            if (CollectionUtils.isEmpty(friends)) {
+                LOG.info("there is no friends present for user {}", userId);
+                throw new CustomException(MatchLookupConstants.NO_FRIENDS_PRESNT.getMessage());
             }
-            mapperUtil.getResponseFromMatches(builder, matches);
-            LOG.info("completed building chat response");
-            builder.setMessage(MatchLookupConstants.MATCH_RESPONSE_CREATED.getMessage())
+            mapperUtil.getResponseFromMatches(builder, friends);
+            LOG.info("completed building friend response");
+            builder.setMessage(MatchLookupConstants.FRIEND_RESPONSE_CREATED.getMessage())
                     .setResponseCode(HttpStatus.OK.value());
         } catch (Exception e) {
             builder.setMessage(e.getMessage())
                     .setResponseCode(HttpStatus.UNPROCESSABLE_ENTITY.value());
-            LOG.info("failed building match response for requester id {}", requesterId);
+            LOG.info("failed building match response for requester id {}", userId);
             e.printStackTrace();
         }
+        return builder.build();
+    }
+
+    public MatchLookupProto.FriendRequestsResponse getFriendRequests(int requesteeId) {
+        MatchLookupProto.FriendRequestsResponse.Builder builder = MatchLookupProto.FriendRequestsResponse.newBuilder();
+        try {
+            List<MatchRequest> requests = matchRequestDao.getByUserRequesteeIdAndStatus(requesteeId, MatchRequestConstants.REQUESTED.getStatus());
+            if (CollectionUtils.isEmpty(requests)) {
+                LOG.info("there are no requests for {}", requesteeId);
+                throw new CustomException(String.format(MatchRequestConstants.NO_REQUESTS_PRESENT.getStatus(), requesteeId));
+            }
+            mapperUtil.buildFriendRequests(builder, requests);
+        } catch (Exception e) {
+            LOG.info("failed fetching friend requests for {}", requesteeId);
+            builder.setMessage(e.getMessage())
+                    .setResponseCode(HttpStatus.UNPROCESSABLE_ENTITY.value());
+        }
+        return builder.build();
+    }
+
+    public MatchLookupProto.MatchResponse acceptFriendRequest(int matchRequestId) {
+        MatchLookupProto.MatchResponse.Builder builder = MatchLookupProto.MatchResponse.newBuilder();
+        LOG.info("sending friend request for id {}", matchRequestId);
+        likeProcessor.submitFriendRequest(matchRequestId);
+        builder.setMessage(MatchRequestConstants.BUDDY_REQUEST_PLACED.getStatus())
+                .setResponseCode(HttpStatus.OK.value());
         return builder.build();
     }
 }
