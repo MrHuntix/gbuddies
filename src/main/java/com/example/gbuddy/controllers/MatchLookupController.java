@@ -71,13 +71,13 @@ public class MatchLookupController {
      * else
      * should not happen and should be logged
      *
-     * @param matchId pk of MATCH table
+     * @param matchRequestId pk of MATCH_REQUEST table
      * @return
      */
-    @PutMapping(value = "/unmatch/{matchId}")
-    public MatchLookupProto.MatchResponse unmatch(@PathVariable("matchId") int matchId) {
-        logger.info("unmatching: {}", matchId);
-        return matchLookupService.unmatch(matchId);
+    @PutMapping(value = "/reject/{matchRequestId}")
+    public MatchLookupProto.MatchResponse reject(@PathVariable("matchRequestId") int matchRequestId) {
+        logger.info("rejecting request: {}", matchRequestId);
+        return matchLookupService.reject(matchRequestId);
     }
 
     /**

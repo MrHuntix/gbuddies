@@ -6,8 +6,9 @@ public enum MatchLookupConstants {
     NO_MATCHES_AVAILABLE("no matches available"),
     NO_FRIENDS_PRESNT("no friends present"),
     FRIEND_RESPONSE_CREATED("friend response created"),
-    BUDDY_REQUEST_SENT("buddy request sent");
-
+    BUDDY_REQUEST_SENT("buddy request sent"),
+    NO_LOOKUP_RECORD("NO_LOOKUP_RECORD[ID:%s]"),
+    UNACCEPTABLE_STATUS("UNACCEPTABLE_STATUS[ID:%s,STATUS:%s]");
     private String message;
 
     MatchLookupConstants(String message) {

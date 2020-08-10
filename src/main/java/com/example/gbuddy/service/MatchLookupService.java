@@ -10,7 +10,6 @@ import com.example.gbuddy.models.constants.MatchLookupConstants;
 import com.example.gbuddy.models.constants.MatchRequestConstants;
 import com.example.gbuddy.models.constants.MatcherConst;
 import com.example.gbuddy.models.entities.BuddyGraph;
-import com.example.gbuddy.models.entities.Match;
 import com.example.gbuddy.models.entities.MatchLookup;
 import com.example.gbuddy.models.entities.MatchRequest;
 import com.example.gbuddy.models.protos.MatchLookupProto;
@@ -24,7 +23,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.function.BiPredicate;
 import java.util.stream.Collectors;
@@ -91,39 +89,30 @@ public class MatchLookupService {
         return builder.build();
     }
 
-    public MatchLookupProto.MatchResponse unmatch(int matchId) {
+    public MatchLookupProto.MatchResponse reject(int matchRequestId) {
         MatchLookupProto.MatchResponse.Builder builder = MatchLookupProto.MatchResponse.newBuilder();
-        LOG.info("start of unmatch process for match id {}", matchId);
+        LOG.info("start of reject process for match id {}", matchRequestId);
         try {
-            Match match = matchDao.findById(matchId).orElse(null);
-            if (Objects.isNull(match)) {
-                LOG.info("no record in MATCHES found for id: {}", matchId);
-                throw new CustomException(CommonConstants.UNMATCH_FAIL.getMessage());
+            MatchRequest matchRequest = matchRequestDao.findById(matchRequestId).orElseThrow(() -> new CustomException(String.format(MatchRequestConstants.NO_REQUEST_IS_PRESENT.getStatus(), matchRequestId)));
+            MatchLookup requestee = matchLookupDao.getById(matchRequest.getLookupRequesteeId()).orElseThrow(() -> new CustomException(String.format(MatchLookupConstants.NO_LOOKUP_RECORD.getMessage(), matchRequest.getLookupRequesteeId())));
+            MatchLookup requester = matchLookupDao.getById(matchRequest.getLookupRequesterId()).orElseThrow(() -> new CustomException(String.format(MatchLookupConstants.NO_LOOKUP_RECORD.getMessage(), matchRequest.getLookupRequesterId())));
+
+            if (MatchRequestConstants.ACCEPTED.getStatus().equalsIgnoreCase(matchRequest.getStatus())) {
+                throw new CustomException(String.format(MatchLookupConstants.UNACCEPTABLE_STATUS.getMessage(), matchRequestId, matchRequest.getStatus()));
             }
-            MatchLookup requester = matchLookupDao.getRequestMatch(match.getGymId(), match.getBranchId(), match.getRequester()).orElse(null);
-            if (!Objects.isNull(requester) && !MatcherConst.MATCHED.getName().equalsIgnoreCase(requester.getStatus())) {
-                LOG.info("Got requester. Status {}", requester.getStatus());
-                throw new CustomException(CommonConstants.UNMATCH_FAIL.getMessage());
-            }
-            MatchLookup requestee = matchLookupDao.getRequestMatch(match.getGymId(), match.getBranchId(), match.getRequestee()).orElse(null);
-            if (!Objects.isNull(requestee) && !MatcherConst.MATCHED.getName().equalsIgnoreCase(requestee.getStatus())) {
-                LOG.info("Got requestee. Status {}", requester.getStatus());
-                throw new CustomException(CommonConstants.UNMATCH_FAIL.getMessage());
-            }
-            if (MatcherConst.UNMATCHED.getName().equals(requester.getStatus()) || MatcherConst.UNMATCHED.getName().equals(requestee.getStatus())) {
-                LOG.info("record found in MATCH_LOOKUP for (gymId: {}, branchId: {}, requesterId: {}) but status({}) invalid", match.getGymId(), match.getBranchId(), match.getRequester(), requester.getStatus());
-                throw new CustomException(CommonConstants.UNMATCH_FAIL.getMessage());
-            }
+            LOG.info("updating request status to REJECTED for request id {}", matchRequestId);
+            matchRequest.setStatus(MatchRequestConstants.REJECTED.getStatus());
+            matchRequestDao.save(matchRequest);
+            LOG.info("updating lookup status to UNMATCHED for requester: {}, requestee: {}", requester.getId(), requestee.getId());
             requester.setStatus(MatcherConst.UNMATCHED.getName());
             requestee.setStatus(MatcherConst.UNMATCHED.getName());
-            LOG.info("requester: {}, requestee: {}", requester, requestee);
             matchLookupDao.save(requester);
             matchLookupDao.save(requestee);
-            matchDao.delete(match);
-            LOG.info("start of unmatch process for match id {}", matchId);
-            builder.setMessage(CommonConstants.UNMATCH_SUCCESS.getMessage())
+            builder.setMessage(CommonConstants.REJECT_SUCCESS.getMessage())
                     .setResponseCode(HttpStatus.OK.value());
         } catch (Exception e) {
+            LOG.info("exception while processing reject request");
+            e.printStackTrace();
             builder.setMessage(e.getMessage())
                     .setResponseCode(HttpStatus.UNPROCESSABLE_ENTITY.value());
         }
