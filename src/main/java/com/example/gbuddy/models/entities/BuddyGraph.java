@@ -20,4 +20,6 @@ public class BuddyGraph {
     private int userId;
 
     private int userBuddy;
+
+    private int matchRequestId;
 }

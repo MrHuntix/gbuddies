@@ -2,7 +2,7 @@ syntax = "proto3";
 
 package gbuddy;
 
-option java_package = "com.example.gym.buddies.data.protos";
+option java_package = "com.example.gbuddy.models.protos";
 option java_outer_classname = "MatchLookupProto";
 
 message MatchResponse {
@@ -38,7 +38,7 @@ message Branch {
   string city = 3;
   double latitude = 4;
   double longitude = 5;
-  string contact = 6;  
+  string contact = 6;
 }
 
 enum Status {
@@ -53,15 +53,26 @@ message LookupResponse {
   repeated MatchLookup lookups = 17;
 }
 
-message Match {
-  int32 matchId = 1;
-  int32 lookupId = 2;
+message Friend {
+  int32 matchRequestId = 1;
   User user = 16;
-  Gym gym = 17;  
+  Gym gym = 17;
 }
 
-message ChatResponse {
+message FriendResponse {
   int32 responseCode = 1;
   string message = 2;
-  repeated Match matches = 17;
+  repeated Friend friends = 17;
+}
+
+message FriendRequest {
+  int32 matchRequestId = 1;
+  User user = 16;
+  Gym gym = 17;
+}
+
+message FriendRequestsResponse {
+  int32 responseCode = 1;
+  string message = 2;
+  repeated FriendRequest friendRequests = 16;
 }

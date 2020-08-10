@@ -12,7 +12,7 @@ public enum CommonConstants {
     REQUEST_ALREADY_EXISTS("a request already exists, check your requests tab"),
     LIKED("like process completed"),
     UNMATCH_FAIL("unable to process request for unmatching"),
-    UNMATCH_SUCCESS("unmatch request successful");
+    REJECT_SUCCESS("rejected friend request");
 
     private String message;
 

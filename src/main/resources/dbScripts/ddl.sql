@@ -3,7 +3,10 @@ create table BUDDY_GRAPH
 	id int auto_increment
 		primary key,
 	userId int not null,
-	userBuddy int not null
+	userBuddy int not null,
+	matchRequestId int not null,
+	constraint matchRequestId
+		unique (matchRequestId)
 )
 ;
 
