@@ -90,9 +90,10 @@ public class LikeProcessor {
 
     @PreDestroy
     private void destory() {
-        if (likeExecutor != null) {
+        if (likeExecutor != null && friendRequestExecutor != null) {
             LOG.info("shutting down executor");
             likeExecutor.shutdown();
+            friendRequestExecutor.shutdown();
         }
     }
 }
