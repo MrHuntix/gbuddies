@@ -3,19 +3,24 @@ package com.example.gbuddy.service;
 import com.example.gbuddy.dao.BuddyGraphDao;
 import com.example.gbuddy.dao.MatchLookupDao;
 import com.example.gbuddy.dao.MatchRequestDao;
+import com.example.gbuddy.models.mbeans.LikeProcessorMBean;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.jmx.export.annotation.ManagedAttribute;
+import org.springframework.jmx.export.annotation.ManagedResource;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.stereotype.Component;
 
+import javax.annotation.ManagedBean;
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 import java.util.concurrent.locks.ReentrantLock;
 
 @Component
-public class LikeProcessor {
+@ManagedResource(objectName = "GBUDDIES-LIKE_PROCESSOR:name=likeProcessor")
+public class LikeProcessor implements LikeProcessorMBean{
     private static final Logger LOG = LoggerFactory.getLogger(LikeProcessor.class);
 
     @Value("${like.processor.core.pool.size}")
@@ -89,11 +94,35 @@ public class LikeProcessor {
     }
 
     @PreDestroy
-    private void destory() {
+    private void destroy() {
         if (likeExecutor != null && friendRequestExecutor != null) {
             LOG.info("shutting down executor");
             likeExecutor.shutdown();
             friendRequestExecutor.shutdown();
         }
+    }
+
+    @Override
+    @ManagedAttribute(description = "core pool size for like executor")
+    public int getCorePoolSizeForLikeExecutor() {
+        return this.corePoolSize;
+    }
+
+    @ManagedAttribute(description = "core pool size for friend request executor")
+    @Override
+    public int getCorePoolSizeForFriendRequestExecutor() {
+        return this.corePoolSize;
+    }
+
+    @ManagedAttribute(description = "thread prefix name for like executor")
+    @Override
+    public String getLikeExecutorPrefix() {
+        return this.likePrefix;
+    }
+
+    @Override
+    @ManagedAttribute(description = "thread prefix name for like executor")
+    public String getFriendRequestExecutorPrefix() {
+        return this.friendRequestPrefix;
     }
 }
