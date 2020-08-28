@@ -6,13 +6,18 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.HashMap;
+import java.util.Map;
+
 @RestController
 @RequestMapping("/")
 public class HomeController {
     @CrossOrigin
     @GetMapping("/")
     public ResponseEntity test() {
-        return ResponseEntity.ok("gym buddy server is up and running");
+        Map<String, String> resp = new HashMap<>();
+        resp.put("responseMessage", "gbuddies started properly");
+        return ResponseEntity.ok(resp);
     }
 
 }
