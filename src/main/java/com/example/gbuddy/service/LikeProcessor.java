@@ -103,15 +103,29 @@ public class LikeProcessor implements LikeProcessorMBean{
     }
 
     @Override
-    @ManagedAttribute(description = "core pool size for like executor")
+    @ManagedAttribute(description = "get core pool size for like executor")
     public int getCorePoolSizeForLikeExecutor() {
         return this.corePoolSize;
     }
 
-    @ManagedAttribute(description = "core pool size for friend request executor")
+    @ManagedAttribute(description = "get core pool size for friend request executor")
     @Override
     public int getCorePoolSizeForFriendRequestExecutor() {
         return this.corePoolSize;
+    }
+
+    @Override
+    @ManagedAttribute(description = "set core pool size for like executor")
+    public void setCorePoolSizeForLikeExecutor(int corePoolSize) {
+        this.corePoolSize = corePoolSize;
+        this.likeExecutor.setCorePoolSize(this.corePoolSize);
+    }
+
+    @ManagedAttribute(description = "set core pool size for friend request executor")
+    @Override
+    public void setCorePoolSizeForFriendRequestExecutor(int corePoolSize) {
+        this.corePoolSize = corePoolSize;
+        this.friendRequestExecutor.setCorePoolSize(this.corePoolSize);
     }
 
     @ManagedAttribute(description = "thread prefix name for like executor")
