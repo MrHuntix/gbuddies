@@ -1,16 +1,17 @@
 package com.example.gbuddy.util;
 
-import com.example.gbuddy.dao.*;
+import com.example.gbuddy.dao.BuddyGraphDao;
+import com.example.gbuddy.dao.MatchDao;
+import com.example.gbuddy.dao.MatchLookupDao;
+import com.example.gbuddy.dao.MatchRequestDao;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
 import javax.transaction.Transactional;
 
 @Component
-@Profile("default")
 public class MiscUtil {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(MiscUtil.class);
