@@ -1,1 +1,1 @@
-web java -Dserver.port=$PORT -Dspring.profiles.active=$PROFILE $JAVA_OPTS -jar target/gbuddy-0.0.1-SNAPSHOT.jar
+web java -Dserver.port=$PORT -Dspring.profiles.active=$PROFILE -Djava.awt.headless=true -Xmx128M -server -Dcom.sun.management.jmxremote -Dcom.sun.management.jmxremote.port=7091 -Dcom.sun.management.jmxremote.authenticate=false -Dcom.sun.management.jmxremote.ssl=false $JAVA_OPTS -jar target/gbuddy-0.0.1-SNAPSHOT.jar

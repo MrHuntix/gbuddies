@@ -1,6 +1,8 @@
 package com.example.gbuddy.controllers;
 
 import com.example.gbuddy.util.MiscUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
@@ -13,6 +15,7 @@ import java.util.Map;
 @RequestMapping("/")
 public class HomeController {
 
+    private static final Logger LOG = LoggerFactory.getLogger(HomeController.class);
     @Autowired
     private MiscUtil miscUtil;
 
@@ -24,6 +27,7 @@ public class HomeController {
     public ResponseEntity test() {
         Map<String, String> resp = new HashMap<>();
         resp.put("responseMessage", "gbuddies started properly");
+        LOG.info("jmx port: {}, jmx enabled: {}, jmx host: {}", System.getProperty("com.sun.management.jmxremote.port"), System.getProperty("com.sun.management.jmxremote"), System.getProperty("java.rmi.server.hostname"));
         return ResponseEntity.ok(resp);
     }
 
