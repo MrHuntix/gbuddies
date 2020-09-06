@@ -155,7 +155,9 @@ public class MatchLookupService {
             matchLookupsForRequester.forEach(requester -> {
                 List<MatchLookup> requesteeMatches = matchLookupDao.possibleMatches(requester.getGymId(), requester.getBranchId(), requesterId, matcherConst.getName());
                 if (!CollectionUtils.isEmpty(requesteeMatches)) {
-                    List<MatchLookup> newRequestees = requesteeMatches.stream().filter(requestee -> doesRequestExist.test(requester, requestee)).collect(Collectors.toList());
+                    List<MatchLookup> newRequestees = requesteeMatches.stream()
+                            .filter(requestee -> (doesRequestExist.test(requester, requestee)) && doesRequestExist.test(requestee, requester))
+                            .collect(Collectors.toList());
                     if(CollectionUtils.isEmpty(newRequestees))
                         LOG.info("there are no new requestees to derive for matchlookup {}", requester.getId());
                     else
