@@ -25,25 +25,25 @@ public class AuthenticationValidator {
         LOG.info("starting validation for signup request");
         List<String> validationMessage = new ArrayList<>();
         if (StringUtils.isEmpty(userSignupRequest.getUserName())) {
-            validationMessage.add(ValidationInfoEnum.EMPTY_INVALID_USERNAME.getValidationInfoValue());
+            validationMessage.add(ValidationInfoEnum.EMPTY_USERNAME.getValidationInfoValue());
         }
         if (StringUtils.isEmpty(userSignupRequest.getEmailId())) {
-            validationMessage.add(ValidationInfoEnum.EMPTY_INVALID_EMAIL.getValidationInfoValue());
+            validationMessage.add(ValidationInfoEnum.EMPTY_EMAIL.getValidationInfoValue());
         }
         if (StringUtils.isEmpty(userSignupRequest.getMobileNo())) {
-            validationMessage.add(ValidationInfoEnum.EMPTY_INVALID_MOBILE.getValidationInfoValue());
+            validationMessage.add(ValidationInfoEnum.EMPTY_MOBILE.getValidationInfoValue());
         }
         if (StringUtils.isEmpty(userSignupRequest.getPassword())) {
-            validationMessage.add(ValidationInfoEnum.EMPTY_INVALID_PASSWORD.getValidationInfoValue());
+            validationMessage.add(ValidationInfoEnum.EMPTY_PASSWORD.getValidationInfoValue());
         }
         if (StringUtils.isEmpty(userSignupRequest.getRoles().name())) {
-            validationMessage.add(ValidationInfoEnum.EMPTY_INVALID_ROLES.getValidationInfoValue());
+            validationMessage.add(ValidationInfoEnum.EMPTY_ROLES.getValidationInfoValue());
         }
         if (StringUtils.isEmpty(userSignupRequest.getAbout())) {
-            validationMessage.add(ValidationInfoEnum.EMPTY_INVALID_ABOUT.getValidationInfoValue());
+            validationMessage.add(ValidationInfoEnum.EMPTY_ABOUT.getValidationInfoValue());
         }
         if (userSignupRequest.getUserImage().isEmpty()) {
-            validationMessage.add(ValidationInfoEnum.EMPTY_INVALID_IMAGE.getValidationInfoValue());
+            validationMessage.add(ValidationInfoEnum.EMPTY_IMAGE.getValidationInfoValue());
         }
         usernameAlreadyExists(userSignupRequest.getUserName(), validationMessage);
         return validationMessage;
@@ -58,11 +58,11 @@ public class AuthenticationValidator {
     public List<String> validateLoginRequest(LoginSignupProto.LoginRequest userLoginRequest) {
         LOG.info("starting validation for login request");
         List<String> validationMessage = new ArrayList<>();
-        if (StringUtils.isNotEmpty(userLoginRequest.getUsername())) {
-            validationMessage.add(ValidationInfoEnum.EMPTY_INVALID_USERNAME.getValidationInfoValue());
+        if (StringUtils.isEmpty(userLoginRequest.getUsername())) {
+            validationMessage.add(ValidationInfoEnum.EMPTY_USERNAME.getValidationInfoValue());
         }
-        if (StringUtils.isNotEmpty(userLoginRequest.getPassword())) {
-            validationMessage.add(ValidationInfoEnum.EMPTY_INVALID_PASSWORD.getValidationInfoValue());
+        if (StringUtils.isEmpty(userLoginRequest.getPassword())) {
+            validationMessage.add(ValidationInfoEnum.EMPTY_PASSWORD.getValidationInfoValue());
         }
         isCredentialsCorrect(userLoginRequest.getUsername(), userLoginRequest.getPassword(), validationMessage);
         return validationMessage;
