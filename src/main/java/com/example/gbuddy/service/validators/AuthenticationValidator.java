@@ -73,7 +73,7 @@ public class AuthenticationValidator {
         if (!user.isPresent()) {
             validationMessage.add(String.format(ValidationInfoEnum.USER_NOT_FOUND_IN_DB.getValidationInfoValue(), username));
         }
-        if (!password.equals(user.get().getPassword())) {
+        if (user.isPresent() && !password.equals(user.get().getPassword())) {
             validationMessage.add(ValidationInfoEnum.INVALID_LOGIN_CREDENTALS.getValidationInfoValue());
         }
     }

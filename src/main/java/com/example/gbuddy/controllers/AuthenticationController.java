@@ -2,6 +2,7 @@ package com.example.gbuddy.controllers;
 
 import com.example.gbuddy.dao.UserDao;
 import com.example.gbuddy.exception.CustomException;
+import com.example.gbuddy.models.constants.ResponseMessageConstants;
 import com.example.gbuddy.models.entities.User;
 import com.example.gbuddy.models.protos.LoginSignupProto;
 import com.example.gbuddy.service.validators.AuthenticationValidator;
@@ -41,32 +42,28 @@ public class AuthenticationController {
         logger.info("starting signup process");
         User user = null;
         LoginSignupProto.LoginResponse.Builder responseBuilder = LoginSignupProto.LoginResponse.newBuilder();
-        LoginSignupProto.SignupResponse response;
+        LoginSignupProto.SignupResponse response = null;
         try {
             List<String> validationMessage = authenticationValidator.validateSignupRequest(userSignupRequest);
             if (!validationMessage.isEmpty()) {
                 logger.info("validation failed with {} issues", validationMessage.size());
-
                 throw new CustomException(String.join("|", validationMessage));
             }
             logger.info("validation completed in {} sec");
             user = mapperUtil.getUserFromUserSignupRequest(userSignupRequest);
             logger.info("creating new user, {}", user);
             user = userDao.save(user);
+            logger.info("user is saved in db");
             Blob image = user.getProfilePic().getUserImage();
             responseBuilder.setUserImage(ByteString.copyFrom(image.getBytes(1, Math.toIntExact(image.length()))));
-            responseBuilder.setResponseMessage("successfully created user")
+            responseBuilder.setResponseMessage(ResponseMessageConstants.SIGNUP_SUCCESSFULL.getMessage())
                     .setResponseCode(HttpStatus.OK.value());
         } catch (Exception e) {
-            logger.info("exception occurred during signup process");
-            responseBuilder.setResponseMessage(e.getMessage())
+            logger.info("exception occurred during signup process {}", e.getMessage());
+            responseBuilder.setResponseMessage(ResponseMessageConstants.SIGNUP_UNSUCCESSFULL.getMessage())
                     .setResponseCode(HttpStatus.BAD_REQUEST.value());
-            e.printStackTrace();
-        } finally {
-            response = mapperUtil.buildSignUpResponse(responseBuilder, user);
-            logger.info("user persisted in db and response built");
+            response = LoginSignupProto.SignupResponse.newBuilder().setResponse(responseBuilder.build()).build();
         }
-        logger.info("sending response");
         return response;
     }
 
@@ -76,27 +73,26 @@ public class AuthenticationController {
     @PostMapping(value = "/login")
     public LoginSignupProto.LoginResponse login(@Valid @RequestBody LoginSignupProto.LoginRequest userLoginRequest) {
         LoginSignupProto.LoginResponse.Builder builder = LoginSignupProto.LoginResponse.newBuilder();
-        LoginSignupProto.LoginResponse response;
+        LoginSignupProto.LoginResponse response = null;
         User user = null;
         logger.info("start or login process");
         try {
             List<String> validationMessage = authenticationValidator.validateLoginRequest(userLoginRequest);
-            if (validationMessage.isEmpty()) {
+            if (!validationMessage.isEmpty()) {
                 logger.info("validation failed with {} issues", validationMessage.size());
                 throw new CustomException(String.join("|", validationMessage));
             }
             user = userDao.getByUserName(userLoginRequest.getUsername()).get();
             Blob image = user.getProfilePic().getUserImage();
             builder.setUserImage(ByteString.copyFrom(image.getBytes(1, Math.toIntExact(image.length()))));
-            builder.setResponseMessage("login successful")
+            builder.setResponseMessage(ResponseMessageConstants.LOGIN_SUCCESSFULL.getMessage())
                     .setResponseCode(HttpStatus.OK.value());
-        } catch (Exception e) {
-            logger.info("exception occured during login process");
-            builder.setResponseMessage(e.getMessage())
-                    .setResponseCode(HttpStatus.BAD_REQUEST.value());
-            e.printStackTrace();
-        } finally {
             response = mapperUtil.buildLoginResponse(builder, user);
+        } catch (Exception e) {
+            logger.info("exception occured during login process {}", e.getMessage());
+            builder.setResponseMessage(ResponseMessageConstants.INVALID_LOGIN_CREDENTIALS.getMessage())
+                    .setResponseCode(HttpStatus.BAD_REQUEST.value());
+            response = builder.build();
         }
         return response;
     }
