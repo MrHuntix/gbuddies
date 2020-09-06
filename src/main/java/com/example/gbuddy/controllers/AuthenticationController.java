@@ -58,6 +58,7 @@ public class AuthenticationController {
             responseBuilder.setUserImage(ByteString.copyFrom(image.getBytes(1, Math.toIntExact(image.length()))));
             responseBuilder.setResponseMessage(ResponseMessageConstants.SIGNUP_SUCCESSFULL.getMessage())
                     .setResponseCode(HttpStatus.OK.value());
+            response = mapperUtil.buildSignUpResponse(responseBuilder, user);
         } catch (Exception e) {
             logger.info("exception occurred during signup process {}", e.getMessage());
             responseBuilder.setResponseMessage(ResponseMessageConstants.SIGNUP_UNSUCCESSFULL.getMessage())
