@@ -1,14 +1,10 @@
 package com.example.gbuddy.service;
 
 import com.example.gbuddy.dao.BuddyGraphDao;
-import com.example.gbuddy.dao.MatchDao;
 import com.example.gbuddy.dao.MatchLookupDao;
 import com.example.gbuddy.dao.MatchRequestDao;
 import com.example.gbuddy.exception.CustomException;
-import com.example.gbuddy.models.constants.CommonConstants;
-import com.example.gbuddy.models.constants.MatchLookupConstants;
-import com.example.gbuddy.models.constants.MatchRequestConstants;
-import com.example.gbuddy.models.constants.MatcherConst;
+import com.example.gbuddy.models.constants.*;
 import com.example.gbuddy.models.entities.BuddyGraph;
 import com.example.gbuddy.models.entities.MatchLookup;
 import com.example.gbuddy.models.entities.MatchRequest;
@@ -36,9 +32,6 @@ public class MatchLookupService {
     private MatchLookupDao matchLookupDao;
 
     @Autowired
-    private MatchDao matchDao;
-
-    @Autowired
     private MatchRequestDao matchRequestDao;
 
     @Autowired
@@ -60,7 +53,7 @@ public class MatchLookupService {
         try {
             MatchLookup lookup = matchLookupDao.getRequestMatch(gymId, branchId, requesterId).orElse(null);
             if (lookup != null) {
-                LOG.info("request already exists(id: {}, status: {})", lookup.getId(), lookup.getStatus());
+                LOG.info("request already exists(lookup: {}, status: {})", lookup.getId(), lookup.getStatus());
                 throw new CustomException(String.format(CommonConstants.LOOKUP_REQUEST_EXISTS.getMessage(), lookup.getId(), lookup.getStatus()));
             }
             MatchLookup match = new MatchLookup();
@@ -69,12 +62,14 @@ public class MatchLookupService {
             match.setRequesterId(requesterId);
             match.setStatus(MatcherConst.UNMATCHED.getName());
             matchLookupDao.save(match);
-            LOG.info("created match(id: {}) for user {}, for gym {}", match.getId(), match.getRequesterId(), match.getGymId());
-            builder.setMessage(CommonConstants.REQUEST_RAISED.getMessage())
+            LOG.info("created match(match: {}) for user {}, for gym {}", match.getId(), match.getRequesterId(), match.getGymId());
+            builder.setMessage(ResponseMessageConstants.LOOKUP_CREATED.getMessage())
                     .setResponseCode(HttpStatus.OK.value());
         } catch (Exception e) {
-            builder.setMessage(e.getMessage())
-                    .setResponseCode(HttpStatus.UNPROCESSABLE_ENTITY.value());
+            LOG.info("exception occurred while adding for lookup for requester {}, gym {}, branch {}", requesterId, gymId, branchId);
+            e.printStackTrace();
+            builder.setMessage(ResponseMessageConstants.FAILED_TO_CREATE_LOOKUP.getMessage())
+                    .setResponseCode(HttpStatus.BAD_REQUEST.value());
         }
         return builder.build();
 
@@ -82,16 +77,16 @@ public class MatchLookupService {
 
     public MatchLookupProto.MatchResponse like(int matchLookupId, int userId) {
         MatchLookupProto.MatchResponse.Builder builder = MatchLookupProto.MatchResponse.newBuilder();
-        LOG.info("start of like process for match lookup id {} requested by user id {}", matchLookupId, userId);
+        LOG.info("start of like process for match lookup {} requested by user {}", matchLookupId, userId);
         likeProcessor.submitLikeRequest(matchLookupId, userId);
-        builder.setMessage(MatchLookupConstants.BUDDY_REQUEST_SENT.getMessage())
+        builder.setMessage(ResponseMessageConstants.BUDDY_REQUEST_SENT.getMessage())
                 .setResponseCode(HttpStatus.OK.value());
         return builder.build();
     }
 
     public MatchLookupProto.MatchResponse reject(int matchRequestId) {
         MatchLookupProto.MatchResponse.Builder builder = MatchLookupProto.MatchResponse.newBuilder();
-        LOG.info("start of reject process for match id {}", matchRequestId);
+        LOG.info("start of reject process for match request {}", matchRequestId);
         try {
             MatchRequest matchRequest = matchRequestDao.findById(matchRequestId).orElseThrow(() -> new CustomException(String.format(MatchRequestConstants.NO_REQUEST_IS_PRESENT.getStatus(), matchRequestId)));
             MatchLookup requestee = matchLookupDao.getById(matchRequest.getLookupRequesteeId()).orElseThrow(() -> new CustomException(String.format(MatchLookupConstants.NO_LOOKUP_RECORD.getMessage(), matchRequest.getLookupRequesteeId())));
@@ -100,7 +95,7 @@ public class MatchLookupService {
             if (MatchRequestConstants.ACCEPTED.getStatus().equalsIgnoreCase(matchRequest.getStatus())) {
                 throw new CustomException(String.format(MatchLookupConstants.UNACCEPTABLE_STATUS.getMessage(), matchRequestId, matchRequest.getStatus()));
             }
-            LOG.info("updating request status to REJECTED for request id {}", matchRequestId);
+            LOG.info("updating request status to REJECTED for match request {}", matchRequestId);
             matchRequest.setStatus(MatchRequestConstants.REJECTED.getStatus());
             matchRequestDao.save(matchRequest);
             LOG.info("updating lookup status to UNMATCHED for requester: {}, requestee: {}", requester.getId(), requestee.getId());
@@ -108,13 +103,13 @@ public class MatchLookupService {
             requestee.setStatus(MatcherConst.UNMATCHED.getName());
             matchLookupDao.save(requester);
             matchLookupDao.save(requestee);
-            builder.setMessage(CommonConstants.REJECT_SUCCESS.getMessage())
+            builder.setMessage(ResponseMessageConstants.REJECT_SUCCESS.getMessage())
                     .setResponseCode(HttpStatus.OK.value());
         } catch (Exception e) {
-            LOG.info("exception while processing reject request");
+            LOG.info("exception occurred while processing reject request for match request {}", matchRequestId);
             e.printStackTrace();
-            builder.setMessage(e.getMessage())
-                    .setResponseCode(HttpStatus.UNPROCESSABLE_ENTITY.value());
+            builder.setMessage(ResponseMessageConstants.REJECT_FAILED.getMessage())
+                    .setResponseCode(HttpStatus.BAD_REQUEST.value());
         }
         return builder.build();
     }
@@ -130,11 +125,13 @@ public class MatchLookupService {
             }
             LOG.info("found {} records in match lookup table. Building response", matches.size());
             mapperUtil.getResponseFromMatchLookup(matches, builder);
-            builder.setMessage(MatchLookupConstants.MATCH_LOOKUP_RESPONSE_CREATED.getMessage())
+            builder.setMessage(ResponseMessageConstants.FOUND_SUITABLE_BUDDIES.getMessage())
                     .setResponseCode(HttpStatus.OK.value());
         } catch (Exception e) {
-            builder.setMessage(e.getMessage())
-                    .setResponseCode(HttpStatus.UNPROCESSABLE_ENTITY.value());
+            LOG.info("exception occurred while getting suitable matches for requester {}, gym {}, branch {}", requesterId, gymId, branchId);
+            e.printStackTrace();
+            builder.setMessage(ResponseMessageConstants.FAILED_TO_FIND_SUITABLE_MATCHES.getMessage())
+                    .setResponseCode(HttpStatus.BAD_REQUEST.value());
         }
         return builder.build();
     }
@@ -144,12 +141,12 @@ public class MatchLookupService {
     }
 
     private MatchLookupProto.LookupResponse deriveMatches(int requesterId, MatcherConst matcherConst) {
-        LOG.info("deriving matches for user id {}", requesterId);
+        LOG.info("deriving matches for user {}", requesterId);
         MatchLookupProto.LookupResponse.Builder builder = MatchLookupProto.LookupResponse.newBuilder();
         try {
             List<MatchLookup> matchLookupsForRequester = matchLookupDao.getMatchesByRequestIdAndStatus(requesterId, matcherConst.getName());
             if (CollectionUtils.isEmpty(matchLookupsForRequester)) {
-                LOG.info("there is no match_lookup entries for requester id :{}", requesterId);
+                LOG.info("there is no match_lookup entries for requester {}", requesterId);
                 throw new CustomException(MatchLookupConstants.NO_MATCH_LOOKUP_RECORD.getMessage());
             }
             matchLookupsForRequester.forEach(requester -> {
@@ -165,30 +162,35 @@ public class MatchLookupService {
                 }
             });
             LOG.info("derived {} matches", builder.getLookupsList().size());
-            builder.setMessage(MatchLookupConstants.MATCH_LOOKUP_RESPONSE_CREATED.getMessage())
+            builder.setMessage(ResponseMessageConstants.DERIVED_BUDDIES.getMessage())
                     .setResponseCode(HttpStatus.OK.value());
         } catch (Exception e) {
-            builder.setMessage(e.getMessage())
-                    .setResponseCode(HttpStatus.UNPROCESSABLE_ENTITY.value());
+            LOG.info("failed to derive matches for user {}", requesterId);
+            e.printStackTrace();
+            builder.setMessage(ResponseMessageConstants.FAILED_TO_DERIVE_MATCHES.getMessage())
+                    .setResponseCode(HttpStatus.BAD_REQUEST.value());
         }
         return builder.build();
     }
 
     public MatchLookupProto.FriendResponse friends(int userId) {
+        LOG.info("getting friends for user {}", userId);
         MatchLookupProto.FriendResponse.Builder builder = MatchLookupProto.FriendResponse.newBuilder();
         try {
             List<BuddyGraph> friends = buddyGraphDao.getByUserId(userId);
             if (CollectionUtils.isEmpty(friends)) {
                 LOG.info("there is no friends present for user {}", userId);
-                throw new CustomException(MatchLookupConstants.NO_FRIENDS_PRESNT.getMessage());
+                throw new CustomException(MatchLookupConstants.NO_FRIENDS_PRESENT.getMessage());
             }
             mapperUtil.getResponseFromMatches(builder, friends);
             LOG.info("completed building friend response");
-            builder.setMessage(MatchLookupConstants.FRIEND_RESPONSE_CREATED.getMessage())
+            builder.setMessage(ResponseMessageConstants.DERIVE_FRIENDS.getMessage())
                     .setResponseCode(HttpStatus.OK.value());
         } catch (Exception e) {
-            builder.setMessage(e.getMessage())
-                    .setResponseCode(HttpStatus.UNPROCESSABLE_ENTITY.value());
+            LOG.info("exception occurred while getting friends for user {}", userId);
+            e.printStackTrace();
+            builder.setMessage(ResponseMessageConstants.FAILED_TO_DERIVE_FRIENDS.getMessage())
+                    .setResponseCode(HttpStatus.BAD_REQUEST.value());
             LOG.info("failed building match response for requester id {}", userId);
             e.printStackTrace();
         }
@@ -197,6 +199,7 @@ public class MatchLookupService {
 
     public MatchLookupProto.FriendRequestsResponse getFriendRequests(int requesteeId) {
         MatchLookupProto.FriendRequestsResponse.Builder builder = MatchLookupProto.FriendRequestsResponse.newBuilder();
+        LOG.info("getting friend requests for user {}", requesteeId);
         try {
             List<MatchRequest> requests = matchRequestDao.getByUserRequesteeIdAndStatus(requesteeId, MatchRequestConstants.REQUESTED.getStatus());
             if (CollectionUtils.isEmpty(requests)) {
@@ -205,18 +208,19 @@ public class MatchLookupService {
             }
             mapperUtil.buildFriendRequests(builder, requests);
         } catch (Exception e) {
-            LOG.info("failed fetching friend requests for {}", requesteeId);
-            builder.setMessage(e.getMessage())
-                    .setResponseCode(HttpStatus.UNPROCESSABLE_ENTITY.value());
+            LOG.info("failed fetching friend requests for user{}", requesteeId);
+            e.printStackTrace();
+            builder.setMessage(ResponseMessageConstants.FAILED_TO_GET_FRIEND_REQUESTS.getMessage())
+                    .setResponseCode(HttpStatus.BAD_REQUEST.value());
         }
         return builder.build();
     }
 
     public MatchLookupProto.MatchResponse acceptFriendRequest(int matchRequestId) {
         MatchLookupProto.MatchResponse.Builder builder = MatchLookupProto.MatchResponse.newBuilder();
-        LOG.info("sending friend request for id {}", matchRequestId);
+        LOG.info("accepting friend request for match request {}", matchRequestId);
         likeProcessor.submitFriendRequest(matchRequestId);
-        builder.setMessage(MatchRequestConstants.BUDDY_REQUEST_PLACED.getStatus())
+        builder.setMessage(ResponseMessageConstants.BUDDY_REQUEST_ACCEPTED.getMessage())
                 .setResponseCode(HttpStatus.OK.value());
         return builder.build();
     }

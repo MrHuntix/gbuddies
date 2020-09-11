@@ -30,7 +30,7 @@ public class FriendRequestTask implements Runnable {
 
     private BuddyGraphDao buddyGraphDao;
 
-    public FriendRequestTask(int matchRequestId, ReentrantLock friendRequestLock, MatchLookupDao matchLookupDao, MatchRequestDao matchRequestDao, BuddyGraphDao buddyGraphDao) {
+    FriendRequestTask(int matchRequestId, ReentrantLock friendRequestLock, MatchLookupDao matchLookupDao, MatchRequestDao matchRequestDao, BuddyGraphDao buddyGraphDao) {
         this.matchRequestId = matchRequestId;
         this.friendRequestLock = friendRequestLock;
         this.matchLookupDao = matchLookupDao;

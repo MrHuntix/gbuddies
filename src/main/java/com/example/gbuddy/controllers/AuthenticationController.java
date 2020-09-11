@@ -61,6 +61,7 @@ public class AuthenticationController {
             response = mapperUtil.buildSignUpResponse(responseBuilder, user);
         } catch (Exception e) {
             logger.info("exception occurred during signup process {}", e.getMessage());
+            e.printStackTrace();
             responseBuilder.setResponseMessage(ResponseMessageConstants.SIGNUP_UNSUCCESSFULL.getMessage())
                     .setResponseCode(HttpStatus.BAD_REQUEST.value());
             response = LoginSignupProto.SignupResponse.newBuilder().setResponse(responseBuilder.build()).build();
@@ -90,7 +91,8 @@ public class AuthenticationController {
                     .setResponseCode(HttpStatus.OK.value());
             response = mapperUtil.buildLoginResponse(builder, user);
         } catch (Exception e) {
-            logger.info("exception occured during login process {}", e.getMessage());
+            logger.info("exception occurred during login process {}", e.getMessage());
+            e.printStackTrace();
             builder.setResponseMessage(ResponseMessageConstants.INVALID_LOGIN_CREDENTIALS.getMessage())
                     .setResponseCode(HttpStatus.BAD_REQUEST.value());
             response = builder.build();
@@ -100,29 +102,31 @@ public class AuthenticationController {
 
     @CrossOrigin
     @GetMapping("/id/{id}")
-    public LoginSignupProto.LoginResponse getUserById(@PathVariable("id") List<Integer> userId) {
+    public LoginSignupProto.LoginResponse getUserById(@PathVariable("id") int userId) {
         logger.info("fetching deatails of user having id {}", userId);
         LoginSignupProto.LoginResponse.Builder responseBuilder = LoginSignupProto.LoginResponse.newBuilder();
         LoginSignupProto.LoginResponse response;
         User user = null;
         try {
-            Optional<List<User>> users = userDao.getByUserIdIn(userId);
-            if (!users.isPresent()) {
-                logger.info("no user present for id {}", userId.get(0));
+            Optional<User> userFromDb = userDao.getByUserId(userId);
+            if (!userFromDb.isPresent()) {
+                logger.info("no user present for id {}", userId);
                 return LoginSignupProto.LoginResponse.newBuilder()
-                        .setResponseMessage("no user present for id " + userId)
+                        .setResponseMessage(ResponseMessageConstants.USER_NOT_PRESENT.getMessage())
                         .setResponseCode(HttpStatus.NO_CONTENT.value())
                         .build();
             }
-            user = users.get().get(0);
+            user = userFromDb.get();
             logger.info("found user having id {}", user.getUserId());
             Blob image = user.getProfilePic().getUserImage();
             responseBuilder.setUserImage(ByteString.copyFrom(image.getBytes(1, Math.toIntExact(image.length()))))
                     .setResponseMessage("user found in db")
                     .setResponseCode(HttpStatus.OK.value());
         } catch (Exception e) {
-            responseBuilder.setResponseMessage(e.getMessage())
-                    .setResponseCode(HttpStatus.INTERNAL_SERVER_ERROR.value());
+            logger.info("exception occurred while getting user for id {}");
+            e.printStackTrace();
+            responseBuilder.setResponseMessage(ResponseMessageConstants.USER_LOOKUP_FAILED.getMessage())
+                    .setResponseCode(HttpStatus.BAD_REQUEST.value());
         } finally {
             response = mapperUtil.buildLoginResponse(responseBuilder, user);
         }

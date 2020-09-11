@@ -13,7 +13,6 @@ import org.springframework.jmx.export.annotation.ManagedResource;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.stereotype.Component;
 
-import javax.annotation.ManagedBean;
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 import java.util.concurrent.locks.ReentrantLock;
@@ -79,7 +78,7 @@ public class LikeProcessor implements LikeProcessorMBean{
         try {
             likeExecutor.execute(new LikeTask(matchLookupDao, matchRequestDao, likeLock, matchLookupId, userId));
         } catch (Exception e) {
-            LOG.info("exception {}", e.getMessage());
+            LOG.info("exception occurred while submitting like request {}", e.getMessage());
             e.printStackTrace();
         }
     }
@@ -88,7 +87,7 @@ public class LikeProcessor implements LikeProcessorMBean{
         try {
             friendRequestExecutor.execute(new FriendRequestTask(matchRequestId, friendRequestLock, matchLookupDao, matchRequestDao, buddyGraphDao));
         } catch (Exception e) {
-            LOG.info("exception {}", e.getMessage());
+            LOG.info("exception occurred while submitting friend request {}", e.getMessage());
             e.printStackTrace();
         }
     }
