@@ -8,16 +8,26 @@
 		<version>2.2.5.RELEASE</version>
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
-	<groupId>com.example</groupId>
+	<groupId>com.com.gbuddies</groupId>
 	<artifactId>gbuddy</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>gbuddy</name>
-	<description>Demo project for Spring Boot</description>
+	<name>${project.artifactId}</name>
+	<description>A project for com.gbuddies</description>
+
+	<packaging>pom</packaging>
 
 	<properties>
 		<java.version>1.8</java.version>
 	</properties>
 
+	<modules>
+		<module>gbuddies-api-gateway</module>
+		<module>gbuddies-config-server</module>
+		<module>gbuddies-discovery-server</module>
+		<module>gbuddies-gym-service</module>
+		<module>gbuddies-matcher-service</module>
+		<module>gbuddies-user-service</module>
+	</modules>
 	<dependencies>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
