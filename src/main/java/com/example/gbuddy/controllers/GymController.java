@@ -3,9 +3,9 @@ package com.example.gbuddy.controllers;
 import com.example.gbuddy.dao.BranchDao;
 import com.example.gbuddy.dao.GymDao;
 import com.example.gbuddy.exception.CustomException;
+import com.example.gbuddy.models.constants.ResponseMessageConstants;
 import com.example.gbuddy.models.entities.Branch;
 import com.example.gbuddy.models.entities.Gym;
-import com.example.gbuddy.models.constants.CommonConstants;
 import com.example.gbuddy.models.protos.GymProto;
 import com.example.gbuddy.service.validators.GymValidator;
 import com.example.gbuddy.util.MapperUtil;
@@ -51,14 +51,14 @@ public class GymController {
             Gym g = mapperUtil.getGymFromRequest(request);
             Gym gym = gymDao.save(g);
             logger.info("gym created with id: {}", gym.getId());
-            builder.setMessage("gym created and saved in db with id " + gym.getId())
+            builder.setMessage(String.format(ResponseMessageConstants.GYM_CREATED.getMessage(), gym.getId()))
                     .setResponseCode(HttpStatus.OK.value());
             logger.info("completed building response for gym registration");
         } catch (Exception e) {
-            builder.setMessage(e.getMessage())
-                    .setResponseCode(HttpStatus.BAD_REQUEST.value());
-            logger.info("exception during gym registration");
+            logger.info("exception occurred during gym registration");
             e.printStackTrace();
+            builder.setMessage(ResponseMessageConstants.FAILED_TO_CREATE_GYM.getMessage())
+                    .setResponseCode(HttpStatus.BAD_REQUEST.value());
         }
         logger.info("sending register response");
         return builder.build();
@@ -80,13 +80,15 @@ public class GymController {
                         .build();
             }
             logger.info("fetch process completed. Found {} gyms", gyms.size());
-            builder.setMessage(String.format(CommonConstants.FETCH_COMPLETED.getMessage(), gyms.size()))
+            builder.setMessage(String.format(ResponseMessageConstants.FETCH_COMPLETED.getMessage(), gyms.size()))
                     .setResponseCode(HttpStatus.OK.value());
             response = mapperUtil.getResponseFromEntity(gyms, builder);
             logger.info("completed building fetch response");
         } catch (Exception e) {
-            builder.setMessage(e.getMessage())
-                    .setResponseCode(HttpStatus.INTERNAL_SERVER_ERROR.value());
+            logger.info("exception occurred during fetch process");
+            e.printStackTrace();
+            builder.setMessage(ResponseMessageConstants.FETCH_FAILED.getMessage())
+                    .setResponseCode(HttpStatus.BAD_REQUEST.value());
             logger.info("exception during fetch");
             e.printStackTrace();
         }
@@ -108,17 +110,19 @@ public class GymController {
             Branch branch = branchDao.findById(branchId).orElse(null);
             if (branch == null) {
                 logger.info("no branch found for having branch id: {}", branchId);
-                throw new CustomException(String.format(CommonConstants.NO_BRANCH_FOUND.getMessage(), branchId));
+                throw new CustomException(ResponseMessageConstants.COORDINATES_ERROR.getMessage());
             }
             logger.info("found branch: {}", branch);
             builder.setResponseCode(HttpStatus.OK.value())
-                    .setMessage(String.format(CommonConstants.FOUND_COORDINATES_FOR_BRANCH.getMessage(), branchId))
+                    .setMessage(ResponseMessageConstants.COORDINATES_FOUND.getMessage())
                     .setLatitude(branch.getLatitude())
                     .setLongitude(branch.getLongitude());
             logger.info("completed building coordinate response");
         } catch (Exception e) {
-            builder.setMessage(e.getMessage())
-                    .setResponseCode(HttpStatus.INTERNAL_SERVER_ERROR.value());
+            logger.info("exception occurred while fetching coordinates for branch {}", branchId);
+            e.printStackTrace();
+            builder.setMessage(ResponseMessageConstants.COORDINATES_ERROR.getMessage())
+                    .setResponseCode(HttpStatus.BAD_REQUEST.value());
             logger.info("exception during coordinate request");
             e.printStackTrace();
         }

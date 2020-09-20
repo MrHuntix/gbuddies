@@ -21,10 +21,10 @@ public class GymValidator {
         List<String> validationMessage = new ArrayList<>();
         Validate.notNull(gym, "gym object should not be null");
         if (StringUtils.isNotEmpty(gym.getName())) {
-            validationMessage.add(ValidationInfoEnum.EMPTY_INVALID_GYM_NAME.getValidationInfoValue());
+            validationMessage.add(ValidationInfoEnum.EMPTY_GYM_NAME.getValidationInfoValue());
         }
         if (StringUtils.isNotEmpty(gym.getWebsite())) {
-            validationMessage.add(ValidationInfoEnum.EMPTY_INVALID_WEBSITE.getValidationInfoValue());
+            validationMessage.add(ValidationInfoEnum.EMPTY_WEBSITE.getValidationInfoValue());
         }
         if (!CollectionUtils.isEmpty(gym.getBranchesList())) {
             validationMessage.add(ValidationInfoEnum.EMPTY_BRANCHES.getValidationInfoValue());
@@ -32,19 +32,19 @@ public class GymValidator {
         }
         gym.getBranchesList().forEach(branch -> {
             if (StringUtils.isNotEmpty(branch.getLocality())) {
-                validationMessage.add(String.format(ValidationInfoEnum.EMPTY_INVALID_LOCALITY.getValidationInfoValue(), branch.getLocality()));
+                validationMessage.add(String.format(ValidationInfoEnum.EMPTY_LOCALITY.getValidationInfoValue(), branch.getLocality()));
             }
             if (StringUtils.isNotEmpty(branch.getCity())) {
-                validationMessage.add(String.format(ValidationInfoEnum.EMPTY_INVALID_CITY.getValidationInfoValue(), branch.getCity()));
+                validationMessage.add(String.format(ValidationInfoEnum.EMPTY_CITY.getValidationInfoValue(), branch.getCity()));
             }
             if (Double.isNaN(branch.getLatitude())) {
-                validationMessage.add(String.format(ValidationInfoEnum.EMPTY_INVALID_LATITUDE.getValidationInfoValue(), branch.getLatitude()));
+                validationMessage.add(String.format(ValidationInfoEnum.EMPTY_LATITUDE.getValidationInfoValue(), branch.getLatitude()));
             }
             if (Double.isNaN(branch.getLongitude())) {
-                validationMessage.add(String.format(ValidationInfoEnum.EMPTY_INVALID_LONGIUDE.getValidationInfoValue(), branch.getLongitude()));
+                validationMessage.add(String.format(ValidationInfoEnum.EMPTY_LONGIUDE.getValidationInfoValue(), branch.getLongitude()));
             }
             if (StringUtils.isNotEmpty(branch.getContact())) {
-                validationMessage.add(String.format(ValidationInfoEnum.EMPTY_INVALID_CONTACT.getValidationInfoValue(), branch.getContact()));
+                validationMessage.add(String.format(ValidationInfoEnum.EMPTY_CONTACT.getValidationInfoValue(), branch.getContact()));
             }
         });
         return validationMessage;
