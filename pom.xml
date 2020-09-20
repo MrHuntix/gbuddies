@@ -2,17 +2,19 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
+
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
 		<version>2.2.5.RELEASE</version>
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
-	<groupId>com.com.gbuddies</groupId>
+
+	<groupId>com.gbuddies</groupId>
 	<artifactId>gbuddy</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>${project.artifactId}</name>
-	<description>A project for com.gbuddies</description>
+	<description>A project for gbuddies</description>
 
 	<packaging>pom</packaging>
 
@@ -22,12 +24,14 @@
 
 	<modules>
 		<module>gbuddies-api-gateway</module>
+		<module>gbuddies-common</module>
 		<module>gbuddies-config-server</module>
 		<module>gbuddies-discovery-server</module>
 		<module>gbuddies-gym-service</module>
 		<module>gbuddies-matcher-service</module>
 		<module>gbuddies-user-service</module>
 	</modules>
+
 	<dependencies>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -36,7 +40,6 @@
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web</artifactId>
-			<!--<version>LATEST</version>-->
 		</dependency>
 		<dependency>
 			<groupId>mysql</groupId>

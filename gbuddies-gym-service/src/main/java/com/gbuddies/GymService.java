@@ -11,7 +11,6 @@ public class GymService {
     ProtobufHttpMessageConverter protobufHttpMessageConverter() {
         return new ProtobufHttpMessageConverter();
     }
-
     public static void main(String[] args) {
         SpringApplication.run(GymService.class, args);
     }
