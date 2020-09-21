@@ -29,11 +29,3 @@ build/
 
 ### VS Code ###
 .vscode/
-
-gbuddies-common/src/main/resources/application.properties
-gbuddies-api-gateway/src/main/resources/application.properties
-gbuddies-config-server/src/main/resources/application.properties
-gbuddies-discovery-server/src/main/resources/application.properties
-gbuddies-gym-service/src/main/resources/application.properties
-gbuddies-matcher-service/src/main/resources/application.properties
-gbuddies-user-service/src/main/resources/application.properties
