@@ -1,0 +1,28 @@
+package com.gbuddies.dao;
+
+import com.gbuddies.models.MatchLookup;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.repository.query.Param;
+import org.springframework.stereotype.Component;
+
+import javax.transaction.Transactional;
+import java.util.List;
+import java.util.Optional;
+
+@Component
+@Transactional
+public interface MatchLookupDao extends JpaRepository<MatchLookup, Integer> {
+    List<MatchLookup> getByStatus(String status);
+
+    List<MatchLookup> getAllByRequesterId(int requesterId);
+
+    List<MatchLookup> possibleMatches(@Param("gymId") int gymId, @Param("branchId") int branchId, @Param("requesterId") int requesterId, @Param("status") String status);
+
+    List<MatchLookup> deriveMatches(@Param("gymId") int gymId, @Param("branchId") int branchId, @Param("status") String status);
+
+    List<MatchLookup> getMatchesByRequestIdAndStatus(@Param("requesterId") int requesterId, @Param("status") String status);
+
+    Optional<MatchLookup> getById(int id);
+
+    Optional<MatchLookup> getRequestMatch(@Param("gymId") int gymId, @Param("branchId") int branchId, @Param("requesterId") int requesterId);
+}
