@@ -16,8 +16,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
 import java.sql.Blob;
 import java.util.List;
 import java.util.Optional;
@@ -69,8 +67,6 @@ public class AuthenticationController {
         return response;
     }
 
-    @POST
-    @Path("/login")
     @CrossOrigin
     @PostMapping(value = "/login")
     public LoginSignupProto.LoginResponse login(@Valid @RequestBody LoginSignupProto.LoginRequest userLoginRequest) {
