@@ -9,14 +9,14 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/match")
+@RequestMapping("match")
 public class MatchLookupController {
     private static final Logger logger = LoggerFactory.getLogger(MatchLookupController.class);
 
     @Autowired
     private MatchLookupService matchLookupService;
 
-    @GetMapping("/test/match")
+    @GetMapping(path = "/up")
     public ResponseEntity test() {
         return ResponseEntity.ok("match service is up and running");
     }
@@ -36,7 +36,7 @@ public class MatchLookupController {
      * @param branchId    id of branch
      * @return
      */
-    @PutMapping(value = "/buddy/requester/{requesterId}/gym/{gymId}/branch/{branchId}")
+    @PutMapping(path = "/buddy/requester/{requesterId}/gym/{gymId}/branch/{branchId}")
     public MatchLookupProto.MatchResponse addForLookup(@PathVariable("requesterId") int requesterId, @PathVariable("gymId") int gymId, @PathVariable("branchId") int branchId) {
         logger.info("adding for lookup requesterid: {}, gymid: {}, branch id: {}", requesterId, gymId, branchId);
         return matchLookupService.addForLookup(requesterId, gymId, branchId);
@@ -56,7 +56,7 @@ public class MatchLookupController {
      * @param userId        requester id
      * @return
      */
-    @PutMapping(value = "/like/{matchLookupId}/by/{userId}")
+    @PutMapping(path = "/like/{matchLookupId}/by/{userId}")
     public MatchLookupProto.MatchResponse like(@PathVariable("matchLookupId") int matchLookupId, @PathVariable("userId") int userId) {
         logger.info("liking matchLookupId: {}, userId: {}", matchLookupId, userId);
         return matchLookupService.like(matchLookupId, userId);
@@ -74,7 +74,7 @@ public class MatchLookupController {
      * @param matchRequestId pk of MATCH_REQUEST table
      * @return
      */
-    @PutMapping(value = "/reject/{matchRequestId}")
+    @PutMapping(path = "/reject/{matchRequestId}")
     public MatchLookupProto.MatchResponse reject(@PathVariable("matchRequestId") int matchRequestId) {
         logger.info("rejecting request: {}", matchRequestId);
         return matchLookupService.reject(matchRequestId);
@@ -93,7 +93,7 @@ public class MatchLookupController {
      * @param branchId    id of branch
      * @return
      */
-    @GetMapping(value = "/all/{requesterId}/gym/{gymId}/branch/{branchId}")
+    @GetMapping(path = "/all/{requesterId}/gym/{gymId}/branch/{branchId}")
     public MatchLookupProto.LookupResponse getSuitableMatches(@PathVariable("requesterId") int requesterId, @PathVariable("gymId") int gymId,
                                                               @PathVariable("branchId") int branchId) {
         logger.info("getting suitable matches for user id: {} for gym id: {} and branch id: {}", requesterId, gymId, branchId);
@@ -108,13 +108,13 @@ public class MatchLookupController {
      * @param requesterId
      * @return
      */
-    @GetMapping(value = "/derive/{requesterId}")
+    @GetMapping(path = "/derive/{requesterId}")
     public MatchLookupProto.LookupResponse deriveMatches(@PathVariable("requesterId") int requesterId) {
         logger.info("deriving matches for user id: {}", requesterId);
         return matchLookupService.deriveMatches(requesterId);
     }
 
-    @GetMapping(value = "/friends/{userId}")
+    @GetMapping(path = "/friends/{userId}")
     public MatchLookupProto.FriendResponse getFriends(@PathVariable("userId") int userId) {
         logger.info("fetching friends for {}", userId);
         return matchLookupService.friends(userId);
@@ -126,7 +126,7 @@ public class MatchLookupController {
         return matchLookupService.getFriendRequests(requesterId);
     }
 
-    @PutMapping(value = "/accept/{matchRequestId}")
+    @PutMapping(path = "/accept/{matchRequestId}")
     public MatchLookupProto.MatchResponse acceptFriendRequest(@PathVariable("matchRequestId") int matchRequestId) {
         logger.info("accepting friend request {}", matchRequestId);
         return matchLookupService.acceptFriendRequest(matchRequestId);
