@@ -21,10 +21,10 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/auth")
-public class AuthenticationController {
+@RequestMapping("users")
+public class UserController {
 
-    private static final Logger logger = LoggerFactory.getLogger(AuthenticationController.class);
+    private static final Logger logger = LoggerFactory.getLogger(UserController.class);
 
     @Autowired
     private UserDao userDao;
@@ -35,7 +35,7 @@ public class AuthenticationController {
     @Autowired
     private AuthenticationValidator authenticationValidator;
 
-    @PostMapping(value = "/signup")
+    @PostMapping(path = "/signup")
     public LoginSignupProto.SignupResponse signup(@Valid @RequestBody LoginSignupProto.SignupRequest userSignupRequest) {
         logger.info("starting signup process");
         User user = null;
@@ -68,7 +68,7 @@ public class AuthenticationController {
     }
 
     @CrossOrigin
-    @PostMapping(value = "/login")
+    @PostMapping(path = "/login")
     public LoginSignupProto.LoginResponse login(@Valid @RequestBody LoginSignupProto.LoginRequest userLoginRequest) {
         LoginSignupProto.LoginResponse.Builder builder = LoginSignupProto.LoginResponse.newBuilder();
         LoginSignupProto.LoginResponse response = null;
@@ -97,7 +97,7 @@ public class AuthenticationController {
     }
 
     @CrossOrigin
-    @GetMapping("/id/{id}")
+    @GetMapping(path = "/id/{id}")//@RequestParam(value="id") for /id?id=123
     public LoginSignupProto.LoginResponse getUserById(@PathVariable("id") int userId) {
         logger.info("fetching deatails of user having id {}", userId);
         LoginSignupProto.LoginResponse.Builder responseBuilder = LoginSignupProto.LoginResponse.newBuilder();
@@ -129,9 +129,9 @@ public class AuthenticationController {
         return response;
     }
 
-    @CrossOrigin
-    @GetMapping("/test")
-    public ResponseEntity test() {
+    //    @CrossOrigin
+    @GetMapping(path = "/up")
+    public ResponseEntity test() throws InterruptedException {
         return ResponseEntity.ok("authentication server is up and running");
     }
 }
