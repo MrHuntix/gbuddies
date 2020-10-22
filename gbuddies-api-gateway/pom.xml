@@ -16,11 +16,6 @@
 
     <dependencies>
         <!-- - module dependencies-->
-        <dependency>
-            <groupId>com.gbuddies</groupId>
-            <artifactId>gbuddies-common</artifactId>
-            <version>0.0.1-SNAPSHOT</version>
-        </dependency>
         <!-- - spring dependencies-->
         <!-- - spring cloud dependencies-->
         <dependency>
