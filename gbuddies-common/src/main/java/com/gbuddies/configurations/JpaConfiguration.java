@@ -1,8 +1,9 @@
 package com.gbuddies.configurations;
 
-import org.springframework.beans.factory.annotation.Value;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.env.Environment;
 import org.springframework.dao.annotation.PersistenceExceptionTranslationPostProcessor;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.orm.jpa.JpaTransactionManager;
@@ -13,34 +14,19 @@ import org.springframework.transaction.PlatformTransactionManager;
 
 import javax.persistence.EntityManagerFactory;
 import javax.sql.DataSource;
-import javax.transaction.Transactional;
 
 @Configuration
-@Transactional
 public class JpaConfiguration {
 
-    @Value("${gbuddies.db.packages.to.scan}")
-    String packagesToScan;
-
-    @Value("${gbuddies.db.driver.class.name}")
-    String driverClassName;
-
-    @Value("${gbuddies.db.url}")
-    String url;
-
-    @Value("${gbuddies.db.username}")
-    String username;
-
-    @Value("${gbuddies.db.password}")
-    String password;
-
+    @Autowired
+    private Environment environment;
 
     @Bean
     public LocalContainerEntityManagerFactoryBean entityManagerFactory() {
         LocalContainerEntityManagerFactoryBean em
                 = new LocalContainerEntityManagerFactoryBean();
         em.setDataSource(dataSource());
-        em.setPackagesToScan(packagesToScan);
+        em.setPackagesToScan(environment.getProperty("gbuddies.db.packages.to.scan"));
 
         JpaVendorAdapter vendorAdapter = new HibernateJpaVendorAdapter();
         em.setJpaVendorAdapter(vendorAdapter);
@@ -50,10 +36,10 @@ public class JpaConfiguration {
     @Bean
     public DataSource dataSource() {
         DriverManagerDataSource dataSource = new DriverManagerDataSource();
-        dataSource.setDriverClassName(driverClassName);
-        dataSource.setUrl(url);
-        dataSource.setUsername(username);
-        dataSource.setPassword(password);
+        dataSource.setDriverClassName(environment.getProperty("gbuddies.db.driver.class.name"));
+        dataSource.setUrl(environment.getProperty("gbuddies.db.url"));
+        dataSource.setUsername(environment.getProperty("gbuddies.db.username"));
+        dataSource.setPassword(environment.getProperty("gbuddies.db.password"));
         return dataSource;
     }
 
