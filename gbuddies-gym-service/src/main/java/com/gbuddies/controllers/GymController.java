@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/gym")
+@RequestMapping("gym")
 public class GymController {
     private static final Logger logger = LoggerFactory.getLogger(GymController.class);
 
@@ -37,7 +37,7 @@ public class GymController {
     private GymValidator gymValidator;
 
     @CrossOrigin
-    @PostMapping(name = "/register/gym")
+    @PostMapping(path = "/register/gym")
     public GymProto.RegisterResponse registerGym(@RequestBody GymProto.Gym request) {
         logger.info("start of gym registration process");
         GymProto.RegisterResponse.Builder builder = GymProto.RegisterResponse.newBuilder();
@@ -64,7 +64,7 @@ public class GymController {
         return builder.build();
     }
 
-    @PostMapping("/fetch")
+    @PostMapping(path = "/fetch")
     public GymProto.FetchResponse fetch() {
         logger.info("start of fetch process");
         GymProto.FetchResponse.Builder builder = GymProto.FetchResponse.newBuilder();
@@ -96,13 +96,8 @@ public class GymController {
         return response;
     }
 
-    @CrossOrigin
-    @GetMapping("/test/gym")
-    public ResponseEntity test() {
-        return ResponseEntity.ok("gym service is up and running");
-    }
 
-    @GetMapping("/coordinates/{branchId}")
+    @GetMapping(path = "/coordinates/{branchId}")
     public GymProto.CoordinateResponse coordinates(@PathVariable("branchId") int branchId) {
         GymProto.CoordinateResponse.Builder builder = GymProto.CoordinateResponse.newBuilder();
         logger.info("getting coordinates for branch id: {}", branchId);
@@ -128,6 +123,11 @@ public class GymController {
         }
         logger.info("sending coordinate response");
         return builder.build();
+    }
+
+    @GetMapping(path = "/up")
+    public ResponseEntity test() {
+        return ResponseEntity.ok("gym service is up and running");
     }
 }
 
