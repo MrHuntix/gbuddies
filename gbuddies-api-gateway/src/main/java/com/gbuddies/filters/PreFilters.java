@@ -6,10 +6,15 @@ import com.netflix.zuul.context.RequestContext;
 import com.netflix.zuul.exception.ZuulException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.env.Environment;
 
 public class PreFilters extends ZuulFilter {
     private static final Logger LOGGER = LoggerFactory.getLogger(PreFilters.class);
+
+    @Autowired
+    private Environment environment;
 
     @Value("${gbuddies.enable.zuul.filters}")
     private boolean enableFilters;
