@@ -6,12 +6,16 @@ import com.example.gbuddy.models.constants.ResponseMessageConstants;
 import com.example.gbuddy.models.entities.User;
 import com.example.gbuddy.models.protos.LoginSignupProto;
 import com.example.gbuddy.service.validators.AuthenticationValidator;
+import com.example.gbuddy.util.JwtUtil;
 import com.example.gbuddy.util.MapperUtil;
 import com.google.protobuf.ByteString;
+import com.google.protobuf.InvalidProtocolBufferException;
+import com.google.protobuf.util.JsonFormat;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -20,6 +24,7 @@ import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import java.sql.Blob;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 @RestController
@@ -37,8 +42,11 @@ public class AuthenticationController {
     @Autowired
     private AuthenticationValidator authenticationValidator;
 
-    @PostMapping(value = "/signup")
-    public LoginSignupProto.SignupResponse signup(@Valid @RequestBody LoginSignupProto.SignupRequest userSignupRequest) {
+    @Autowired
+    private JwtUtil jwtUtil;
+
+    @PostMapping(value = "/signup", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<String> signup(@Valid @RequestBody LoginSignupProto.SignupRequest userSignupRequest) throws InvalidProtocolBufferException {
         logger.info("starting signup process");
         User user = null;
         LoginSignupProto.LoginResponse.Builder responseBuilder = LoginSignupProto.LoginResponse.newBuilder();
@@ -58,6 +66,7 @@ public class AuthenticationController {
             responseBuilder.setUserImage(ByteString.copyFrom(image.getBytes(1, Math.toIntExact(image.length()))));
             responseBuilder.setResponseMessage(ResponseMessageConstants.SIGNUP_SUCCESSFULL.getMessage())
                     .setResponseCode(HttpStatus.OK.value());
+            responseBuilder.setToken(jwtUtil.generateToken(userSignupRequest.getUserName()));
             response = mapperUtil.buildSignUpResponse(responseBuilder, user);
         } catch (Exception e) {
             logger.info("exception occurred during signup process {}", e.getMessage());
@@ -66,14 +75,14 @@ public class AuthenticationController {
                     .setResponseCode(HttpStatus.BAD_REQUEST.value());
             response = LoginSignupProto.SignupResponse.newBuilder().setResponse(responseBuilder.build()).build();
         }
-        return response;
+        return ResponseEntity.ok(JsonFormat.printer().print(response));
     }
 
     @POST
     @Path("/login")
     @CrossOrigin
-    @PostMapping(value = "/login")
-    public LoginSignupProto.LoginResponse login(@Valid @RequestBody LoginSignupProto.LoginRequest userLoginRequest) {
+    @PostMapping(value = "/login", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<String> login(@Valid @RequestBody LoginSignupProto.LoginRequest userLoginRequest) throws InvalidProtocolBufferException {
         LoginSignupProto.LoginResponse.Builder builder = LoginSignupProto.LoginResponse.newBuilder();
         LoginSignupProto.LoginResponse response = null;
         User user = null;
@@ -97,24 +106,24 @@ public class AuthenticationController {
                     .setResponseCode(HttpStatus.BAD_REQUEST.value());
             response = builder.build();
         }
-        return response;
+        return ResponseEntity.ok(JsonFormat.printer().print(response));
     }
 
     @CrossOrigin
-    @GetMapping("/id/{id}")
-    public LoginSignupProto.LoginResponse getUserById(@PathVariable("id") int userId) {
+    @GetMapping(value = "/id/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<String> getUserById(@PathVariable("id") int userId) throws InvalidProtocolBufferException {
         logger.info("fetching deatails of user having id {}", userId);
         LoginSignupProto.LoginResponse.Builder responseBuilder = LoginSignupProto.LoginResponse.newBuilder();
-        LoginSignupProto.LoginResponse response;
+        LoginSignupProto.LoginResponse response = null;
         User user = null;
         try {
             Optional<User> userFromDb = userDao.getByUserId(userId);
             if (!userFromDb.isPresent()) {
                 logger.info("no user present for id {}", userId);
-                return LoginSignupProto.LoginResponse.newBuilder()
+                return ResponseEntity.ok(JsonFormat.printer().print(LoginSignupProto.LoginResponse.newBuilder()
                         .setResponseMessage(ResponseMessageConstants.USER_NOT_PRESENT.getMessage())
                         .setResponseCode(HttpStatus.NO_CONTENT.value())
-                        .build();
+                        .build()));
             }
             user = userFromDb.get();
             logger.info("found user having id {}", user.getUserId());
@@ -122,15 +131,15 @@ public class AuthenticationController {
             responseBuilder.setUserImage(ByteString.copyFrom(image.getBytes(1, Math.toIntExact(image.length()))))
                     .setResponseMessage("user found in db")
                     .setResponseCode(HttpStatus.OK.value());
+            response = mapperUtil.buildLoginResponse(responseBuilder, user);
         } catch (Exception e) {
             logger.info("exception occurred while getting user for id {}");
             e.printStackTrace();
             responseBuilder.setResponseMessage(ResponseMessageConstants.USER_LOOKUP_FAILED.getMessage())
                     .setResponseCode(HttpStatus.BAD_REQUEST.value());
-        } finally {
-            response = mapperUtil.buildLoginResponse(responseBuilder, user);
         }
-        return response;
+        return Objects.isNull(response)?ResponseEntity.ok(ResponseMessageConstants.USER_LOOKUP_FAILED.getMessage()):ResponseEntity.ok(JsonFormat.printer().print(response));
+
     }
 
     @CrossOrigin

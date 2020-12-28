@@ -9,10 +9,13 @@ import com.example.gbuddy.models.entities.Gym;
 import com.example.gbuddy.models.protos.GymProto;
 import com.example.gbuddy.service.validators.GymValidator;
 import com.example.gbuddy.util.MapperUtil;
+import com.google.protobuf.InvalidProtocolBufferException;
+import com.google.protobuf.util.JsonFormat;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
@@ -37,8 +40,8 @@ public class GymController {
     private GymValidator gymValidator;
 
     @CrossOrigin
-    @PostMapping(name = "/register/gym")
-    public GymProto.RegisterResponse registerGym(@RequestBody GymProto.Gym request) {
+    @PostMapping(value ="/register/gym", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<String> registerGym(@RequestBody GymProto.Gym request) throws InvalidProtocolBufferException {
         logger.info("start of gym registration process");
         GymProto.RegisterResponse.Builder builder = GymProto.RegisterResponse.newBuilder();
         try {
@@ -61,11 +64,11 @@ public class GymController {
                     .setResponseCode(HttpStatus.BAD_REQUEST.value());
         }
         logger.info("sending register response");
-        return builder.build();
+        return ResponseEntity.ok(JsonFormat.printer().print(builder.build()));
     }
 
-    @PostMapping("/fetch")
-    public GymProto.FetchResponse fetch() {
+    @PostMapping(value ="/fetch", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<String> fetch() throws InvalidProtocolBufferException {
         logger.info("start of fetch process");
         GymProto.FetchResponse.Builder builder = GymProto.FetchResponse.newBuilder();
         GymProto.FetchResponse response = null;
@@ -73,11 +76,11 @@ public class GymController {
             List<Gym> gyms = gymDao.findAll();
             if (CollectionUtils.isEmpty(gyms)) {
                 logger.info("fetch process did not find any gyms");
-                return GymProto.FetchResponse.newBuilder()
+                return ResponseEntity.ok(JsonFormat.printer().print(GymProto.FetchResponse.newBuilder()
                         .setGym(0, GymProto.Gym.getDefaultInstance())
                         .setMessage("there are no gyms in the system")
                         .setResponseCode(HttpStatus.NO_CONTENT.value())
-                        .build();
+                        .build()));
             }
             logger.info("fetch process completed. Found {} gyms", gyms.size());
             builder.setMessage(String.format(ResponseMessageConstants.FETCH_COMPLETED.getMessage(), gyms.size()))
@@ -93,17 +96,17 @@ public class GymController {
             e.printStackTrace();
         }
         logger.info("sending fetch response");
-        return response;
+        return ResponseEntity.ok(JsonFormat.printer().print(response));
     }
 
     @CrossOrigin
-    @GetMapping("/test/gym")
-    public ResponseEntity test() {
+    @GetMapping(value ="/test/gym", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<String> test() {
         return ResponseEntity.ok("gym service is up and running");
     }
 
-    @GetMapping("/coordinates/{branchId}")
-    public GymProto.CoordinateResponse coordinates(@PathVariable("branchId") int branchId) {
+    @GetMapping(value ="/coordinates/{branchId}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<String> coordinates(@PathVariable("branchId") int branchId) throws InvalidProtocolBufferException {
         GymProto.CoordinateResponse.Builder builder = GymProto.CoordinateResponse.newBuilder();
         logger.info("getting coordinates for branch id: {}", branchId);
         try {
@@ -127,7 +130,9 @@ public class GymController {
             e.printStackTrace();
         }
         logger.info("sending coordinate response");
-        return builder.build();
+
+        return ResponseEntity.ok(JsonFormat.printer().print(builder.build()));
+
     }
 }
 
