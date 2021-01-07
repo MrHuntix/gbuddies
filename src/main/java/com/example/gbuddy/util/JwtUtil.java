@@ -1,14 +1,17 @@
 package com.example.gbuddy.util;
 
+import com.example.gbuddy.dao.TokenDao;
 import com.example.gbuddy.exception.CustomException;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
+import java.util.Base64;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -22,6 +25,9 @@ public class JwtUtil {
 
     @Value("${jwt.secret}")
     private String secret;
+
+    @Autowired
+    private TokenDao tokenDao;
 
     //retrieve username from jwt token
     public String getUsernameFromToken(String token) {
@@ -63,7 +69,7 @@ public class JwtUtil {
         try {
             return Jwts.builder().setClaims(claims).setSubject(subject).setIssuedAt(new Date(System.currentTimeMillis()))
                     .setExpiration(new Date(System.currentTimeMillis() + JWT_TOKEN_VALIDITY * 1000 * 1000))
-                    .signWith(SignatureAlgorithm.HS512, secret).compact();
+                    .signWith(SignatureAlgorithm.HS512, Base64.getEncoder().encodeToString(secret.getBytes())).compact();
         } catch (Exception e) {
             throw new CustomException(e.getMessage());
         }
