@@ -20,7 +20,7 @@ import java.util.List;
 })
 public class Gym {
     public static final String selectGymBranchRecordById = "SELECT g FROM Gym g JOIN g.branches b WHERE g.id = :gymId AND b.id = :branchId";
-
+    public static final String selectGymByCity = "SELECT g FROM Gym g JOIN g.branches b WHERE g.id = :gymId AND b.id = :branchId";
     @Column(name = "id")
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
