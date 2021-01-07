@@ -36,14 +36,14 @@ public class LikeTask implements Runnable {
 
     @Override
     public void run() {
-        LOG.info("start of like process for match lookup id {} requested by user id {}", Thread.currentThread().getName(), matchLookupId, userId);
+        LOG.info("start of like process for match lookup id {} requested by user id {}", matchLookupId, userId);
         try {
             likeLock.lock();
-            LOG.info("acquired lock for match lookup id {} requested by user id {}", Thread.currentThread().getName(), matchLookupId, userId);
+            LOG.info("acquired lock for match lookup id {} requested by user id {}", matchLookupId, userId);
             MatchLookup requesteeLookup = matchLookupDao.getById(matchLookupId).orElse(null);
             MatchLookup requesterLookup = matchLookupDao.getRequestMatch(requesteeLookup.getGymId(), requesteeLookup.getBranchId(), userId).orElse(null);
             if (Objects.isNull(requesteeLookup) || Objects.isNull(requesterLookup)) {
-                LOG.info("no record in MATCH_LOOKUP for matchLookUpId {} and userId {}", Thread.currentThread().getName(), matchLookupId, userId);
+                LOG.info("no record in MATCH_LOOKUP for matchLookUpId {} and userId {}", matchLookupId, userId);
                 throw new CustomException(CommonConstants.CANNOT_LIKE.getMessage());
             }
             if (requesteeLookup.getRequesterId() == userId) {
@@ -54,22 +54,22 @@ public class LikeTask implements Runnable {
             MatchRequest requesterContext = matchRequestDao.getMatchRequest(requesteeLookup.getId(), requesterLookup.getId(), requesteeLookup.getRequesterId(), requesterLookup.getRequesterId()).orElse(null);
             if (!Objects.isNull(requesteeContext) || !Objects.isNull(requesterContext)) {
                 int id = requesteeContext == null?requesterContext.getId():requesteeContext.getId();
-                LOG.info("request for match already exists with id {}", Thread.currentThread().getName(), id);
+                LOG.info("request for match already exists with id {}", id);
                 throw new CustomException(String.format(MatchRequestConstants.REQUEST_ALREADY_EXISTS.getStatus(), id));
             }
-            LOG.info("record found in MATCH_LOOKUP for id {}, with status {}. CREATING MATCH", Thread.currentThread().getName(), matchLookupId, requesteeLookup.getStatus());
+            LOG.info("record found in MATCH_LOOKUP for id {}, with status {}. CREATING MATCH", matchLookupId, requesteeLookup.getStatus());
 //            requesteeLookup.setStatus(MatchLookupProto.Status.REQUESTED.name());
 //            requesterLookup.setStatus(MatchLookupProto.Status.REQUESTED.name());
 //            matchLookupDao.save(requesteeLookup);
 //            matchLookupDao.save(requesterLookup);
-            LOG.info("updated status to requested for match lookup record {}, {}", Thread.currentThread().getName(), requesteeLookup.getId(), requesterLookup.getId());
+            LOG.info("updated status to requested for match lookup record {}, {}", requesteeLookup.getId(), requesterLookup.getId());
             matchRequestDao.save(buildmatchRequest(requesteeLookup, requesterLookup));
             LOG.info("match request entry made for lookup id {}", Thread.currentThread().getName(), matchLookupId);
         } catch (Exception e) {
             LOG.info("exception occurred {}", e.getMessage());
             e.printStackTrace();
         } finally {
-            LOG.info("completed processing request for like for match lookup id {} requested by user id {}. Releasing lock", Thread.currentThread().getName(), matchLookupId, userId);
+            LOG.info("completed processing request for like for match lookup id {} requested by user id {}. Releasing lock", matchLookupId, userId);
             likeLock.unlock();
         }
     }

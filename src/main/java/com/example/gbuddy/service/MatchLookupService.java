@@ -18,6 +18,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.BiPredicate;
@@ -51,6 +52,7 @@ public class MatchLookupService {
     public MatchLookupProto.MatchResponse addForLookup(int requesterId, int gymId, int branchId) {
         MatchLookupProto.MatchResponse.Builder builder = MatchLookupProto.MatchResponse.newBuilder();
         try {
+            //TODO: validate to ensure requesterId, gymId, branchId are valid and matchLookupDao.getRequestMatch(gymId, branchId, requesterId) should be null
             MatchLookup lookup = matchLookupDao.getRequestMatch(gymId, branchId, requesterId).orElse(null);
             if (lookup != null) {
                 LOG.info("request already exists(lookup: {}, status: {})", lookup.getId(), lookup.getStatus());
@@ -101,8 +103,7 @@ public class MatchLookupService {
             LOG.info("updating lookup status to UNMATCHED for requester: {}, requestee: {}", requester.getId(), requestee.getId());
             requester.setStatus(MatcherConst.UNMATCHED.getName());
             requestee.setStatus(MatcherConst.UNMATCHED.getName());
-            matchLookupDao.save(requester);
-            matchLookupDao.save(requestee);
+            matchLookupDao.saveAll(Arrays.asList(requester, requestee));
             builder.setMessage(ResponseMessageConstants.REJECT_SUCCESS.getMessage())
                     .setResponseCode(HttpStatus.OK.value());
         } catch (Exception e) {
@@ -189,10 +190,9 @@ public class MatchLookupService {
         } catch (Exception e) {
             LOG.info("exception occurred while getting friends for user {}", userId);
             e.printStackTrace();
-            builder.setMessage(ResponseMessageConstants.FAILED_TO_DERIVE_FRIENDS.getMessage())
+            builder.setMessage(e.getMessage())
                     .setResponseCode(HttpStatus.BAD_REQUEST.value());
             LOG.info("failed building match response for requester id {}", userId);
-            e.printStackTrace();
         }
         return builder.build();
     }
