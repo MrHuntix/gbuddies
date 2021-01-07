@@ -42,7 +42,23 @@ public class MatchLookupController {
     @PutMapping(value = "/buddy/requester/{requesterId}/gym/{gymId}/branch/{branchId}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<String> addForLookup(@PathVariable("requesterId") int requesterId, @PathVariable("gymId") int gymId, @PathVariable("branchId") int branchId) throws InvalidProtocolBufferException {
         logger.info("adding for lookup requesterid: {}, gymid: {}, branch id: {}", requesterId, gymId, branchId);
-        return ResponseEntity.ok(JsonFormat.printer().print(matchLookupService.addForLookup(requesterId, gymId, branchId)));
+        MatchLookupProto.MatchResponse response = matchLookupService.addForLookup(requesterId, gymId, branchId);
+        return ResponseEntity.status(response.getResponseCode()).body(JsonFormat.printer().print(response));
+    }
+
+    /**
+     * for requester id get all the gb -> (gym,branch) id pairs
+     * for each gb get lookup info where status is unmatched.
+     * use in matches tab
+     *
+     * @param requesterId
+     * @return
+     */
+    @GetMapping(value = "/derive/{requesterId}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<String> deriveMatches(@PathVariable("requesterId") int requesterId) throws InvalidProtocolBufferException {
+        logger.info("deriving matches for user id: {}", requesterId);
+        MatchLookupProto.LookupResponse response = matchLookupService.deriveMatches(requesterId);
+        return ResponseEntity.status(response.getResponseCode()).body(JsonFormat.printer().print(response));
     }
 
     /**
@@ -62,7 +78,22 @@ public class MatchLookupController {
     @PutMapping(value = "/like/{matchLookupId}/by/{userId}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<String> like(@PathVariable("matchLookupId") int matchLookupId, @PathVariable("userId") int userId) throws InvalidProtocolBufferException {
         logger.info("liking matchLookupId: {}, userId: {}", matchLookupId, userId);
-        return ResponseEntity.ok(JsonFormat.printer().print(matchLookupService.like(matchLookupId, userId)));
+        MatchLookupProto.MatchResponse response = matchLookupService.like(matchLookupId, userId);
+        return ResponseEntity.status(response.getResponseCode()).body(JsonFormat.printer().print(response));
+    }
+
+    @GetMapping(value = "/requests/{requesterId}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<String> getFriendRequests(@PathVariable("requesterId") int requesterId) throws InvalidProtocolBufferException {
+        logger.info("fetching friend requests for user {}", requesterId);
+        MatchLookupProto.FriendRequestsResponse response = matchLookupService.getFriendRequests(requesterId);
+        return ResponseEntity.status(response.getResponseCode()).body(JsonFormat.printer().print(response));
+    }
+
+    @PutMapping(value = "/accept/{matchRequestId}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<String> acceptFriendRequest(@PathVariable("matchRequestId") int matchRequestId) throws InvalidProtocolBufferException {
+        logger.info("accepting friend request {}", matchRequestId);
+        MatchLookupProto.MatchResponse response = matchLookupService.acceptFriendRequest(matchRequestId);
+        return ResponseEntity.status(response.getResponseCode()).body(JsonFormat.printer().print(response));
     }
 
     /**
@@ -78,60 +109,16 @@ public class MatchLookupController {
      * @return
      */
     @PutMapping(value = "/reject/{matchRequestId}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<String> reject(@PathVariable("matchRequestId") int matchRequestId) throws InvalidProtocolBufferException {
+    public ResponseEntity<String> rejectFriendRequest(@PathVariable("matchRequestId") int matchRequestId) throws InvalidProtocolBufferException {
         logger.info("rejecting request: {}", matchRequestId);
-        return ResponseEntity.ok(JsonFormat.printer().print(matchLookupService.reject(matchRequestId)));
-    }
-
-    /**
-     * use only for getting suitable matches for a single gym,branch,requester id pair
-     * if gymid, branchid, requestid present
-     * if status == UNMATCHED and resuestid != requesting_user
-     * return all matching records
-     * else
-     * no one is looking for a buddy in the current gym
-     *
-     * @param requesterId user requesting for buddy
-     * @param gymId       id of gym
-     * @param branchId    id of branch
-     * @return
-     */
-    @GetMapping(value = "/all/{requesterId}/gym/{gymId}/branch/{branchId}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<String> getSuitableMatches(@PathVariable("requesterId") int requesterId, @PathVariable("gymId") int gymId,
-                                                              @PathVariable("branchId") int branchId) throws InvalidProtocolBufferException {
-        logger.info("getting suitable matches for user id: {} for gym id: {} and branch id: {}", requesterId, gymId, branchId);
-        return ResponseEntity.ok(JsonFormat.printer().print(matchLookupService.getSuitableMatches(requesterId, gymId, branchId)));
-    }
-
-    /**
-     * for requester id get all the gb -> (gym,branch) id pairs
-     * for each gb get lookup info where status is unmatched.
-     * use in matches tab
-     *
-     * @param requesterId
-     * @return
-     */
-    @GetMapping(value = "/derive/{requesterId}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<String> deriveMatches(@PathVariable("requesterId") int requesterId) throws InvalidProtocolBufferException {
-        logger.info("deriving matches for user id: {}", requesterId);
-        return ResponseEntity.ok(JsonFormat.printer().print(matchLookupService.deriveMatches(requesterId)));
+        MatchLookupProto.MatchResponse response = matchLookupService.reject(matchRequestId);
+        return ResponseEntity.status(response.getResponseCode()).body(JsonFormat.printer().print(response));
     }
 
     @GetMapping(value = "/friends/{userId}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<String> getFriends(@PathVariable("userId") int userId) throws InvalidProtocolBufferException {
         logger.info("fetching friends for {}", userId);
-        return ResponseEntity.ok(JsonFormat.printer().print(matchLookupService.friends(userId)));
-    }
-
-    @GetMapping(value = "/requests/{requesterId}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<String> getFriendRequests(@PathVariable("requesterId") int requesterId) throws InvalidProtocolBufferException {
-        logger.info("fetching friend requests for user {}", requesterId);
-        return ResponseEntity.ok(JsonFormat.printer().print(matchLookupService.getFriendRequests(requesterId)));
-    }
-
-    @PutMapping(value = "/accept/{matchRequestId}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<String> acceptFriendRequest(@PathVariable("matchRequestId") int matchRequestId) throws InvalidProtocolBufferException {
-        logger.info("accepting friend request {}", matchRequestId);
-        return ResponseEntity.ok(JsonFormat.printer().print(matchLookupService.acceptFriendRequest(matchRequestId)));
+        MatchLookupProto.FriendResponse response = matchLookupService.friends(userId);
+        return ResponseEntity.status(response.getResponseCode()).body(JsonFormat.printer().print(response));
     }
 }
