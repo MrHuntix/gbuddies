@@ -9,6 +9,7 @@ import com.example.gbuddy.models.entities.MatchLookup;
 import com.example.gbuddy.models.entities.MatchRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.Objects;
 import java.util.concurrent.locks.ReentrantLock;
@@ -16,8 +17,10 @@ import java.util.concurrent.locks.ReentrantLock;
 public class LikeTask implements Runnable {
     private static final Logger LOG = LoggerFactory.getLogger(LikeTask.class);
 
+    @Autowired
     private MatchLookupDao matchLookupDao;
 
+    @Autowired
     private MatchRequestDao matchRequestDao;
 
     private ReentrantLock likeLock;
@@ -26,9 +29,7 @@ public class LikeTask implements Runnable {
 
     private int userId;
 
-    LikeTask(MatchLookupDao matchLookupDao, MatchRequestDao matchRequestDao, ReentrantLock likeLock, int matchLookupId, int userId) {
-        this.matchLookupDao = matchLookupDao;
-        this.matchRequestDao = matchRequestDao;
+    LikeTask(ReentrantLock likeLock, int matchLookupId, int userId) {
         this.likeLock = likeLock;
         this.matchLookupId = matchLookupId;
         this.userId = userId;
@@ -47,7 +48,7 @@ public class LikeTask implements Runnable {
                 throw new CustomException(CommonConstants.CANNOT_LIKE.getMessage());
             }
             if (requesteeLookup.getRequesterId() == userId) {
-                LOG.info("user id({}) and requester id({}) is same", Thread.currentThread().getName(), userId, requesteeLookup.getRequesterId());
+                LOG.info("user id({}) and requester id({}) is same", userId, requesteeLookup.getRequesterId());
                 throw new CustomException(CommonConstants.CANNOT_LIKE.getMessage());
             }
             MatchRequest requesteeContext = matchRequestDao.getMatchRequest(requesterLookup.getId(), requesteeLookup.getId(), requesterLookup.getRequesterId(), requesteeLookup.getRequesterId()).orElse(null);
@@ -64,7 +65,7 @@ public class LikeTask implements Runnable {
 //            matchLookupDao.save(requesterLookup);
             LOG.info("updated status to requested for match lookup record {}, {}", requesteeLookup.getId(), requesterLookup.getId());
             matchRequestDao.save(buildmatchRequest(requesteeLookup, requesterLookup));
-            LOG.info("match request entry made for lookup id {}", Thread.currentThread().getName(), matchLookupId);
+            LOG.info("match request entry made for lookup id {}", matchLookupId);
         } catch (Exception e) {
             LOG.info("exception occurred {}", e.getMessage());
             e.printStackTrace();

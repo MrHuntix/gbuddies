@@ -76,7 +76,7 @@ public class LikeProcessor implements LikeProcessorMBean{
 
     void submitLikeRequest(int matchLookupId, int userId) {
         try {
-            likeExecutor.execute(new LikeTask(matchLookupDao, matchRequestDao, likeLock, matchLookupId, userId));
+            likeExecutor.execute(new LikeTask(likeLock, matchLookupId, userId));
         } catch (Exception e) {
             LOG.info("exception occurred while submitting like request {}", e.getMessage());
             e.printStackTrace();
@@ -85,7 +85,7 @@ public class LikeProcessor implements LikeProcessorMBean{
 
     void submitFriendRequest(int matchRequestId) {
         try {
-            friendRequestExecutor.execute(new FriendRequestTask(matchRequestId, friendRequestLock, matchLookupDao, matchRequestDao, buddyGraphDao));
+            friendRequestExecutor.execute(new FriendRequestTask(matchRequestId, friendRequestLock));
         } catch (Exception e) {
             LOG.info("exception occurred while submitting friend request {}", e.getMessage());
             e.printStackTrace();
@@ -94,11 +94,16 @@ public class LikeProcessor implements LikeProcessorMBean{
 
     @PreDestroy
     private void destroy() {
-        if (likeExecutor != null && friendRequestExecutor != null) {
-            LOG.info("shutting down executor");
-            likeExecutor.shutdown();
-            friendRequestExecutor.shutdown();
+        try {
+            if (likeExecutor != null && friendRequestExecutor != null) {
+                LOG.info("shutting down executor");
+                likeExecutor.shutdown();
+                friendRequestExecutor.shutdown();
+            }
+        }catch (Exception e) {
+            LOG.error("exception while shutting down executors {}", e.getMessage());
         }
+
     }
 
     @Override
