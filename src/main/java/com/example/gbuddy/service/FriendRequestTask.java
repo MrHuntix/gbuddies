@@ -34,9 +34,12 @@ public class FriendRequestTask implements Runnable {
     @Autowired
     private BuddyGraphDao buddyGraphDao;
 
-    FriendRequestTask(int matchRequestId, ReentrantLock friendRequestLock) {
+    FriendRequestTask(int matchRequestId, ReentrantLock friendRequestLock, MatchLookupDao matchLookupDao, MatchRequestDao matchRequestDao, BuddyGraphDao buddyGraphDao) {
         this.matchRequestId = matchRequestId;
         this.friendRequestLock = friendRequestLock;
+        this.matchLookupDao = matchLookupDao;
+        this.matchRequestDao = matchRequestDao;
+        this.buddyGraphDao = buddyGraphDao;
     }
 
     @Override

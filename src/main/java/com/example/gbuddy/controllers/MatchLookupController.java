@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
 @RestController
 @RequestMapping("/match")
@@ -75,11 +76,12 @@ public class MatchLookupController {
      * @param userId        requester id
      * @return
      */
-    @PutMapping(value = "/like/{matchLookupId}/by/{userId}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<String> like(@PathVariable("matchLookupId") int matchLookupId, @PathVariable("userId") int userId) throws InvalidProtocolBufferException {
+    @PutMapping(value = "/like/{matchLookupId}/by/{userId}")
+    public SseEmitter like(@PathVariable("matchLookupId") int matchLookupId, @PathVariable("userId") int userId) throws InvalidProtocolBufferException {
         logger.info("liking matchLookupId: {}, userId: {}", matchLookupId, userId);
-        MatchLookupProto.MatchResponse response = matchLookupService.like(matchLookupId, userId);
-        return ResponseEntity.status(response.getResponseCode()).body(JsonFormat.printer().print(response));
+        SseEmitter emitter = new SseEmitter();
+        matchLookupService.like(emitter, matchLookupId, userId);
+        return emitter;//ResponseEntity.status(response.getResponseCode()).body(JsonFormat.printer().print(response));
     }
 
     @GetMapping(value = "/requests/{requesterId}", produces = MediaType.APPLICATION_JSON_VALUE)

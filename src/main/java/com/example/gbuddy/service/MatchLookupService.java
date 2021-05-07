@@ -17,6 +17,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
+import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
 import java.util.Arrays;
 import java.util.List;
@@ -77,10 +78,10 @@ public class MatchLookupService {
 
     }
 
-    public MatchLookupProto.MatchResponse like(int matchLookupId, int userId) {
+    public MatchLookupProto.MatchResponse like(SseEmitter emitter, int matchLookupId, int userId) {
         MatchLookupProto.MatchResponse.Builder builder = MatchLookupProto.MatchResponse.newBuilder();
         LOG.info("start of like process for match lookup {} requested by user {}", matchLookupId, userId);
-        likeProcessor.submitLikeRequest(matchLookupId, userId);
+        likeProcessor.submitLikeRequest(emitter, matchLookupId, userId);
         builder.setMessage(ResponseMessageConstants.BUDDY_REQUEST_SENT.getMessage())
                 .setResponseCode(HttpStatus.OK.value());
         return builder.build();

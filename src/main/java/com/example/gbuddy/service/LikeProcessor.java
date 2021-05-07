@@ -12,6 +12,7 @@ import org.springframework.jmx.export.annotation.ManagedAttribute;
 import org.springframework.jmx.export.annotation.ManagedResource;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.stereotype.Component;
+import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
@@ -74,9 +75,9 @@ public class LikeProcessor implements LikeProcessorMBean{
         LOG.info("init completed for friend request executor");
     }
 
-    void submitLikeRequest(int matchLookupId, int userId) {
+    void submitLikeRequest(SseEmitter emitter, int matchLookupId, int userId) {
         try {
-            likeExecutor.execute(new LikeTask(likeLock, matchLookupId, userId));
+            likeExecutor.execute(new LikeTask(emitter, matchLookupDao, matchRequestDao, likeLock, matchLookupId, userId));
         } catch (Exception e) {
             LOG.info("exception occurred while submitting like request {}", e.getMessage());
             e.printStackTrace();
@@ -85,7 +86,7 @@ public class LikeProcessor implements LikeProcessorMBean{
 
     void submitFriendRequest(int matchRequestId) {
         try {
-            friendRequestExecutor.execute(new FriendRequestTask(matchRequestId, friendRequestLock));
+            friendRequestExecutor.execute(new FriendRequestTask(matchRequestId, friendRequestLock, matchLookupDao, matchRequestDao, buddyGraphDao));
         } catch (Exception e) {
             LOG.info("exception occurred while submitting friend request {}", e.getMessage());
             e.printStackTrace();
