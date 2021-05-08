@@ -31,5 +31,6 @@ message AuthResponse {
   string mobileNo = 3;
   string picUrl = 4;
   int32 userId = 5;
+  string token = 6;
   string bio = 21;
 }
