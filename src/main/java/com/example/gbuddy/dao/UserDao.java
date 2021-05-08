@@ -9,7 +9,7 @@ import java.util.Optional;
 
 @Component
 public interface UserDao extends JpaRepository<User, Integer> {
-    Optional<User> getByUserName(String userName);
+    Optional<User> getByMobile(String mobile);
 
     Optional<User> getByUserId(int id);
 

@@ -47,7 +47,7 @@ public class AuthenticationValidator {
     }
 
     private void usernameAlreadyExists(String userName, ValidationResponse<String, User> validationResponse) {
-        Optional<User> user = userDao.getByUserName(userName);
+        Optional<User> user = userDao.getByMobile(userName);
         if (StringUtils.isNotEmpty(userName) && user.isPresent()) {
             validationResponse.getValidationMessage().add(String.format(ValidationInfoEnum.USERNAME_ALREADY_EXISTS.getValidationInfoValue(), userName));
         }
@@ -67,7 +67,7 @@ public class AuthenticationValidator {
     }
 
     private void isCredentialsCorrect(String username, String password, ValidationResponse<String, User> validationResponse) {
-        Optional<User> user = userDao.getByUserName(username);
+        Optional<User> user = userDao.getByMobile(username);
         if (!user.isPresent()) {
             validationResponse.getValidationMessage().add(String.format(ValidationInfoEnum.USER_NOT_FOUND_IN_DB.getValidationInfoValue(), username));
         } else if (user.isPresent() && !(password.equals(user.get().getPassword()))) {

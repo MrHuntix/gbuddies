@@ -10,7 +10,7 @@ import javax.persistence.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "tokens")
+@Table(name = "TOKEN")
 public class Token {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
