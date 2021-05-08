@@ -5,28 +5,17 @@ import lombok.*;
 
 import javax.persistence.*;
 
+@EqualsAndHashCode(callSuper = true)
 @Entity
-@Table(name = "GYM_BRANCH")
-@Getter
-@Setter
+@Table(name = "BRANCH")
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
-@EqualsAndHashCode
 @NamedQueries({
         @NamedQuery(name = "Branch.selectGymBranchRecordById", query = Branch.selectGymBranchRecordById)
 })
-public class Branch {
+public class Branch extends BaseId<Integer>{
     public static final String selectGymBranchRecordById = "FROM Branch b WHERE b.id = :branchId AND b.gymId.id = :gymId";
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
-
-    @Column(name = "locality")
-    private String locality;
-
-    @Column(name = "city")
-    private String city;
 
     @Column(name = "latitude")
     private double latitude;
@@ -37,20 +26,12 @@ public class Branch {
     @Column(name = "contact")
     private String contact;
 
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "address_id", referencedColumnName = "id")
+    private Address address;
+
     @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER, targetEntity = Gym.class)
-    @JoinColumn(name = "gymId")
+    @JoinColumn(name = "gym_id")
     @JsonIgnore
     private Gym gymId;
-
-    @Override
-    public String toString() {
-        return "Branch{" +
-                "id=" + id +
-                ", locality='" + locality + '\'' +
-                ", city='" + city + '\'' +
-                ", latitude=" + latitude +
-                ", longitude=" + longitude +
-                ", contact='" + contact + '\'' +
-                '}';
-    }
 }

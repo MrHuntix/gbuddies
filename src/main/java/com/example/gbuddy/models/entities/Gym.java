@@ -1,30 +1,23 @@
 package com.example.gbuddy.models.entities;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
+@EqualsAndHashCode(callSuper = true)
 @Entity
-@Table(name = "GEN_GYM")
-@Getter
-@Setter
+@Table(name = "GYM")
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
 @NamedQueries({
         @NamedQuery(name = "Gym.selectGymBranchRecordById", query = Gym.selectGymBranchRecordById)
 })
-public class Gym {
+public class Gym extends BaseEntity<Integer> {
     public static final String selectGymBranchRecordById = "SELECT g FROM Gym g JOIN g.branches b WHERE g.id = :gymId AND b.id = :branchId";
     public static final String selectGymByCity = "SELECT g FROM Gym g JOIN g.branches b WHERE g.id = :gymId AND b.id = :branchId";
-    @Column(name = "id")
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
 
     @Column(name = "name")
     private String name;

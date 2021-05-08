@@ -2,10 +2,12 @@ package com.example.gbuddy.models.entities;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 
+@EqualsAndHashCode(callSuper = true)
 @Entity
 @Table(name = "MATCH_LOOKUP")
 @Data
@@ -17,23 +19,19 @@ import javax.persistence.*;
         @NamedQuery(name = "MatchLookup.deriveMatches", query = MatchLookup.deriveMatches),
         @NamedQuery(name = "MatchLookup.getMatchesByRequestIdAndStatus", query = MatchLookup.getMatchesByRequestIdAndStatus)
 })
-public class MatchLookup {
+public class MatchLookup extends BaseEntity<Integer> {
     public static final String getRequestMatch = "FROM MatchLookup m where m.gymId = :gymId AND m.branchId = :branchId AND m.requesterId = :requesterId";
     public static final String possibleMatches = "FROM MatchLookup m where m.gymId = :gymId AND m.branchId = :branchId AND m.requesterId != :requesterId AND m.status = :status";
     public static final String deriveMatches = "FROM MatchLookup m WHERE m.gymId = :gymId AND m.branchId = :branchId AND m.status = :status";
     public static final String getMatchesByRequestIdAndStatus = "FROM MatchLookup m WHERE  m.requesterId = :requesterId AND m.status = :status";
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
-
-    @Column(name = "gymid")
+    @Column(name = "gym_id")
     private int gymId;
 
-    @Column(name = "branchid")
+    @Column(name = "branch_id")
     private int branchId;
 
-    @Column(name = "requesterid")
+    @Column(name = "requester_id")
     private int requesterId;
 
     @Column(name = "status")
