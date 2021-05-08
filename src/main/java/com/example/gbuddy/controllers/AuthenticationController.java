@@ -1,12 +1,8 @@
 package com.example.gbuddy.controllers;
 
-import com.example.gbuddy.dao.TokenDao;
-import com.example.gbuddy.dao.UserDao;
+import com.example.gbuddy.models.protos.CommonsProto;
 import com.example.gbuddy.models.protos.LoginSignupProto;
 import com.example.gbuddy.service.AuthenticationService;
-import com.example.gbuddy.service.validators.AuthenticationValidator;
-import com.example.gbuddy.util.JwtUtil;
-import com.example.gbuddy.util.MapperUtil;
 import com.google.protobuf.InvalidProtocolBufferException;
 import com.google.protobuf.util.JsonFormat;
 import org.slf4j.Logger;
@@ -32,8 +28,8 @@ public class AuthenticationController {
     @PostMapping(value = "/signup", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<String> signup(@Valid @RequestBody LoginSignupProto.SignupRequest userSignupRequest) throws InvalidProtocolBufferException {
         logger.info("starting signup process");
-        LoginSignupProto.SignupResponse response = authenticationService.signup(userSignupRequest);
-        return ResponseEntity.status(response.getResponse().getResponseCode()).body(JsonFormat.printer().print(response.getResponse()));
+        CommonsProto.AuthResponse response = authenticationService.signup(userSignupRequest);
+        return ResponseEntity.ok(JsonFormat.printer().print(response));
     }
 
     @POST
@@ -41,16 +37,16 @@ public class AuthenticationController {
     @CrossOrigin
     @PostMapping(value = "/login", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<String> login(@Valid @RequestBody LoginSignupProto.LoginRequest userLoginRequest) throws InvalidProtocolBufferException {
-        LoginSignupProto.LoginResponse response = authenticationService.login(userLoginRequest);
-        return ResponseEntity.status(response.getResponseCode()).body(JsonFormat.printer().print(response));
+        CommonsProto.AuthResponse response = authenticationService.login(userLoginRequest);
+        return ResponseEntity.ok(JsonFormat.printer().print(response));
     }
 
     @CrossOrigin
     @GetMapping(value = "/id/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<String> getUserById(@PathVariable("id") int userId) throws InvalidProtocolBufferException {
         logger.info("fetching deatails of user having id {}", userId);
-        LoginSignupProto.LoginResponse response = authenticationService.getUserById(userId);
-        return ResponseEntity.status(response.getResponseCode()).body(JsonFormat.printer().print(response));
+        CommonsProto.AuthResponse response = authenticationService.getUserById(userId);
+        return ResponseEntity.ok(JsonFormat.printer().print(response));
 
     }
 

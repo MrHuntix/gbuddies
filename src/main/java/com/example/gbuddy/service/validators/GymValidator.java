@@ -31,11 +31,11 @@ public class GymValidator {
             return validationMessage;
         }
         gym.getBranchesList().forEach(branch -> {
-            if (StringUtils.isNotEmpty(branch.getLocality())) {
-                validationMessage.add(String.format(ValidationInfoEnum.EMPTY_LOCALITY.getValidationInfoValue(), branch.getLocality()));
+            if (StringUtils.isNotEmpty(branch.getGymAddress().getState())) {
+                validationMessage.add(String.format(ValidationInfoEnum.EMPTY_LOCALITY.getValidationInfoValue(), branch.getGymAddress().getState()));
             }
-            if (StringUtils.isNotEmpty(branch.getCity())) {
-                validationMessage.add(String.format(ValidationInfoEnum.EMPTY_CITY.getValidationInfoValue(), branch.getCity()));
+            if (StringUtils.isNotEmpty(branch.getGymAddress().getCity())) {
+                validationMessage.add(String.format(ValidationInfoEnum.EMPTY_CITY.getValidationInfoValue(), branch.getGymAddress().getCity()));
             }
             if (Double.isNaN(branch.getLatitude())) {
                 validationMessage.add(String.format(ValidationInfoEnum.EMPTY_LATITUDE.getValidationInfoValue(), branch.getLatitude()));

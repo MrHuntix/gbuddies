@@ -24,11 +24,8 @@ public class AuthenticationValidator {
     public ValidationResponse<String, User> validateSignupRequest(LoginSignupProto.SignupRequest userSignupRequest) {
         LOG.info("starting validation for signup request");
         ValidationResponse<String, User> validationResponse = new ValidationResponse<>(new ArrayList<>());
-        if (StringUtils.isEmpty(userSignupRequest.getUserName())) {
+        if (StringUtils.isEmpty(userSignupRequest.getName())) {
             validationResponse.getValidationMessage().add(ValidationInfoEnum.EMPTY_USERNAME.getValidationInfoValue());
-        }
-        if (StringUtils.isEmpty(userSignupRequest.getEmailId())) {
-            validationResponse.getValidationMessage().add(ValidationInfoEnum.EMPTY_EMAIL.getValidationInfoValue());
         }
         if (StringUtils.isEmpty(userSignupRequest.getMobileNo())) {
             validationResponse.getValidationMessage().add(ValidationInfoEnum.EMPTY_MOBILE.getValidationInfoValue());
@@ -36,16 +33,16 @@ public class AuthenticationValidator {
         if (StringUtils.isEmpty(userSignupRequest.getPassword())) {
             validationResponse.getValidationMessage().add(ValidationInfoEnum.EMPTY_PASSWORD.getValidationInfoValue());
         }
-        if (StringUtils.isEmpty(userSignupRequest.getRoles().name())) {
+        if (StringUtils.isEmpty(userSignupRequest.getRole())) {
             validationResponse.getValidationMessage().add(ValidationInfoEnum.EMPTY_ROLES.getValidationInfoValue());
         }
-        if (StringUtils.isEmpty(userSignupRequest.getAbout())) {
+        if (StringUtils.isEmpty(userSignupRequest.getBio())) {
             validationResponse.getValidationMessage().add(ValidationInfoEnum.EMPTY_ABOUT.getValidationInfoValue());
         }
-        if (userSignupRequest.getUserImage().isEmpty()) {
+        if (StringUtils.isEmpty(userSignupRequest.getPicUrl())) {
             validationResponse.getValidationMessage().add(ValidationInfoEnum.EMPTY_IMAGE.getValidationInfoValue());
         }
-        usernameAlreadyExists(userSignupRequest.getUserName(), validationResponse);
+        usernameAlreadyExists(userSignupRequest.getName(), validationResponse);
         return validationResponse;
     }
 
@@ -59,13 +56,13 @@ public class AuthenticationValidator {
     public ValidationResponse<String, User> validateLoginRequest(LoginSignupProto.LoginRequest userLoginRequest) {
         LOG.info("starting validation for login request");
         ValidationResponse<String, User> validationResponse = new ValidationResponse<>(new ArrayList<>());
-        if (StringUtils.isEmpty(userLoginRequest.getUsername())) {
+        if (StringUtils.isEmpty(userLoginRequest.getMobileNo())) {
             validationResponse.getValidationMessage().add(ValidationInfoEnum.EMPTY_USERNAME.getValidationInfoValue());
         }
         if (StringUtils.isEmpty(userLoginRequest.getPassword())) {
             validationResponse.getValidationMessage().add(ValidationInfoEnum.EMPTY_PASSWORD.getValidationInfoValue());
         }
-        isCredentialsCorrect(userLoginRequest.getUsername(), userLoginRequest.getPassword(), validationResponse);
+        isCredentialsCorrect(userLoginRequest.getMobileNo(), userLoginRequest.getPassword(), validationResponse);
         return validationResponse;
     }
 

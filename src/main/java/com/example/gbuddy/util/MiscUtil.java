@@ -1,7 +1,6 @@
 package com.example.gbuddy.util;
 
 import com.example.gbuddy.dao.BuddyGraphDao;
-import com.example.gbuddy.dao.MatchDao;
 import com.example.gbuddy.dao.MatchLookupDao;
 import com.example.gbuddy.dao.MatchRequestDao;
 import org.slf4j.Logger;
@@ -24,9 +23,6 @@ public class MiscUtil {
 
     @Autowired
     private MatchRequestDao matchRequestDao;
-
-    @Autowired
-    MatchDao matchDao;
 
     @Transactional
     public String clenup() {

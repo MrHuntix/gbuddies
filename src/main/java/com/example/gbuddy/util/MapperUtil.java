@@ -6,7 +6,9 @@ import com.example.gbuddy.dao.MatchRequestDao;
 import com.example.gbuddy.dao.UserDao;
 import com.example.gbuddy.exception.CustomException;
 import com.example.gbuddy.models.constants.MatchRequestConstants;
+import com.example.gbuddy.models.constants.Role;
 import com.example.gbuddy.models.entities.*;
+import com.example.gbuddy.models.protos.CommonsProto;
 import com.example.gbuddy.models.protos.GymProto;
 import com.example.gbuddy.models.protos.LoginSignupProto;
 import com.example.gbuddy.models.protos.MatchLookupProto;
@@ -16,7 +18,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import javax.sql.rowset.serial.SerialBlob;
 import java.io.IOException;
 import java.sql.Blob;
 import java.sql.SQLException;
@@ -41,17 +42,10 @@ public class MapperUtil {
 
     public Gym getGymFromRequest(GymProto.Gym request) {
         logger.info("building gym entity from proto for gym {}", request.getName());
-        Gym gym = new Gym();
-        gym.setName(request.getName());
-        gym.setWebsite(request.getWebsite());
+        Gym gym = CommonUtils.buildGym(request.getName(), request.getWebsite());
         for (GymProto.Branch branch : request.getBranchesList()) {
-            Branch b = new Branch();
-            b.setGymId(gym);
-            b.setLocality(branch.getLocality());
-            b.setCity(branch.getCity());
-            b.setLatitude(branch.getLatitude());
-            b.setLongitude(branch.getLongitude());
-            b.setContact(branch.getContact());
+            Address address = CommonUtils.buildAddressEntity(branch.getGymAddress().getCity(), branch.getGymAddress().getState(), branch.getGymAddress().getPincode());
+            Branch b = CommonUtils.buildBranch(branch.getContact(), branch.getLatitude(), branch.getLongitude(), gym, address);
             gym.getBranches().add(b);
         }
         logger.info("built gym entity {}", gym);
@@ -59,47 +53,25 @@ public class MapperUtil {
     }
 
     public User getUserFromUserSignupRequest(LoginSignupProto.SignupRequest userSignupRequest) throws SQLException, IOException {
-        logger.info("building user entity from proto for use {}", userSignupRequest.getUserName());
-        ProfilePic profilePic = new ProfilePic();
-        profilePic.setUserImage(new SerialBlob(userSignupRequest.getUserImage().toByteArray()));
-        User user = new User();
-        user.setUserName(userSignupRequest.getUserName());
-        user.setEmailId(userSignupRequest.getEmailId());
-        user.setMobileNo(userSignupRequest.getMobileNo());
-        user.setPassword(userSignupRequest.getPassword());
-        user.setAbout(userSignupRequest.getAbout());
-        user.setRoles(userSignupRequest.getRoles().name());
-        user.setProfilePic(profilePic);
-        profilePic.setUser(user);
+        logger.info("building user entity from proto for use {}", userSignupRequest.getName());
+        Address address = CommonUtils.buildAddressEntity(userSignupRequest.getHomeAddress().getCity(), userSignupRequest.getHomeAddress().getState(), userSignupRequest.getHomeAddress().getPincode());
+        User user = CommonUtils.buildUser(userSignupRequest.getName(), userSignupRequest.getMobileNo(), userSignupRequest.getPassword(), userSignupRequest.getPicUrl(), address, Role.valueOf(userSignupRequest.getRole()), userSignupRequest.getBio());
         logger.info("built user entity");
         return user;
     }
 
-    public LoginSignupProto.SignupResponse buildSignUpResponse(LoginSignupProto.LoginResponse.Builder responseBuilder, User user) {
+    public CommonsProto.AuthResponse buildAuthResponse(CommonsProto.AuthResponse.Builder responseBuilder, User user) {
         logger.info("building signup response proto");
         if (user != null) {
             responseBuilder
-                    .setUserName(user.getUserName())
-                    .setEmailId(user.getEmailId())
-                    .setMobileNo(user.getMobileNo())
-                    .setPicId(user.getProfilePic().getPicId())
-                    .setUserId(user.getUserId())
-                    .setAbout(user.getAbout())
-                    .build();
+                    .setName(user.getName())
+                    .setMobileNo(user.getMobile())
+                    .setPicUrl(user.getPicUrl())
+                    .setUserId(user.getId())
+                    .setBio(user.getBio());
         }
-        logger.info("built signup response with message: {} and code: {}", responseBuilder.getResponseMessage(), responseBuilder.getResponseCode());
-        return LoginSignupProto.SignupResponse.newBuilder().setResponse(responseBuilder.build()).build();
-    }
-
-    public LoginSignupProto.LoginResponse buildLoginResponse(LoginSignupProto.LoginResponse.Builder builder, User user) {
-        logger.info("building login response proto");
-        return builder.setUserName(user.getUserName())
-                .setEmailId(user.getEmailId())
-                .setMobileNo(user.getMobileNo())
-                .setPicId(user.getProfilePic().getPicId())
-                .setUserId(user.getUserId())
-                .setAbout(user.getAbout())
-                .build();
+        logger.info("built signup response with for user {}", user.getId());
+        return responseBuilder.build();
     }
 
     public GymProto.FetchResponse getResponseFromEntity(List<Gym> gyms, GymProto.FetchResponse.Builder builder) {
@@ -120,8 +92,7 @@ public class MapperUtil {
             GymProto.Branch.Builder branchBuilder = GymProto.Branch.newBuilder();
             branchBuilder.setId(branch.getId())
                     .setGymId(gymId)
-                    .setLocality(branch.getLocality())
-                    .setCity(branch.getCity())
+                    .setGymAddress(CommonUtils.buildAddressProto(branch))
                     .setLatitude(branch.getLatitude())
                     .setLongitude(branch.getLongitude())
                     .setContact(branch.getContact());
@@ -146,24 +117,18 @@ public class MapperUtil {
 
                 lookupBuilder.setId(requestee.getId())
                         .setStatus(MatchLookupProto.Status.valueOf(requestee.getStatus()))
-                        .setGym(MatchLookupProto.Gym.newBuilder()
-                                .setGymId(branch.getGymId().getId())
-                                .setGymName(branch.getGymId().getName())
+                        .setGym(GymProto.Gym.newBuilder()
+                                .setId(branch.getGymId().getId())
+                                .setName(branch.getGymId().getName())
                                 .setWebsite(branch.getGymId().getWebsite())
-                                .setBranch(MatchLookupProto.Branch.newBuilder()
-                                        .setBranchId(branch.getId())
-                                        .setLocality(branch.getLocality())
-                                        .setCity(branch.getCity())
+                                .addBranches(GymProto.Branch.newBuilder()
+                                        .setId(branch.getId())
+                                        .setGymAddress(CommonUtils.buildAddressProto(branch))
                                         .setLatitude(branch.getLatitude())
                                         .setLongitude(branch.getLongitude())
                                         .setContact(branch.getContact())
                                 ))
-                        .setUser(MatchLookupProto.User.newBuilder()
-                                .setUserId(user.getUserId())
-                                .setUserName(user.getUserName())
-                                .setMobileNo(user.getMobileNo())
-                                .setUserImage(generateImageByteString(user.getProfilePic().getUserImage()))
-                                .setAbout(user.getAbout()));
+                        .setUser(CommonUtils.buildAuthResponse(user));
                 builder.addLookups(lookupBuilder.build());
                 logger.info("built and added requestee having match lookup id {}", requestee.getId());
             } catch (Exception e) {
@@ -200,21 +165,14 @@ public class MapperUtil {
                     throw new CustomException(String.format(MatchRequestConstants.NO_USER_PRESENT.getStatus(), friend.getUserBuddy()));
                 }
                 friendBuilder.setMatchRequestId(matchRequest.getId())
-                        .setUser(MatchLookupProto.User.newBuilder()
-                                .setUserId(user.getUserId())
-                                .setUserName(user.getUserName())
-                                .setMobileNo(user.getMobileNo())
-                                .setUserImage(generateImageByteString(user.getProfilePic().getUserImage()))
-                                .setAbout(user.getAbout())
-                                .build())
-                        .setGym(MatchLookupProto.Gym.newBuilder()
-                                .setGymId(branch.getGymId().getId())
-                                .setGymName(branch.getGymId().getName())
+                        .setUser(CommonUtils.buildAuthResponse(user))
+                        .setGym(GymProto.Gym.newBuilder()
+                                .setId(branch.getGymId().getId())
+                                .setName(branch.getGymId().getName())
                                 .setWebsite(branch.getGymId().getWebsite())
-                                .setBranch(MatchLookupProto.Branch.newBuilder()
-                                        .setBranchId(branch.getId())
-                                        .setLocality(branch.getLocality())
-                                        .setCity(branch.getCity())
+                                .addBranches(GymProto.Branch.newBuilder()
+                                        .setId(branch.getId())
+                                        .setGymAddress(CommonUtils.buildAddressProto(branch))
                                         .setLatitude(branch.getLatitude())
                                         .setLongitude(branch.getLongitude())
                                         .setContact(branch.getContact())
@@ -248,8 +206,8 @@ public class MapperUtil {
         });
     }
 
-    private MatchLookupProto.User buildUserForMatchLookup(MatchLookup matchLookup) throws CustomException, SQLException {
-        MatchLookupProto.User.Builder user = MatchLookupProto.User.newBuilder();
+    private CommonsProto.AuthResponse buildUserForMatchLookup(MatchLookup matchLookup) throws CustomException, SQLException {
+        CommonsProto.AuthResponse.Builder user = CommonsProto.AuthResponse.newBuilder();
         if (Objects.isNull(matchLookup)) {
             throw new CustomException(String.format(MatchRequestConstants.NO_LOOKUP_PRESENT.getStatus(), matchLookup.getRequesterId()));
         }
@@ -257,11 +215,11 @@ public class MapperUtil {
         if (Objects.isNull(userFromDb)) {
             throw new CustomException(String.format(MatchRequestConstants.NO_USER_PRESENT.getStatus(), matchLookup.getRequesterId()));
         }
-        user.setUserId(userFromDb.getUserId())
-                .setUserName(userFromDb.getUserName())
-                .setMobileNo(userFromDb.getMobileNo())
-                .setUserImage(generateImageByteString(userFromDb.getProfilePic().getUserImage()))
-                .setAbout(userFromDb.getAbout());
+        user.setUserId(userFromDb.getId())
+                .setName(userFromDb.getName())
+                .setMobileNo(userFromDb.getMobile())
+                .setPicUrl(userFromDb.getPicUrl())
+                .setBio(userFromDb.getBio());
         return user.build();
     }
 
@@ -269,8 +227,8 @@ public class MapperUtil {
         return ByteString.copyFrom(image.getBytes(1, Math.toIntExact(image.length())));
     }
 
-    private MatchLookupProto.Gym buildGymForMatchLookup(MatchLookup matchLookup) throws CustomException {
-        MatchLookupProto.Gym.Builder gym = MatchLookupProto.Gym.newBuilder();
+    private GymProto.Gym buildGymForMatchLookup(MatchLookup matchLookup) throws CustomException {
+        GymProto.Gym.Builder gym = GymProto.Gym.newBuilder();
         if (Objects.isNull(matchLookup)) {
             throw new CustomException(String.format(MatchRequestConstants.NO_LOOKUP_PRESENT.getStatus(), matchLookup.getRequesterId()));
         }
@@ -278,13 +236,12 @@ public class MapperUtil {
         if (Objects.isNull(branch)) {
             throw new CustomException(String.format(MatchRequestConstants.NO_BRANCH_PRESENT.getStatus(), matchLookup.getGymId(), matchLookup.getBranchId()));
         }
-        gym.setGymId(branch.getGymId().getId())
-                .setGymName(branch.getGymId().getName())
+        gym.setId(branch.getGymId().getId())
+                .setName(branch.getGymId().getName())
                 .setWebsite(branch.getGymId().getWebsite())
-                .setBranch(MatchLookupProto.Branch.newBuilder()
-                        .setBranchId(branch.getId())
-                        .setLocality(branch.getLocality())
-                        .setCity(branch.getCity())
+                .addBranches(GymProto.Branch.newBuilder()
+                        .setId(branch.getId())
+                        .setGymAddress(CommonUtils.buildAddressProto(branch))
                         .setLatitude(branch.getLatitude())
                         .setLongitude(branch.getLongitude())
                         .setContact(branch.getContact())
