@@ -105,7 +105,7 @@ public class MapperUtil {
         logger.info("in mapper adding {} requestee to lookup response", requestees.size());
         requestees.forEach(requestee -> {
             try {
-                User user = userDao.getByUserId(requestee.getRequesterId()).orElse(null);
+                User user = userDao.getById(requestee.getRequesterId()).orElse(null);
                 if (Objects.isNull(user)) {
                     throw new CustomException(String.format(MatchRequestConstants.NO_USER_PRESENT.getStatus(), requestee.getRequesterId()));
                 }
@@ -160,7 +160,7 @@ public class MapperUtil {
                 if (Objects.isNull(branch)) {
                     throw new CustomException(String.format(MatchRequestConstants.NO_BRANCH_PRESENT.getStatus(), matchLookup.getGymId(), matchLookup.getBranchId()));
                 }
-                User user = userDao.getByUserId(friend.getUserBuddy()).orElse(null);
+                User user = userDao.getById(friend.getUserBuddy()).orElse(null);
                 if (Objects.isNull(user)) {
                     throw new CustomException(String.format(MatchRequestConstants.NO_USER_PRESENT.getStatus(), friend.getUserBuddy()));
                 }
@@ -211,7 +211,7 @@ public class MapperUtil {
         if (Objects.isNull(matchLookup)) {
             throw new CustomException(String.format(MatchRequestConstants.NO_LOOKUP_PRESENT.getStatus(), matchLookup.getRequesterId()));
         }
-        User userFromDb = userDao.getByUserId(matchLookup.getRequesterId()).orElse(null);
+        User userFromDb = userDao.getById(matchLookup.getRequesterId()).orElse(null);
         if (Objects.isNull(userFromDb)) {
             throw new CustomException(String.format(MatchRequestConstants.NO_USER_PRESENT.getStatus(), matchLookup.getRequesterId()));
         }

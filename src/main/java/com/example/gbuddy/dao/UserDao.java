@@ -11,7 +11,6 @@ import java.util.Optional;
 public interface UserDao extends JpaRepository<User, Integer> {
     Optional<User> getByMobile(String mobile);
 
-    Optional<User> getByUserId(int id);
+    Optional<User> getById(int id);
 
-    Optional<List<User>> getByUserIdIn(List<Integer> userIds);
 }

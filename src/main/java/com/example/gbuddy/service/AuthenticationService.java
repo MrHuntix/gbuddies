@@ -95,7 +95,7 @@ public class AuthenticationService {
         CommonsProto.AuthResponse response;
         User user;
         try {
-            Optional<User> userFromDb = userDao.getByUserId(userId);
+            Optional<User> userFromDb = userDao.getById(userId);
             if (!userFromDb.isPresent()) {
                 logger.info("no user present for id {}", userId);
                 return CommonsProto.AuthResponse.newBuilder().build();

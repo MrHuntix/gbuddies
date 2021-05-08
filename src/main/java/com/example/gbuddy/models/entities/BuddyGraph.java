@@ -17,9 +17,12 @@ public class BuddyGraph {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
+    @Column(name = "user_id")
     private int userId;
 
+    @Column(name = "buddy_id")
     private int userBuddy;
 
+    @Column(name = "match_request_id")
     private int matchRequestId;
 }

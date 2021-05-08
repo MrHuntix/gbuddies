@@ -36,10 +36,10 @@ public class User extends BaseEntity<Integer> {
     private String bio;
 
     @Temporal(TemporalType.DATE)
-    @Column(name = "last_login_time")
-    private Date lastLoginTime;
+    @Column(name = "last_login_date")
+    private Date lastLoginDate;
 
     @Temporal(TemporalType.DATE)
-    @Column(name = "deleted_time")
-    private Date deletedTime;
+    @Column(name = "deleted_date")
+    private Date deletedDate;
 }

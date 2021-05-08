@@ -10,15 +10,15 @@ import java.util.Date;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-abstract class BaseEntity<T> extends BaseId<T> implements Serializable {
+public class BaseEntity<T> extends BaseId<T> implements Serializable {
 
     @Temporal(TemporalType.DATE)
-    @Column(name = "created_time")
-    private Date createdTime;
+    @Column(name = "created_date")
+    private Date createdDate;
 
     @Temporal(TemporalType.DATE)
-    @Column(name = "last_updated_time")
-    private Date lastUpdatedTime;
+    @Column(name = "last_updated_date")
+    private Date lastUpdatedDate;
 
     private String hostname;
 }

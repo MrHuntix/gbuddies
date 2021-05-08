@@ -30,11 +30,12 @@ public class CommonUtils {
 
     public static Gym buildGym(String name, String website) {
         Gym g = new Gym();
+        Date d = new Date();
         g.setName(name);
         g.setWebsite(website);
         g.setHostname(getHostname());
-        g.setCreatedTime(new Date());
-        g.setLastUpdatedTime(new Date());
+        g.setCreatedDate(d);
+        g.setLastUpdatedDate(d);
         g.setBranches(new LinkedList<>());
         return g;
     }
@@ -57,10 +58,10 @@ public class CommonUtils {
         user.setAddress(address);
         user.setRole(role);
         user.setBio(bio);
-        user.setLastLoginTime(d);
-        user.setDeletedTime(null);
-        user.setCreatedTime(d);
-        user.setLastUpdatedTime(d);
+        user.setLastLoginDate(d);
+        user.setDeletedDate(null);
+        user.setCreatedDate(d);
+        user.setLastUpdatedDate(d);
         user.setHostname(getHostname());
         return user;
     }
