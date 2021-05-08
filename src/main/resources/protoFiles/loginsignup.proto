@@ -1,43 +1,27 @@
 syntax = "proto3";
 
-package gbuddy;
-
+import "commons.proto";
 option java_package = "com.example.gbuddy.models.protos";
+
 option java_outer_classname = "LoginSignupProto";
 
+/**
+    this object is used for representing login request
+ */
 message LoginRequest {
-  string username = 1;
+  string mobileNo = 1;
   string password = 2;
 }
 
-message LoginResponse {
-  string userName = 1;
-  string emailId = 2;
-  string mobileNo = 3;
-  int32 picId = 4;
-  int32 userId = 5;
-  bytes userImage = 20;
-  string about = 21;
-  int32 responseCode = 6;
-  string responseMessage = 22;
-}
-
+/**
+    this object is used for representing signup request
+ */
 message SignupRequest {
-  string userName = 1;
-  string emailId = 2;
-  string mobileNo = 3;
-  string password = 4;
-  RoleType roles = 20; 
-  string about = 21;
-  bytes userImage = 22;
+  string name = 1;
+  string mobileNo = 2;
+  string password = 3;
+  string role = 7;
+  string picUrl = 19;
+  Address homeAddress = 20;
+  string bio = 21;
 }
-
-message SignupResponse {
-  LoginResponse response = 1;
-}
-
-enum RoleType {
-    APP_USER = 0;
-    GYM_ADMIN = 1;
-    APP_ADMIN = 2;
-  }

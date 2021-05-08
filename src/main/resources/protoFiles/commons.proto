@@ -1,0 +1,35 @@
+syntax = "proto3";
+
+option java_outer_classname = "CommonsProto";
+option java_package = "com.example.gbuddy.models.protos";
+
+/**
+    this object is used for representing address for branch and user
+ */
+message Address {
+  string state = 1;
+  string city = 2;
+  int64 pincode = 3;
+}
+
+/**
+    this object is used for representing a user
+ */
+message User {
+  string name = 1;
+  string mobileNo = 3;
+  string picUrl = 4;
+  int32 userId = 5;
+  string bio = 21;
+}
+
+/**
+    this object is used for representing login and signup response
+ */
+message AuthResponse {
+  string name = 1;
+  string mobileNo = 3;
+  string picUrl = 4;
+  int32 userId = 5;
+  string bio = 21;
+}

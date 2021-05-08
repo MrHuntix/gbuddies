@@ -1,8 +1,9 @@
 syntax = "proto3";
 
-package gbuddy;
-
+import "commons.proto";
+import "gym.proto";
 option java_package = "com.example.gbuddy.models.protos";
+
 option java_outer_classname = "MatchLookupProto";
 
 message MatchResponse {
@@ -13,32 +14,8 @@ message MatchResponse {
 message MatchLookup {
   int32 id = 1;
   Status status = 5;
-  User user = 16;
+  AuthResponse user = 16;
   Gym gym = 17;
-}
-
-message User {
-  int32 userId = 1;
-  string userName = 2;
-  string mobileNo = 3;
-  bytes userImage = 20;
-  string about = 21;
-}
-
-message Gym {
-  int32 gymId = 1;
-  string gymName = 2;
-  string website = 3;
-  Branch branch = 16;
-}
-
-message Branch {
-  int32 branchId = 1;
-  string locality = 2;
-  string city = 3;
-  double latitude = 4;
-  double longitude = 5;
-  string contact = 6;
 }
 
 enum Status {
@@ -55,7 +32,7 @@ message LookupResponse {
 
 message Friend {
   int32 matchRequestId = 1;
-  User user = 16;
+  AuthResponse user = 16;
   Gym gym = 17;
 }
 
@@ -67,7 +44,7 @@ message FriendResponse {
 
 message FriendRequest {
   int32 matchRequestId = 1;
-  User user = 16;
+  AuthResponse user = 16;
   Gym gym = 17;
 }
 

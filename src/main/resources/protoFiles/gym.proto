@@ -1,25 +1,25 @@
 syntax = "proto3";
 
-package gbuddy;
-
+import "commons.proto";
 option java_package = "com.example.gbuddy.models.protos";
+
 option java_outer_classname = "GymProto";
 
 message Gym {
   int32 id = 1;
-  string name = 2;
-  string website = 3;
+  string ownerName = 2;
+  string name = 3;
+  string website = 4;
   repeated Branch branches = 16;
 }
 
 message Branch {
   int32 id = 1;
   int32 gymId = 2;
-  string locality = 3;
-  string city = 4;
   double latitude = 5;
   double longitude = 6;
-  string contact = 16;
+  string contact = 7;
+  Address gymAddress = 20;
 }
 
 message RegisterResponse {
