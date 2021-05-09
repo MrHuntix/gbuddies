@@ -22,7 +22,7 @@ public class GbuddyApplication {
     public static void main(String[] args) {
         SpringApplication.run(GbuddyApplication.class, args);
     }
-
+  
     @Bean
     public WebMvcConfigurer corsConfigurer() {
         return new WebMvcConfigurer() {
@@ -32,4 +32,5 @@ public class GbuddyApplication {
             }
         };
     }
+  //test commentgit add .
 }
