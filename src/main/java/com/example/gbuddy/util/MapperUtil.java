@@ -160,7 +160,7 @@ public class MapperUtil {
                                 ))
                         .setUser(MatchLookupProto.User.newBuilder()
                                 .setUserId(user.getUserId())
-                                .setUserName(user.getEmailId())
+                                .setUserName(user.getUserName())
                                 .setMobileNo(user.getMobileNo())
                                 .setUserImage(generateImageByteString(user.getProfilePic().getUserImage()))
                                 .setAbout(user.getAbout()));
@@ -236,7 +236,11 @@ public class MapperUtil {
                         .setUser(buildUserForMatchLookup(matchLookup))
                         .setGym(buildGymForMatchLookup(matchLookup));
                 builder.addFriendRequests(friendRequest.build());
+                builder.setMessage(MatchRequestConstants.FRIEND_REQUESTS_PRESENT.getStatus());
+                builder.setResponseCode(200);
             } catch (Exception e) {
+                builder.setMessage(MatchRequestConstants.FAILED_TO_FIND_FRIEND_REQUEST.getStatus());
+                builder.setResponseCode(204);
                 logger.info(e.getMessage());
                 e.printStackTrace();
                 return;

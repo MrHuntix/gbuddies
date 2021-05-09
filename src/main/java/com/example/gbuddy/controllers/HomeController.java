@@ -5,6 +5,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -23,8 +24,8 @@ public class HomeController {
     private  String secret;
 
     @CrossOrigin
-    @GetMapping("/")
-    public ResponseEntity test() {
+    @GetMapping(value = "/", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Map<String, String>> test() {
         Map<String, String> resp = new HashMap<>();
         resp.put("responseMessage", "gbuddies started properly");
         LOG.info("jmx port: {}, jmx enabled: {}, jmx host: {}", System.getProperty("com.sun.management.jmxremote.port"), System.getProperty("com.sun.management.jmxremote"), System.getProperty("java.rmi.server.hostname"));
@@ -32,8 +33,8 @@ public class HomeController {
     }
 
     @CrossOrigin
-    @GetMapping("/cleanup/{code}")
-    public ResponseEntity cleanDb(@PathVariable("code") String code) {
+    @GetMapping(value = "/cleanup/{code}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Map<String, String>> cleanDb(@PathVariable("code") String code) {
         Map<String, String> resp = new HashMap<>();
         if(code.equals(secret)) resp.put("responseMessage", miscUtil.clenup());
         else resp.put("responseMessage", "aah! you are not worthy.");

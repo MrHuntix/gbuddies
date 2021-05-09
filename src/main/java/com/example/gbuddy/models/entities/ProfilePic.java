@@ -18,6 +18,7 @@ public class ProfilePic implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int picId;
+    @Column(length=16777215)
     private Blob userImage;
 
     @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "profilePic")
