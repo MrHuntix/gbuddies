@@ -16,4 +16,6 @@ public class GbuddyApplication {
     public static void main(String[] args) {
         SpringApplication.run(GbuddyApplication.class, args);
     }
+    //test commentgit add .
+
 }
